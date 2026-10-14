@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="98b23a618d4a">
+<html lang="ko" data-build="9f580915f784">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -281,7 +281,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     <button class="chip xpc" id="xpbtn" aria-label="Grammar and vocab in this episode"><span id="xpn"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg></button>
   </div></header>
   <div class="script wrap" id="script"></div>
-  <button class="back-now" id="backnow" hidden><span id="backarrow">↓</span> <span id="backnowt">Back to the current line</span></button>
+  <button class="back-now" id="backnow" hidden>↓ <span id="backnowt">Back to the current line</span></button>
   <footer class="transport"><div class="wrap">
     <div class="seek"><span id="cur">0:00</span><input type="range" id="pos" min="0" max="1000" value="0" aria-label="Position"><span id="tot">0:00</span></div>
     <div class="ctrls">
@@ -531,7 +531,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     });
   }
 
-  $("back").addEventListener("click", function () { audio.pause(); $("backnow").hidden = true; $("player").hidden = true; $("list").hidden = false; renderList(); runSearch(); });
+  $("back").addEventListener("click", function () { audio.pause(); $("player").hidden = true; $("list").hidden = false; renderList(); runSearch(); });
 
   var timed = [];
   function lineAt(t) {
@@ -558,9 +558,8 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     var el = lineEls[i]; if (!el) return;
     if (Date.now() - userScrolledAt > 4000) {
       autoScrolling = true; el.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-      $("backnow").hidden = true;
-      setTimeout(function () { autoScrolling = false; updateBackNow(); }, 700);
-    } else updateBackNow();
+      setTimeout(function () { autoScrolling = false; }, 700); $("backnow").hidden = true;
+    } else if (!audio.paused) $("backnow").hidden = false;
   }
   function tick(force) {
     if (!ep || !ep.ready) return;
@@ -688,21 +687,6 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   applyPrefs();
   ["wheel", "touchmove"].forEach(function (evn) { window.addEventListener(evn, function () { if (!autoScrolling) userScrolledAt = Date.now(); }, { passive: true }); });
   $("backnow").addEventListener("click", function () { userScrolledAt = 0; setCurrent(cur, true); });
-  // the pill shows whenever the current line has left the middle of the screen, pointing the way back to it
-  function updateBackNow() {
-    var bn = $("backnow"), el = lineEls[cur];
-    if (!ep || !ep.ready || !el || $("player").hidden || autoScrolling) { bn.hidden = true; return; }
-    var top = document.querySelector(".top").getBoundingClientRect().bottom, bot = document.querySelector(".transport").getBoundingClientRect().top;
-    var r = el.getBoundingClientRect(), c = (r.top + r.bottom) / 2, band = (bot - top) * 0.22;
-    var above = c < top + band, below = c > bot - band;
-    bn.hidden = !(above || below);
-    $("backarrow").textContent = above ? "↑" : "↓";
-  }
-  var bnQueued = false;
-  window.addEventListener("scroll", function () {
-    if (bnQueued) return; bnQueued = true;
-    requestAnimationFrame(function () { bnQueued = false; updateBackNow(); });
-  }, { passive: true });
 
   // expressions sheet
   function renderXp() {
