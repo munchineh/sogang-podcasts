@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="5093f6d4a01c">
+<html lang="ko" data-build="972c96e54494">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -8,9 +8,9 @@
 <link rel="icon" href="icon-32.png" sizes="32x32">
 <link rel="icon" href="icon-180.png" sizes="180x180">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>Sogang Podcasts</title>
+<title>서강팟캐스트</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Sogang Podcasts">
+<meta name="apple-mobile-web-app-title" content="서강팟캐스트">
 <meta name="theme-color" content="#f3f4f8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#121318" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -812,7 +812,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   function setMedia() {
     if (!("mediaSession" in navigator)) return;
     try {
-      navigator.mediaSession.metadata = new MediaMetadata({ title: ep.title, artist: "Sogang Podcasts", album: "EP " + (+ep.ep.slice(3)) });
+      navigator.mediaSession.metadata = new MediaMetadata({ title: ep.title, artist: "서강팟캐스트", album: "EP " + (+ep.ep.slice(3)) });
       navigator.mediaSession.setActionHandler("play", function () { audio.play(); });
       navigator.mediaSession.setActionHandler("pause", function () { audio.pause(); });
       navigator.mediaSession.setActionHandler("previoustrack", function () { $("prev").click(); });
