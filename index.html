@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="52dcfc30805a">
+<html lang="ko" data-build="4a3e6a56ac1e">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -66,21 +66,26 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .logo .lg { font: 900 150px "Noto Sans KR", sans-serif; fill: #fff; text-anchor: middle; }
 .logo .b2f { fill: var(--ink); stroke: var(--bg); stroke-width: 32px; paint-order: stroke; }
 .logo .b2 text { fill: var(--bg); }
-/* logo: 서 pops in, 강 follows, both hold; then 강 pops out, 서 pops out, and 서 pops straight back in (7s loop) */
+/* logo (7s loop): 서 springs in, 강 follows, both hold; 강 then 서 pop out (quick swell, snap to nothing),
+   and 서 springs straight back in. Scale only, no fades. */
 .logo .b1 { transform-origin: 90px 300px; animation: lgpop 7s infinite; }
 .logo .b2 { transform-origin: 440px 464px; animation: lgpop2 7s infinite; }
 @keyframes lgpop {
-  0% { transform: scale(0); opacity: 0; animation-timing-function: cubic-bezier(.3,1.6,.5,1); }
-  6% { transform: scale(1); opacity: 1; }
-  87% { transform: scale(1); opacity: 1; animation-timing-function: ease-out; }
-  90% { transform: scale(1.07); opacity: 1; animation-timing-function: cubic-bezier(.55,0,.85,.35); }
-  96%, 100% { transform: scale(0); opacity: 0; } }
+  0% { transform: scale(0); animation-timing-function: cubic-bezier(.2,.8,.3,1); }
+  3% { transform: scale(1.18); animation-timing-function: ease-in-out; }
+  5% { transform: scale(.93); animation-timing-function: ease-in-out; }
+  7% { transform: scale(1.03); animation-timing-function: ease-in-out; }
+  8.5%, 93% { transform: scale(1); animation-timing-function: ease-out; }
+  95% { transform: scale(1.16); animation-timing-function: cubic-bezier(.6,0,.9,.5); }
+  97%, 100% { transform: scale(0); } }
 @keyframes lgpop2 {
-  0%, 8% { transform: scale(0); opacity: 0; animation-timing-function: cubic-bezier(.3,1.6,.5,1); }
-  14% { transform: scale(1); opacity: 1; }
-  81% { transform: scale(1); opacity: 1; animation-timing-function: ease-out; }
-  84% { transform: scale(1.07); opacity: 1; animation-timing-function: cubic-bezier(.55,0,.85,.35); }
-  90%, 100% { transform: scale(0); opacity: 0; } }
+  0%, 6% { transform: scale(0); animation-timing-function: cubic-bezier(.2,.8,.3,1); }
+  9% { transform: scale(1.18); animation-timing-function: ease-in-out; }
+  11% { transform: scale(.93); animation-timing-function: ease-in-out; }
+  13% { transform: scale(1.03); animation-timing-function: ease-in-out; }
+  14.5%, 89% { transform: scale(1); animation-timing-function: ease-out; }
+  91% { transform: scale(1.16); animation-timing-function: cubic-bezier(.6,0,.9,.5); }
+  93%, 100% { transform: scale(0); } }
 @media (prefers-reduced-motion: reduce) { .logo .b1, .logo .b2 { animation: none; } }
 .mast h1 { font: 800 clamp(24px, 7vw, 32px)/1.15 "Poppins", var(--f-display); margin: 0; letter-spacing: -.025em; white-space: nowrap; }
 .mast .count { font: 500 12px var(--f-mono); color: var(--muted); }
