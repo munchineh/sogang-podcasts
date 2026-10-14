@@ -69,7 +69,12 @@ time, 17:00 in winter). `touch podcast/run_podcast.flag` runs it immediately. Th
   cs (syllable start/end pairs), hl ([start, end, item] highlight spans)`. Episodes also carry `ovl` (localised overviews),
   index entries `loc` (localised title/blurb), and `search_<lang>.json` holds each search row's text in that language.
 - Highlighting: `kiwi_hl.py` (kiwipiepy morphemes) plus a spelling fallback that conjugates verbs with Kiwi, pattern
-  overrides for loose frames, then `hl_drop.json`. Bump `HLV` in `build_player.py` when the matcher changes.
+  overrides for loose frames, then `hl_drop.json`. Bump `HLV` in `build_player.py` when the matcher changes (spans are
+  cached per episode under that version).
+- `OVERRIDES` in `kiwi_hl.py`: item → regex. A regex with groups highlights each group separately (split frames like
+  `얼마나 … -은지`). `FUNCS` holds item → function for cases needing Kiwi (conditional `-아/어야`, not `해야 돼`).
+  Items added there skip the spelling fallback. Unmatched on purpose: `-이/가 (새로운 정보)` and four duplicate cards
+  whose twin in the same episode already holds the highlight.
 - `build_site.py` wraps the app into a standalone page, copies `ready/*.mp4` to `audio/`, writes `version.json`
   (the app reloads itself when this changes) and the icons.
 
@@ -78,7 +83,9 @@ time, 17:00 in winter). `touch podcast/run_podcast.flag` runs it immediately. Th
 - The translation setting is also the interface language (None → English): every label comes from the `I18N`
   table in `index.html` (en, zh, zt, de, fr, ru). Add a key there for any new label. The language chip sits on
   the home page (globe) and in the player bar; both open the same menu.
-- Wordmark: "Podcasts" in Poppins ExtraBold (Google Fonts); the logo carries 서강.
+- Wordmark follows the language: 팟캐스트 (no translation), Podcasts, 播客, Подкасты; Poppins ExtraBold for Latin.
+- Speed steps: 0.7–1.2 in 0.1 steps; a stored speed snaps to the nearest step.
+- The back-to-line pill shows whenever the current line leaves the middle band of the screen; its arrow points to it.
 - Settings in localStorage: `tr` (translation: off/en/zh/zt/de/fr/ru), `size` (0–3), `speed`, `ovOpen`, `pos_<ep>`,
   `done_<ep>`.
 - Grammar/expression marks are filled purple, vocab is dotted underline; tapping one opens its sheet (audio pauses
@@ -101,3 +108,17 @@ time, 17:00 in winter). `touch podcast/run_podcast.flag` runs it immediately. Th
 2. Add overviews, cast, translations; extend `build_player.py` to read `l3/` and give episodes a level.
 3. Add the level's episodes to `queue.txt` when audio should start.
 4. The list page groups episodes under a level heading.
+
+## Status and open items (keep current)
+
+- On hold until Mancini says go (after his usage resets):
+  1. Level 3 scripts into the player (`l3/v2`, 21 episodes, script-only at first).
+  2. Full translations of card text (gloss, meaning, example translation, notes) into zh/de/fr/ru for both levels
+     (~1,551 Level 4 cards; zt via OpenCC). Done after Level 3, in one pass.
+- Level 3 Anki deck sort: waiting for photos of the 3A and 3B handbooks (unit banners/contents + vocab pages). Target
+  layout mirrors Level 4 (`Sogang Level 3A::3A Grammar + Vocab::Unit N::3A Unit N · Grammar / · Vocab::듣고 말하기 …`).
+  The pages sent so far were 4A (already sorted). Open: whether `이야기를 나누다` (in Sogang 3 Vocab) belongs in 4A.2.
+- Open question: highlight cards from other episodes (e.g. 제대로 in Ep 1) in a lighter style?
+- Open question: rename the browser tab / home-screen name from "Sogang Podcasts" (clashes with Apple Podcasts if just "Podcasts").
+- Syncing to the Mac: `device_commit_files` can leave a stale copy, and a Mac publish then overwrites GitHub with it.
+  Commit under a new filename, check md5 on the Mac, then copy into place before touching `run_podcast.flag`.
