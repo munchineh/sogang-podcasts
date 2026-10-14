@@ -37,6 +37,7 @@ Inside `podcast/` on the Mac:
 | `ovl/{zh,de,fr,ru}.json` | Localised `{title, blurb, overview, setting, register}` per episode (`*term*` = italic); Traditional is OpenCC from `zh`. |
 | `roman_terms.json` | Romanised Korean words that get `*…*` in the English lines. |
 | `items.json` | Card details (meaning, example, notes, note id) used by the expression sheets. |
+| `card_map.json` | Script item → the Grammar + Vocab card it stands for when the names differ. Cards are picked Grammar + Vocab first, then Expressions (which mostly repeat them), then deckless notes; items that resolve to the same card merge. |
 | `note_decks.json` | Note id → current Anki deck, for tags like `4A.6 Grammar` / `4B.3 듣고 말하기 1`. |
 | `hl_drop.json` | Highlights judged wrong by review: `[item, hit, line or null]`. |
 | `player/index.html` | The app (single file). `player/icon-*.png` are the app icons. |
@@ -118,7 +119,6 @@ time, 17:00 in winter). `touch podcast/run_podcast.flag` runs it immediately. Th
 - Level 3 Anki deck sort: waiting for photos of the 3A and 3B handbooks (unit banners/contents + vocab pages). Target
   layout mirrors Level 4 (`Sogang Level 3A::3A Grammar + Vocab::Unit N::3A Unit N · Grammar / · Vocab::듣고 말하기 …`).
   The pages sent so far were 4A (already sorted). Open: whether `이야기를 나누다` (in Sogang 3 Vocab) belongs in 4A.2.
-- Open question: highlight cards from other episodes (e.g. 제대로 in Ep 1) in a lighter style?
 - Open question: rename the browser tab / home-screen name from "Sogang Podcasts" (clashes with Apple Podcasts if just "Podcasts").
 - Syncing to the Mac: `device_commit_files` can leave a stale copy, and a Mac publish then overwrites GitHub with it.
   Commit under a new filename, check md5 on the Mac, then copy into place before touching `run_podcast.flag`.
