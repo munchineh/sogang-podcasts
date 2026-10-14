@@ -15,14 +15,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
+/* Korean fonts draw … as three dots at mid-height (···); take just that character from the system's Latin font */
+@font-face { font-family: "Dots"; unicode-range: U+2026;
+  src: local("Helvetica Neue"), local("HelveticaNeue"), local("SF Pro Text"), local("Roboto"), local("Segoe UI"), local("Arial"); }
 /* Layout: a script you read like lyrics. Episode list → one scrolling transcript with a fixed transport bar at the bottom. */
 :root {
   --bg: #f3f4f8; --surface: #ffffff; --ink: #17181f; --muted: #646878; --faint: #a3a6b4; --rule: #e1e3ea;
   --accent: #5b4fd6; --accent-soft: #ecebfd; --hl: #e4e1fd;
   --jun: #237a6b; --jun-soft: #e1f2ee; --sua: #b9476e; --sua-soft: #fbe6ee;
   --now: #ffffff; --now-shadow: 0 1px 2px rgba(23,24,31,.06), 0 6px 22px rgba(91,79,214,.12);
-  --f-display: "Noto Sans KR", -apple-system, "Apple SD Gothic Neo", sans-serif;
-  --f-body: "Noto Sans KR", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --f-display: "Dots", "Noto Sans KR", -apple-system, "Apple SD Gothic Neo", sans-serif;
+  --f-body: "Dots", "Noto Sans KR", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
