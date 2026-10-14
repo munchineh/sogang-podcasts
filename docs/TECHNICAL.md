@@ -41,7 +41,7 @@ Inside `podcast/` on the Mac:
 | `note_decks.json` | Note id → current Anki deck, for tags like `4A.6 Grammar` / `4B.3 듣고 말하기 1`. |
 | `hl_drop.json` | Highlights judged wrong by review: `[item, hit, line or null]`. |
 | `player/index.html` | The app (single file). `player/icon-*.png` are the app icons. |
-| `l3/v2/l3_XX.json`, `l3/plan.json` | Level 3 scripts (21 episodes, written, no audio yet, not in the site yet). |
+| `l3/v2/l3_XX.json`, `l3/plan.json` | Level 3 scripts (25 episodes; l3_22–25 cover 3A Units 1–3 and 3B.1 reading vocab added Oct 15). Written, no audio yet, not in the site yet. `l3/extra_cards.json` holds card fields for cards newer than `level3_cards.json`; `l3/book_*.json` are the handbook unit lists. |
 | `cache/v2/<ep>/NN.wav` | Generated audio chunks (re-used across runs). |
 | `audio/v2/<ep>.mp4`, `.chunks.json`, `.words.json`, `.chars.json`, `.voice.json` | Per-episode outputs. |
 | `ready/<ep>.mp4`, `ready/<ep>.timing.json` | Finished episodes, picked up by the site build. |
@@ -113,12 +113,11 @@ time, 17:00 in winter). `touch podcast/run_podcast.flag` runs it immediately. Th
 ## Status and open items (keep current)
 
 - On hold until Mancini says go (after his usage resets):
-  1. Level 3 scripts into the player (`l3/v2`, 21 episodes, script-only at first).
+  1. Level 3 scripts into the player (`l3/v2`, 25 episodes, script-only at first).
   2. Full translations of card text (gloss, meaning, example translation, notes) into zh/de/fr/ru for both levels
      (~1,551 Level 4 cards; zt via OpenCC). Done after Level 3, in one pass.
-- Level 3 Anki deck sort: waiting for photos of the 3A and 3B handbooks (unit banners/contents + vocab pages). Target
-  layout mirrors Level 4 (`Sogang Level 3A::3A Grammar + Vocab::Unit N::3A Unit N · Grammar / · Vocab::듣고 말하기 …`).
-  The pages sent so far were 4A (already sorted). Open: whether `이야기를 나누다` (in Sogang 3 Vocab) belongs in 4A.2.
+- Level 3 Anki decks are sorted by unit (done Oct 15): `Sogang Level 3A::3A Grammar + Vocab::Unit N::3A Unit N · Grammar` and
+  `… · Vocab::3A.N 듣고 말하기 / 3A.N 읽고 말하기`, 3B the same. 1,008 notes. Level 3/4 twins each keep their own sentence and notes.
 - Open question: rename the browser tab / home-screen name from "Sogang Podcasts" (clashes with Apple Podcasts if just "Podcasts").
 - Syncing to the Mac: `device_commit_files` can leave a stale copy, and a Mac publish then overwrites GitHub with it.
   Commit under a new filename, check md5 on the Mac, then copy into place before touching `run_podcast.flag`.
