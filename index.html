@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="63a9ab146098">
+<html lang="ko" data-build="e28b8c9462c8">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -26,6 +26,7 @@
   --now: #ffffff; --now-shadow: 0 1px 2px rgba(23,24,31,.06), 0 6px 22px rgba(91,79,214,.12);
   --f-display: "Dots", "Noto Sans KR", -apple-system, "Apple SD Gothic Neo", sans-serif;
   --f-body: "Dots", "Noto Sans KR", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --f-latin: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans KR", sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
@@ -51,6 +52,9 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 /* ---------- episode list ---------- */
 #list { padding-block: calc(env(safe-area-inset-top, 0px) + 28px) 48px; }
 .mast { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.mast .refresh { margin-left: auto; color: var(--muted); }
+.mast .refresh.spin svg { animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 .logo { width: 46px; height: 46px; flex: none; overflow: visible; }
 .logo .lg { font: 900 112px "Noto Sans KR", sans-serif; fill: #fff; }
 .logo .b2f { fill: var(--ink); }
@@ -62,7 +66,7 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 @media (prefers-reduced-motion: reduce) { .logo .b1, .logo .b2 { animation: none; } }
 .mast h1 { font: 800 32px/1.15 var(--f-display); margin: 0; letter-spacing: -.03em; }
 .mast .count { font: 500 12px var(--f-mono); color: var(--muted); }
-.lede { color: var(--muted); font-size: 14px; margin: 0 0 22px; }
+.lede { color: var(--muted); font-size: 14px; font-family: var(--f-latin); margin: 0 0 22px; }
 .lvl { font: 600 11px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 10px 4px 10px; display: flex; justify-content: space-between; }
 .lvl .count { letter-spacing: .02em; text-transform: none; font-weight: 500; }
 .eps { display: grid; gap: 10px; }
@@ -75,8 +79,8 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .ep .st.new { color: var(--accent); }
 .ep .st.done { color: var(--jun); }
 .ep .t { grid-column: 1 / -1; font: 900 20px/1.35 var(--f-display); letter-spacing: -.025em; min-width: 0; text-wrap: balance; margin-top: 4px; }
-.ep .te { grid-column: 1 / -1; font-size: 14px; font-weight: 500; color: var(--muted); min-width: 0; }
-.ep .b { grid-column: 1 / -1; font-size: 14px; line-height: 1.5; color: var(--ink); opacity: .82; min-width: 0; margin-top: 8px; }
+.ep .te { grid-column: 1 / -1; font-family: var(--f-latin); font-size: 14px; font-weight: 500; color: var(--muted); min-width: 0; }
+.ep .b { grid-column: 1 / -1; font-family: var(--f-latin); font-size: 14px; line-height: 1.5; color: var(--ink); opacity: .82; min-width: 0; margin-top: 8px; }
 .ep[data-noaudio] .t, .ep[data-noaudio] .b { opacity: .62; }
 .search { position: sticky; top: 0; z-index: 2; background: var(--bg); padding: calc(env(safe-area-inset-top, 0px) + 8px) 0 12px;
   margin-inline: -16px; padding-inline: 16px; }
@@ -113,19 +117,22 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .chip { height: 32px; padding: 0 11px; border-radius: 999px; font: 600 12.5px var(--f-body); border: 1px solid var(--rule); flex: none; }
 .chip[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
 
-.script { flex: 1; padding-block: 10px 180px; }
+.script { flex: 1; padding-block: 10px 180px; padding-inline: max(10px, env(safe-area-inset-left, 0px)); }
 .sec { font: 600 11px var(--f-mono); letter-spacing: .12em; color: var(--faint); text-transform: uppercase; margin: 26px 4px 8px; display: flex; gap: 10px; align-items: center; }
 .sec::after { content: ""; height: 1px; flex: 1; background: var(--rule); }
-.line { display: grid; grid-template-columns: 2.9rem 1fr; gap: 10px; padding: 9px 10px; border-radius: 14px; cursor: pointer;
+.line { display: grid; grid-template-columns: 2.9rem 1fr; gap: 9px; padding: 8px 6px; border-radius: 14px; cursor: pointer;
   transition: background .25s, box-shadow .25s, opacity .25s; }
-.line .who { font: 600 11.5px/2.2 var(--f-body); text-align: center; height: fit-content; border-radius: 999px; white-space: nowrap;
+.line .who { font: 600 11.5px/24px var(--f-body); text-align: center; height: 24px; margin-top: calc((18.5px * var(--ks, 1) * 1.52 - 24px) / 2); border-radius: 999px; white-space: nowrap;
   overflow: hidden; text-overflow: ellipsis; padding: 0 4px; letter-spacing: -.02em; }
 .line .who.mid { font-size: 10.5px; letter-spacing: -.04em; padding: 0 2px; }
 .line .who.long { font-size: 9px; letter-spacing: -.06em; padding: 0 1px; }
 .line[data-p="Jun"] .who { color: var(--jun); background: var(--jun-soft); }
 .line[data-p="Sua"] .who { color: var(--sua); background: var(--sua-soft); }
-.line .ko { font-size: calc(18.5px * var(--ks, 1)); font-weight: 500; line-height: 1.7; min-width: 0; letter-spacing: -.01em; }
-.line .en { grid-column: 2; color: var(--muted); font-size: calc(14px * var(--ks, 1)); line-height: 1.5; margin-top: -2px; }
+.line .ko { font-size: calc(18.5px * var(--ks, 1)); font-weight: 500; line-height: 1.52; min-width: 0; letter-spacing: -.01em; }
+.line .en { grid-column: 2; color: var(--muted); font-family: var(--f-latin); font-size: calc(14.5px * var(--ks, 1)); line-height: 1.45; margin-top: 1px; }
+/* in translations: Korean left as Korean (names, quoted words) is set apart; romanised Korean terms are italic */
+.hg { font-family: "Noto Sans KR", sans-serif; font-weight: 600; color: var(--ink); opacity: .78; font-size: .96em; }
+.rk { font-style: italic; }
 .line mark.v { background: none; padding: 0; font-weight: 600; text-decoration: underline dotted var(--accent);
   text-decoration-thickness: 2px; text-underline-offset: 5px; -webkit-text-decoration: underline dotted var(--accent); }
 .line mark { cursor: pointer; background: var(--hl); color: inherit; border-radius: 4px; padding: 0 2px; font-weight: 700; }
@@ -142,7 +149,7 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .line.notime { cursor: default; }
 .line.notime .ko { color: var(--muted); }
 .line.flash { box-shadow: 0 0 0 2px var(--accent) inset; }
-.banner { margin: 12px 4px 0; padding: 10px 12px; border-radius: 12px; background: var(--accent-soft); color: var(--accent); font-size: 13.5px; }
+.banner { font-family: var(--f-latin); margin: 12px 4px 0; padding: 10px 12px; border-radius: 12px; background: var(--accent-soft); color: var(--accent); font-size: 13.5px; }
 .transport.off .seek, .transport.off .mid, .transport.off #speed, .transport.off #again { opacity: .4; pointer-events: none; }
 .top .ttl i { display: block; font-style: normal; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .note { margin: 18px 4px 0; color: var(--muted); font-size: 13px; }
@@ -198,32 +205,36 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
 .xp em.none { color: var(--faint); font-weight: 500; }
 /* episode overview */
 .ov { margin: 14px 0 4px; padding: 14px 16px; border-radius: 16px; background: var(--surface); border: 1px solid var(--rule); }
-.ov .h { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.ov .h span { font: 600 11px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
-.ov .h button { font-size: 13px; font-weight: 600; color: var(--accent); padding: 6px 2px; }
-.ov p { margin: 6px 0 0; font-size: 15px; line-height: 1.6; }
+.ov .h { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 28px; }
+.ov .h span { font: 600 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+.ov .h button { font: 600 13px/1 var(--f-latin); color: var(--accent); padding: 8px 2px; }
+.ov p { margin: 8px 0 0; font-family: var(--f-latin); font-size: 15px; line-height: 1.55; }
 .ov:not(.open) p { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .ov dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 12px 0 0; font-size: 14px; }
 .ov:not(.open) dl { display: none; }
-.ov dt { font: 500 11.5px/1.9 var(--f-mono); color: var(--muted); letter-spacing: .03em; }
-.ov dd { margin: 0; line-height: 1.55; }
+.ov dt { font: 600 10.5px/2.1 var(--f-mono); color: var(--faint); letter-spacing: .06em; text-transform: uppercase; }
+.ov dd { margin: 0; line-height: 1.55; font-family: var(--f-latin); }
 .ov dd button { color: var(--accent); font-weight: 600; }
 /* expression detail sheet */
 .dt-top { position: sticky; top: 0; z-index: 1; display: flex; justify-content: space-between; align-items: center; background: var(--surface);
   margin: -18px 0 0; padding: 12px 0 6px; }
 .dt-top .ib { margin-right: -8px; }
-.dt-kind { font: 600 11px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.dt-kind { font: 600 11px/1 var(--f-mono); letter-spacing: .02em; color: var(--accent); background: var(--accent-soft); padding: 5px 8px; border-radius: 6px; }
 .dt h2 { font: 900 26px/1.3 var(--f-display); letter-spacing: -.02em; margin: 4px 0 2px; }
-.dt .mean { font-size: 16px; margin: 0 0 14px; }
-.dt h3 { font: 600 11px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 18px 0 8px; }
+.dt .mean { font-family: var(--f-latin); font-size: 16px; margin: 0 0 14px; }
+.dt h3 { font: 600 11px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin: 18px 0 8px; }
 .dt .ex { padding: 12px 14px; border-radius: 12px; background: var(--accent-soft); }
 .dt .ex .k { font-size: 17px; font-weight: 500; line-height: 1.6; }
 .dt .ex .e { font-size: 14px; color: var(--muted); margin-top: 2px; }
 .dt ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; font-size: 14.5px; line-height: 1.55; }
-.dt .use { display: grid; gap: 2px; text-align: left; width: 100%; padding: 10px 2px; border-top: 1px solid var(--rule); }
+.dt .uses { display: grid; gap: 8px; }
+.dt .use { display: grid; gap: 3px; text-align: left; width: 100%; padding: 12px 14px; border-radius: 12px;
+  background: color-mix(in srgb, var(--ink) 4.5%, var(--surface)); }
+.dt .use:active { background: color-mix(in srgb, var(--ink) 9%, var(--surface)); }
 .dt .use .k { font-size: 16px; font-weight: 500; line-height: 1.6; }
-.dt .use .e { font-size: 13.5px; color: var(--muted); }
+.dt .use .e { font-family: var(--f-latin); font-size: 13.5px; color: var(--muted); }
 .dt .use mark { background: var(--hl); color: inherit; border-radius: 4px; padding: 0 2px; font-weight: 700; }
+.dt.v .use mark { background: none; padding: 0; text-decoration: underline dotted var(--accent); text-decoration-thickness: 2px; text-underline-offset: 5px; }
 .dt .use .go { font: 500 11px var(--f-mono); color: var(--accent); }
 @media (prefers-reduced-motion: reduce) { .line { transition: none; } }
 </style>
@@ -232,9 +243,9 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
 <main id="list" class="wrap">
   <div class="mast"><svg class="logo" viewBox="0 0 512 512" aria-hidden="true">
     <g class="b1"><path d="M92 70 h144 a44 44 0 0 1 44 44 v88 a44 44 0 0 1 -44 44 h-112 l-58 46 l6 -46 h-8 a44 44 0 0 1 -44 -44 v-88 a44 44 0 0 1 44 -44z" fill="#5b4fd6"/>
-      <text x="164" y="198" text-anchor="middle" class="lg">서</text></g>
+      <text x="154" y="198" text-anchor="middle" class="lg">서</text></g>
     <g class="b2"><path d="M276 252 h144 a44 44 0 0 1 44 44 v88 a44 44 0 0 1 -44 44 h-2 l6 46 l-58 -46 h-90 a44 44 0 0 1 -44 -44 v-88 a44 44 0 0 1 44 -44z" class="b2f"/>
-      <text x="348" y="380" text-anchor="middle" class="lg">강</text></g></svg><h1>Sogang Podcasts</h1></div>
+      <text x="344" y="380" text-anchor="middle" class="lg">강</text></g></svg><h1>Sogang Podcasts</h1><button class="ib refresh" id="refresh" aria-label="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4.5V9h-4.5"/></svg></button></div>
   <p class="lede">서강 한국어 표현으로 만든 준과 수아의 수다 팟캐스트.<br>Tap a line to jump to that part of the audio.</p>
   <div class="search"><div class="wrapin">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
@@ -259,9 +270,9 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       <div class="side"><button class="speed" id="speed" aria-label="Playback speed">1×</button>
         <button class="chip en" id="enbtn" aria-haspopup="menu" aria-label="Translation and text size">EN</button></div>
       <div class="mid">
-        <button class="ib" id="prev" aria-label="Previous line"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h2v14H7zM19 5v14L10 12z"/></svg></button>
-        <button class="play" id="play" aria-label="Play"><svg id="picon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
-        <button class="ib" id="next" aria-label="Next line"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 5h2v14h-2zM5 5v14l9-7z"/></svg></button>
+        <button class="ib" id="prev" aria-label="Previous line"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M7.5 6v12"/><path d="M18 6.6v10.8a.8.8 0 0 1-1.2.7L9.6 12.7a.8.8 0 0 1 0-1.4l7.2-5.4a.8.8 0 0 1 1.2.7z"/></svg></button>
+        <button class="play" id="play" aria-label="Play"><svg id="picon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 6.2v11.6a1.2 1.2 0 0 0 1.8 1l9.1-5.8a1.2 1.2 0 0 0 0-2l-9.1-5.8A1.2 1.2 0 0 0 9 6.2z"/></svg></button>
+        <button class="ib" id="next" aria-label="Next line"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M16.5 6v12"/><path d="M6 6.6v10.8a.8.8 0 0 0 1.2.7l7.2-5.4a.8.8 0 0 0 0-1.4L7.2 5.9A.8.8 0 0 0 6 6.6z"/></svg></button>
       </div>
       <div class="side right"><button class="ib" id="again" aria-label="Replay this line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button></div>
     </div>
@@ -287,7 +298,12 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   var esc = function (t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); };
   var SPEEDS = [0.75, 0.9, 1, 1.15, 1.3];
   var TR = store.get("tr", store.get("showEn", false) ? "en" : "off"), SZ = store.get("size", 1);
-  function trOf(l) { return (TR === "zh" || TR === "zt") ? (l[TR] || l.zh || l.en) : l.en; }
+  function trOf(l) { return (TR !== "off" && TR !== "en" && l[TR]) || (TR === "zt" && l.zh) || l.en || ""; }
+  // translation text: Korean kept as Korean is set apart, *romanised terms* in italics
+  function fmtTr(t) {
+    return esc(t || "").replace(/\*([^*]+)\*/g, '<i class="rk">$1</i>')
+      .replace(/[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3][\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3\s.,?!~…·\-]*[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3]|[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3]/g, '<span class="hg">$&</span>');
+  }
   var audio = $("audio"), index = [], ep = null, cur = -1, lineEls = [], userScrolledAt = 0, autoScrolling = false;
 
   // ---------- list ----------
@@ -329,10 +345,10 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
         if (l.s !== sec) { sec = l.s; html += '<div class="sec">' + esc(sec) + '</div>'; }
         var ko = koHtml(l);
         html += '<div class="line' + (l.t == null ? " notime" : "") + '" tabindex="0" data-i="' + i + '" data-p="' + l.p + '"><span class="who' + ((l.c || "").length > 3 ? " long" : (l.c || "").length > 2 ? " mid" : "") + '">' + esc(l.c || (l.p === "Jun" ? "준" : "수아")) +
-          '</span><div class="ko">' + ko + '</div>' + '<div class="en"' + (TR === "off" ? " hidden" : "") + '>' + esc(trOf(l)) + '</div></div>';
+          '</span><div class="ko">' + ko + '</div>' + '<div class="en"' + (TR === "off" ? " hidden" : "") + '>' + fmtTr(trOf(l)) + '</div></div>';
       });
       var banner = !d.ready ? '<p class="banner">Audio for this episode isn’t recorded yet. You can read the script now; it will play here once it’s ready.</p>'
-        : d.partial ? '<p class="banner">Preview: only the first part is recorded so far. Greyed lines don’t have audio yet.</p>' : "";
+        : d.partial ? '<p class="banner">Preview: Only the first part is recorded so far. Greyed lines don’t have audio yet.</p>' : "";
       $("script").innerHTML = ovHtml(d) + banner + html;
       $("script").classList.toggle("live", !!d.ready);
       document.querySelector(".transport").classList.toggle("off", !d.ready);
@@ -477,7 +493,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   audio.addEventListener("playing", function () { if (!rafOn) { rafOn = true; requestAnimationFrame(raf); } });
 
   function setPlayIcon(on) {
-    $("picon").innerHTML = on ? '<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
+    $("picon").innerHTML = on ? '<rect x="6.5" y="5" width="4" height="14" rx="1.6"/><rect x="13.5" y="5" width="4" height="14" rx="1.6"/>' : '<path d="M9 6.2v11.6a1.2 1.2 0 0 0 1.8 1l9.1-5.8a1.2 1.2 0 0 0 0-2l-9.1-5.8A1.2 1.2 0 0 0 9 6.2z"/>';
     $("play").setAttribute("aria-label", on ? "Pause" : "Play");
   }
   function playFrom(t) { audio.currentTime = Math.max(0, t); audio.play().catch(function () {}); userScrolledAt = 0; }
@@ -503,7 +519,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   function renderSpeedMenu() {
     $("speedmenu").innerHTML = SPEEDS.slice().reverse().map(function (r) {
       return '<button role="menuitemradio" aria-checked="' + (r === audio.playbackRate) + '" data-r="' + r + '">' + fmtSpeed(r) +
-        (r === 1 ? "<small>normal</small>" : "") + '</button>';
+        (r === 1 ? "<small>Default</small>" : "") + '</button>';
     }).join("");
   }
   $("speed").setAttribute("aria-haspopup", "menu");
@@ -519,7 +535,8 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   document.addEventListener("click", function (ev) { if (!ev.target.closest("#speedmenu")) $("speedmenu").hidden = true; });
   document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") $("speedmenu").hidden = true; });
   // translation (none / English / 简体 / 繁體) and text size, remembered on this device
-  var LANGS = [["off", "한국어만", "KO"], ["en", "English", "EN"], ["zh", "简体中文", "简"], ["zt", "繁體中文", "繁"]];
+  var LANGS = [["off", "None", "KO"], ["en", "English", "EN"], ["zh", "简体中文", "简"], ["zt", "繁體中文", "繁"],
+               ["de", "Deutsch", "DE"], ["fr", "Français", "FR"], ["ru", "Русский", "RU"]];
   var SIZES = [0.88, 1, 1.13, 1.27];
   function applyPrefs() {
     var lab = LANGS.filter(function (x) { return x[0] === TR; })[0] || LANGS[1];
@@ -528,7 +545,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     if (!ep) return;
     document.querySelectorAll(".line").forEach(function (el) {
       var l = ep.lines[+el.dataset.i], e = el.querySelector(".en"); if (!e || !l) return;
-      e.textContent = trOf(l); e.hidden = TR === "off";
+      e.innerHTML = fmtTr(trOf(l)); e.hidden = TR === "off";
     });
   }
   function renderLangMenu() {
@@ -592,6 +609,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     var notes = (it.note || "").split(/\s+\/\s+/).filter(Boolean);
     var uses = [];
     ep.lines.forEach(function (l, i) { if ((l.hl || []).some(function (h) { return h[2] === k; })) uses.push(i); });
+    $("detail").className = "wrap dt" + (it.kind === "vocab" ? " v" : "");
     $("detail").innerHTML =
       '<div class="dt-top"><span class="dt-kind">' + esc(it.tag || kinds[it.kind] || "Expression") + '</span>' +
       '<button class="ib" data-close="1" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><h2>' + esc(it.item) + '</h2>' +
@@ -599,11 +617,11 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       (it.example ? '<h3>Example</h3><div class="ex"><div class="k">' + esc(it.example) + '</div><div class="e">' + esc(it.translation || "") + '</div></div>' : "") +
       (notes.length ? '<h3>Notes</h3><ul>' + notes.map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + '</ul>' : "") +
       '<h3>In this episode' + (uses.length ? " · " + uses.length + "×" : "") + '</h3>' +
-      (uses.length ? uses.map(function (i) {
+      (uses.length ? '<div class="uses">' + uses.map(function (i) {
         var l = ep.lines[i];
-        return '<button class="use" data-i="' + i + '"><span class="k">' + hlKo(l, k) + '</span><span class="e">' + esc(l.en) + '</span>' +
+        return '<button class="use" data-i="' + i + '"><span class="k">' + hlKo(l, k) + '</span><span class="e">' + fmtTr(trOf(l)) + '</span>' +
           '<span class="go">' + (ep.ready && l.t != null ? "▶ Play from here · " + fmt(l.t) : "Go to line") + '</span></button>';
-      }).join("") : '<p class="mean" style="color:var(--muted);font-size:14px">Explained in the commentary rather than used in the scene.</p>');
+      }).join("") + '</div>' : '<p class="mean" style="color:var(--muted);font-size:14px">Explained in the commentary rather than used in the scene.</p>');
     resumeAfter = !audio.paused; audio.pause();
     $("dsheet").hidden = false; $("dsheet").querySelector(".panel").scrollTop = 0;
   }
@@ -630,8 +648,8 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     return '<section class="ov' + (open ? " open" : "") + '" id="ov"><div class="h"><span>About this episode</span>' +
       '<button data-ov="t">' + (open ? "Show less" : "Show more") + '</button></div><p>' + esc(o.overview) + '</p><dl>' +
       (o.setting ? '<dt>Setting</dt><dd>' + esc(o.setting) + '</dd>' : "") +
-      (o.register ? '<dt>Speech</dt><dd>' + esc(o.register) + '</dd>' : "") +
-      '<dt>Expressions</dt><dd>' + d.items.length + ' · <button data-ov="x">See all</button></dd></dl></section>';
+      (o.register ? '<dt>Formality</dt><dd>' + esc(o.register) + '</dd>' : "") +
+      '<dt>Expressions</dt><dd>' + d.items.length + '<span style="color:var(--faint)"> · </span><button data-ov="x">See all</button></dd></dl></section>';
   }
   function ovToggle(what) {
     if (what === "x") { $("sheet").hidden = false; return; }
@@ -705,6 +723,10 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     }).catch(function () {});
   }
   document.addEventListener("visibilitychange", function () { if (!document.hidden) checkUpdate(); });
+  $("refresh").addEventListener("click", function () {
+    this.classList.add("spin");
+    fetch("index.html?t=" + Date.now(), { cache: "reload" }).catch(function () {}).then(function () { location.reload(); });
+  });
   setTimeout(checkUpdate, 1500);
   fetch("data/index.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (d) { index = d; renderList(); })
     .catch(function () { $("eps").innerHTML = '<p class="lede">Couldn’t load the episode list. Pull to refresh.</p>'; });
