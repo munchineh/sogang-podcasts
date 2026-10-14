@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="d6d4c9b086d4">
+<html lang="ko" data-build="108579df56b4">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -71,7 +71,7 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 @keyframes lgpop { 0% { transform: scale(0); opacity: 0 } 5% { transform: scale(1); opacity: 1 } 76% { transform: scale(1); opacity: 1 } 82%, 100% { transform: scale(.9); opacity: 0 } }
 @keyframes lgpop2 { 0%, 9% { transform: scale(0); opacity: 0 } 14% { transform: scale(1); opacity: 1 } 76% { transform: scale(1); opacity: 1 } 82%, 100% { transform: scale(.9); opacity: 0 } }
 @media (prefers-reduced-motion: reduce) { .logo .b1, .logo .b2 { animation: none; } }
-.mast h1 { font: 800 clamp(24px, 7vw, 32px)/1.15 "Poppins", var(--f-latin); margin: 0; letter-spacing: -.025em; white-space: nowrap; }
+.mast h1 { font: 800 clamp(24px, 7vw, 32px)/1.15 "Poppins", var(--f-display); margin: 0; letter-spacing: -.025em; white-space: nowrap; }
 .mast .count { font: 500 12px var(--f-mono); color: var(--muted); }
 .lede { color: var(--muted); font-size: 14px; font-family: var(--f-latin); margin: 0 0 22px; padding-inline: 8px; }
 .lvl { font: 600 11px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 10px 8px 10px; display: flex; justify-content: space-between; }
@@ -268,7 +268,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
 <main id="list" class="wrap">
   <div class="mast"><svg class="logo" viewBox="0 0 512 512" aria-hidden="true">
     <g class="b1"><path d="M78 44 h168 a52 52 0 0 1 52 52 v108 a52 52 0 0 1 -52 52 h-108 l-58 46 l6 -46 h-8 a52 52 0 0 1 -52 -52 v-108 a52 52 0 0 1 52 -52z" fill="#5b4fd6"/><text x="150" y="208" class="lg">서</text></g>
-    <g class="b2"><path d="M266 206 h168 a52 52 0 0 1 52 52 v108 a52 52 0 0 1 -52 52 h-2 l6 46 l-58 -46 h-112 a52 52 0 0 1 -52 -52 v-108 a52 52 0 0 1 52 -52z" class="b2f"/><text x="350" y="366" class="lg">강</text></g></svg><h1>Podcasts</h1><div class="tools"><button class="chip lang" id="langbtn" aria-haspopup="menu" aria-expanded="false" aria-label="Language"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.8 5.7 3.8 9s-1.2 6.3-3.8 9c-2.6-2.7-3.8-5.7-3.8-9S9.4 5.7 12 3z"/></svg><span id="langcode">EN</span></button><button class="ib refresh" id="refresh" aria-label="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4.5V9h-4.5"/></svg></button></div></div>
+    <g class="b2"><path d="M266 206 h168 a52 52 0 0 1 52 52 v108 a52 52 0 0 1 -52 52 h-2 l6 46 l-58 -46 h-112 a52 52 0 0 1 -52 -52 v-108 a52 52 0 0 1 52 -52z" class="b2f"/><text x="350" y="366" class="lg">강</text></g></svg><h1 id="wordmark">Podcasts</h1><div class="tools"><button class="chip lang" id="langbtn" aria-haspopup="menu" aria-expanded="false" aria-label="Language"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.8 5.7 3.8 9s-1.2 6.3-3.8 9c-2.6-2.7-3.8-5.7-3.8-9S9.4 5.7 12 3z"/></svg><span id="langcode">EN</span></button><button class="ib refresh" id="refresh" aria-label="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4.5V9h-4.5"/></svg></button></div></div>
   <p class="lede">서강 한국어 표현으로 만든 준과 수아의 수다 팟캐스트.<br><span id="lede2">Tap a line to jump to that part of the audio.</span></p>
   <div class="search"><div class="wrapin">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
@@ -680,6 +680,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   // every label on screen in the chosen language
   function applyUi() {
     document.documentElement.dataset.ui = UL();
+    $("wordmark").textContent = TR === "off" ? "팟캐스트" : { zh: "播客", zt: "播客", ru: "Подкасты" }[TR] || "Podcasts";
     $("lede2").textContent = T("lede"); $("q").placeholder = T("search"); $("lvltxt").textContent = T("level", { n: 4 });
     $("backnowt").textContent = T("backNow"); $("sheeth").textContent = T("sheetH");
     if (index.length) renderList();
