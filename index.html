@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-build="63a9ab146098">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -50,7 +50,16 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 
 /* ---------- episode list ---------- */
 #list { padding-block: calc(env(safe-area-inset-top, 0px) + 28px) 48px; }
-.mast { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+.mast { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.logo { width: 46px; height: 46px; flex: none; overflow: visible; }
+.logo .lg { font: 900 112px "Noto Sans KR", sans-serif; fill: #fff; }
+.logo .b2f { fill: var(--ink); }
+.logo .b2 text { fill: var(--bg); }
+.logo .b1 { transform-origin: 110px 290px; animation: lgpop 7s infinite cubic-bezier(.3,1.5,.5,1); }
+.logo .b2 { transform-origin: 430px 470px; animation: lgpop2 7s infinite cubic-bezier(.3,1.5,.5,1); }
+@keyframes lgpop { 0% { transform: scale(0); opacity: 0 } 5% { transform: scale(1); opacity: 1 } 90% { transform: scale(1); opacity: 1 } 97%, 100% { transform: scale(.9); opacity: 0 } }
+@keyframes lgpop2 { 0%, 9% { transform: scale(0); opacity: 0 } 14% { transform: scale(1); opacity: 1 } 90% { transform: scale(1); opacity: 1 } 97%, 100% { transform: scale(.9); opacity: 0 } }
+@media (prefers-reduced-motion: reduce) { .logo .b1, .logo .b2 { animation: none; } }
 .mast h1 { font: 800 32px/1.15 var(--f-display); margin: 0; letter-spacing: -.03em; }
 .mast .count { font: 500 12px var(--f-mono); color: var(--muted); }
 .lede { color: var(--muted); font-size: 14px; margin: 0 0 22px; }
@@ -107,15 +116,16 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .script { flex: 1; padding-block: 10px 180px; }
 .sec { font: 600 11px var(--f-mono); letter-spacing: .12em; color: var(--faint); text-transform: uppercase; margin: 26px 4px 8px; display: flex; gap: 10px; align-items: center; }
 .sec::after { content: ""; height: 1px; flex: 1; background: var(--rule); }
-.line { display: grid; grid-template-columns: 3.5rem 1fr; gap: 10px; padding: 9px 10px; border-radius: 14px; cursor: pointer;
+.line { display: grid; grid-template-columns: 2.9rem 1fr; gap: 10px; padding: 9px 10px; border-radius: 14px; cursor: pointer;
   transition: background .25s, box-shadow .25s, opacity .25s; }
 .line .who { font: 600 11.5px/2.2 var(--f-body); text-align: center; height: fit-content; border-radius: 999px; white-space: nowrap;
   overflow: hidden; text-overflow: ellipsis; padding: 0 4px; letter-spacing: -.02em; }
-.line .who.long { font-size: 10px; }
+.line .who.mid { font-size: 10.5px; letter-spacing: -.04em; padding: 0 2px; }
+.line .who.long { font-size: 9px; letter-spacing: -.06em; padding: 0 1px; }
 .line[data-p="Jun"] .who { color: var(--jun); background: var(--jun-soft); }
 .line[data-p="Sua"] .who { color: var(--sua); background: var(--sua-soft); }
-.line .ko { font-size: 18.5px; font-weight: 500; line-height: 1.7; min-width: 0; letter-spacing: -.01em; }
-.line .en { grid-column: 2; color: var(--muted); font-size: 14px; line-height: 1.5; margin-top: -2px; }
+.line .ko { font-size: calc(18.5px * var(--ks, 1)); font-weight: 500; line-height: 1.7; min-width: 0; letter-spacing: -.01em; }
+.line .en { grid-column: 2; color: var(--muted); font-size: calc(14px * var(--ks, 1)); line-height: 1.5; margin-top: -2px; }
 .line mark.v { background: none; padding: 0; font-weight: 600; text-decoration: underline dotted var(--accent);
   text-decoration-thickness: 2px; text-underline-offset: 5px; -webkit-text-decoration: underline dotted var(--accent); }
 .line mark { cursor: pointer; background: var(--hl); color: inherit; border-radius: 4px; padding: 0 2px; font-weight: 700; }
@@ -158,6 +168,11 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
 .speedmenu button:active { background: var(--accent-soft); }
 .speedmenu button[aria-checked="true"] { background: var(--accent-soft); color: var(--accent); }
 .speedmenu button small { font: 500 11px var(--f-body); color: var(--muted); }
+.langmenu { left: max(16px, calc(50% - 340px)); min-width: 210px; }
+.langmenu .lbl { font: 600 10.5px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); padding: 8px 14px 4px; }
+.langmenu button { font: 600 15px var(--f-body); }
+.langmenu .sizes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 2px 4px 4px; }
+.langmenu .sizes button { justify-content: center; padding: 0; font-weight: 700; }
 .back-now { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(132px + env(safe-area-inset-bottom, 0px)); z-index: 4;
   background: var(--ink); color: var(--bg); border-radius: 999px; padding: 8px 14px; font-size: 13px; font-weight: 600; box-shadow: 0 6px 18px rgba(0,0,0,.18); }
 
@@ -168,10 +183,19 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
 .sheet .panel .wrap { padding-block: 18px 6px; }
 .sheet h2 { font: 800 20px var(--f-display); letter-spacing: -.02em; margin: 0 0 4px; }
 .sheet p.h { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
-.xp { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 11px 2px; border-top: 1px solid var(--rule); text-align: left; width: 100%; }
-.xp b { font-weight: 600; font-size: 16px; }
+.xpsec { display: flex; justify-content: space-between; align-items: baseline; margin: 18px 2px 6px; }
+.xpsec h3 { font: 800 15px var(--f-display); margin: 0; letter-spacing: -.01em; }
+.xpsec span { font: 500 11.5px var(--f-mono); color: var(--faint); }
+.xp { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 12px 2px; border-top: 1px solid var(--rule); text-align: left; width: 100%; }
+.xp .tag { justify-self: start; font: 600 10.5px/1 var(--f-mono); letter-spacing: .02em; color: var(--accent); background: var(--accent-soft);
+  padding: 4px 7px; border-radius: 6px; }
+.xp .tag.v { background: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent); }
+.xp b { font-weight: 700; font-size: 16.5px; line-height: 1.45; justify-self: start; }
+.xp.g b { background: var(--hl); border-radius: 5px; padding: 0 4px; margin-left: -4px; }
+.xp.v b { text-decoration: underline dotted var(--accent); text-decoration-thickness: 2px; text-underline-offset: 5px; }
 .xp span { color: var(--muted); font-size: 13.5px; grid-column: 1; }
-.xp em { grid-row: 1 / 3; grid-column: 2; align-self: center; font: 500 11px var(--f-mono); color: var(--faint); font-style: normal; white-space: nowrap; }
+.xp em { grid-row: 1 / 4; grid-column: 2; align-self: center; font: 600 11.5px var(--f-mono); color: var(--accent); font-style: normal; white-space: nowrap; }
+.xp em.none { color: var(--faint); font-weight: 500; }
 /* episode overview */
 .ov { margin: 14px 0 4px; padding: 14px 16px; border-radius: 16px; background: var(--surface); border: 1px solid var(--rule); }
 .ov .h { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
@@ -206,7 +230,11 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
 </head>
 <body>
 <main id="list" class="wrap">
-  <div class="mast"><h1>Sogang Podcasts</h1></div>
+  <div class="mast"><svg class="logo" viewBox="0 0 512 512" aria-hidden="true">
+    <g class="b1"><path d="M92 70 h144 a44 44 0 0 1 44 44 v88 a44 44 0 0 1 -44 44 h-112 l-58 46 l6 -46 h-8 a44 44 0 0 1 -44 -44 v-88 a44 44 0 0 1 44 -44z" fill="#5b4fd6"/>
+      <text x="164" y="198" text-anchor="middle" class="lg">서</text></g>
+    <g class="b2"><path d="M276 252 h144 a44 44 0 0 1 44 44 v88 a44 44 0 0 1 -44 44 h-2 l6 46 l-58 -46 h-90 a44 44 0 0 1 -44 -44 v-88 a44 44 0 0 1 44 -44z" class="b2f"/>
+      <text x="348" y="380" text-anchor="middle" class="lg">강</text></g></svg><h1>Sogang Podcasts</h1></div>
   <p class="lede">서강 한국어 표현으로 만든 준과 수아의 수다 팟캐스트.<br>Tap a line to jump to that part of the audio.</p>
   <div class="search"><div class="wrapin">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
@@ -229,7 +257,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     <div class="seek"><span id="cur">0:00</span><input type="range" id="pos" min="0" max="1000" value="0" aria-label="Position"><span id="tot">0:00</span></div>
     <div class="ctrls">
       <div class="side"><button class="speed" id="speed" aria-label="Playback speed">1×</button>
-        <button class="chip en" id="enbtn" aria-pressed="false" aria-label="Show English">EN</button></div>
+        <button class="chip en" id="enbtn" aria-haspopup="menu" aria-label="Translation and text size">EN</button></div>
       <div class="mid">
         <button class="ib" id="prev" aria-label="Previous line"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h2v14H7zM19 5v14L10 12z"/></svg></button>
         <button class="play" id="play" aria-label="Play"><svg id="picon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
@@ -239,12 +267,13 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     </div>
   </div></footer>
   <div class="speedmenu" id="speedmenu" role="menu" aria-label="Playback speed" hidden></div>
+  <div class="speedmenu langmenu" id="langmenu" role="menu" aria-label="Translation and text size" hidden></div>
   <audio id="audio" preload="metadata"></audio>
 </section>
 
 <div class="sheet" id="dsheet" hidden><div class="panel"><div class="wrap dt" id="detail"></div></div></div>
 <div class="sheet" id="sheet" hidden><div class="panel"><div class="wrap">
-  <h2>이번 회 표현</h2><p class="h">Tap one to jump to where it's used.</p><div id="xplist"></div>
+  <h2>이번 회 표현</h2><p class="h">Tap one for its meaning, notes and every line that uses it.</p><div id="xplist"></div>
 </div></div></div>
 
 <script>
@@ -257,6 +286,8 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   var fmt = function (s) { s = Math.max(0, Math.floor(s || 0)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
   var esc = function (t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); };
   var SPEEDS = [0.75, 0.9, 1, 1.15, 1.3];
+  var TR = store.get("tr", store.get("showEn", false) ? "en" : "off"), SZ = store.get("size", 1);
+  function trOf(l) { return (TR === "zh" || TR === "zt") ? (l[TR] || l.zh || l.en) : l.en; }
   var audio = $("audio"), index = [], ep = null, cur = -1, lineEls = [], userScrolledAt = 0, autoScrolling = false;
 
   // ---------- list ----------
@@ -285,7 +316,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   // ---------- player ----------
   function openEp(id, atLine) {
     audio.pause();
-    fetch("data/" + id + ".json").then(function (r) { return r.json(); }).then(function (d) {
+    fetch("data/" + id + ".json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (d) {
       ep = d; cur = -1;
       timed = d.lines.map(function (l, k) { return l.t == null ? -1 : k; }).filter(function (k) { return k >= 0; });
       $("list").hidden = true; $("player").hidden = false; window.scrollTo(0, 0);
@@ -297,8 +328,8 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       d.lines.forEach(function (l, i) {
         if (l.s !== sec) { sec = l.s; html += '<div class="sec">' + esc(sec) + '</div>'; }
         var ko = koHtml(l);
-        html += '<div class="line' + (l.t == null ? " notime" : "") + '" tabindex="0" data-i="' + i + '" data-p="' + l.p + '"><span class="who' + ((l.c || "").length > 3 ? " long" : "") + '">' + esc(l.c || (l.p === "Jun" ? "준" : "수아")) +
-          '</span><div class="ko">' + ko + '</div>' + '<div class="en"' + (store.get("showEn", false) ? "" : " hidden") + '>' + esc(l.en) + '</div></div>';
+        html += '<div class="line' + (l.t == null ? " notime" : "") + '" tabindex="0" data-i="' + i + '" data-p="' + l.p + '"><span class="who' + ((l.c || "").length > 3 ? " long" : (l.c || "").length > 2 ? " mid" : "") + '">' + esc(l.c || (l.p === "Jun" ? "준" : "수아")) +
+          '</span><div class="ko">' + ko + '</div>' + '<div class="en"' + (TR === "off" ? " hidden" : "") + '>' + esc(trOf(l)) + '</div></div>';
       });
       var banner = !d.ready ? '<p class="banner">Audio for this episode isn’t recorded yet. You can read the script now; it will play here once it’s ready.</p>'
         : d.partial ? '<p class="banner">Preview: only the first part is recorded so far. Greyed lines don’t have audio yet.</p>' : "";
@@ -477,7 +508,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   }
   $("speed").setAttribute("aria-haspopup", "menu");
   $("speed").addEventListener("click", function (ev) {
-    ev.stopPropagation();
+    ev.stopPropagation(); $("langmenu").hidden = true;
     var m = $("speedmenu"); if (!m.hidden) { m.hidden = true; return; }
     renderSpeedMenu(); m.hidden = false;
   });
@@ -487,20 +518,56 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   });
   document.addEventListener("click", function (ev) { if (!ev.target.closest("#speedmenu")) $("speedmenu").hidden = true; });
   document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") $("speedmenu").hidden = true; });
-  $("enbtn").addEventListener("click", function () {
-    var on = !store.get("showEn", false); store.set("showEn", on); this.setAttribute("aria-pressed", on);
-    document.querySelectorAll(".line .en").forEach(function (e) { e.hidden = !on; });
+  // translation (none / English / 简体 / 繁體) and text size, remembered on this device
+  var LANGS = [["off", "한국어만", "KO"], ["en", "English", "EN"], ["zh", "简体中文", "简"], ["zt", "繁體中文", "繁"]];
+  var SIZES = [0.88, 1, 1.13, 1.27];
+  function applyPrefs() {
+    var lab = LANGS.filter(function (x) { return x[0] === TR; })[0] || LANGS[1];
+    $("enbtn").textContent = lab[2]; $("enbtn").setAttribute("aria-pressed", TR !== "off");
+    document.documentElement.style.setProperty("--ks", SIZES[SZ] || 1);
+    if (!ep) return;
+    document.querySelectorAll(".line").forEach(function (el) {
+      var l = ep.lines[+el.dataset.i], e = el.querySelector(".en"); if (!e || !l) return;
+      e.textContent = trOf(l); e.hidden = TR === "off";
+    });
+  }
+  function renderLangMenu() {
+    $("langmenu").innerHTML = '<div class="lbl">Translation</div>' + LANGS.map(function (x) {
+      return '<button role="menuitemradio" aria-checked="' + (x[0] === TR) + '" data-tr="' + x[0] + '">' + x[1] + '</button>';
+    }).join("") + '<div class="lbl">Text size</div><div class="sizes">' + SIZES.map(function (v, i) {
+      return '<button role="menuitemradio" aria-checked="' + (i === SZ) + '" data-sz="' + i + '" style="font-size:' + (11 + i * 3) + 'px">가</button>';
+    }).join("") + '</div>';
+  }
+  $("enbtn").addEventListener("click", function (ev) {
+    ev.stopPropagation(); $("speedmenu").hidden = true;
+    var m = $("langmenu"); if (!m.hidden) { m.hidden = true; return; }
+    renderLangMenu(); m.hidden = false;
   });
-  $("enbtn").setAttribute("aria-pressed", store.get("showEn", false));
+  $("langmenu").addEventListener("click", function (ev) {
+    ev.stopPropagation();
+    var b = ev.target.closest("button"); if (!b) return;
+    if (b.dataset.tr) { TR = b.dataset.tr; store.set("tr", TR); this.hidden = true; }
+    if (b.dataset.sz) { SZ = +b.dataset.sz; store.set("size", SZ); renderLangMenu(); }
+    applyPrefs();
+  });
+  document.addEventListener("click", function (ev) { if (!ev.target.closest("#langmenu")) $("langmenu").hidden = true; });
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") $("langmenu").hidden = true; });
+  applyPrefs();
   ["wheel", "touchmove"].forEach(function (evn) { window.addEventListener(evn, function () { if (!autoScrolling) userScrolledAt = Date.now(); }, { passive: true }); });
   $("backnow").addEventListener("click", function () { userScrolledAt = 0; setCurrent(cur, true); });
 
   // expressions sheet
   function renderXp() {
-    $("xplist").innerHTML = ep.items.map(function (it, k) {
-      var n = 0; ep.lines.forEach(function (l) { (l.hl || []).forEach(function (h) { if (h[2] === k) n++; }); });
-      return '<button class="xp" data-k="' + k + '"><b>' + esc(it.item) + '</b><span>' + esc(it.gloss) + '</span><em>' + (n ? n + "×" : "해설") + '</em></button>';
-    }).join("");
+    function row(it, k) {
+      var n = 0, v = it.kind === "vocab"; ep.lines.forEach(function (l) { (l.hl || []).forEach(function (h) { if (h[2] === k) n++; }); });
+      return '<button class="xp ' + (v ? "v" : "g") + '" data-k="' + k + '">' + (it.tag ? '<span class="tag' + (v ? " v" : "") + '">' + esc(it.tag) + '</span>' : "") +
+        '<b>' + esc(it.item) + '</b><span>' + esc(it.gloss) + '</span><em' + (n ? "" : ' class="none"') + '>' + (n ? n + "×" : "해설") + '</em></button>';
+    }
+    var g = [], v = [];
+    ep.items.forEach(function (it, k) { (it.kind === "vocab" ? v : g).push(row(it, k)); });
+    $("xplist").innerHTML =
+      (g.length ? '<div class="xpsec"><h3>문법 · 표현</h3><span>' + g.length + '</span></div>' + g.join("") : "") +
+      (v.length ? '<div class="xpsec"><h3>어휘</h3><span>' + v.length + '</span></div>' + v.join("") : "");
   }
   $("xpbtn").addEventListener("click", function () { $("sheet").hidden = false; });
   $("sheet").addEventListener("click", function (ev) {
@@ -526,7 +593,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     var uses = [];
     ep.lines.forEach(function (l, i) { if ((l.hl || []).some(function (h) { return h[2] === k; })) uses.push(i); });
     $("detail").innerHTML =
-      '<div class="dt-top"><span class="dt-kind">' + (kinds[it.kind] || "Expression") + '</span>' +
+      '<div class="dt-top"><span class="dt-kind">' + esc(it.tag || kinds[it.kind] || "Expression") + '</span>' +
       '<button class="ib" data-close="1" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><h2>' + esc(it.item) + '</h2>' +
       '<p class="mean">' + esc(it.meaning || it.gloss) + '</p>' +
       (it.example ? '<h3>Example</h3><div class="ex"><div class="k">' + esc(it.example) + '</div><div class="e">' + esc(it.translation || "") + '</div></div>' : "") +
@@ -589,7 +656,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   // search across every script, Korean or English
   var corpus = null, qTimer = null;
   function loadCorpus() {
-    if (!corpus) corpus = fetch("data/search.json").then(function (r) { return r.json(); });
+    if (!corpus) corpus = fetch("data/search.json", { cache: "no-cache" }).then(function (r) { return r.json(); });
     return corpus;
   }
   function markText(text, q, ignoreSpaces) {
@@ -630,7 +697,16 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     var h = ev.target.closest(".hit"); if (h) openEp(h.dataset.ep, +h.dataset.i);
   });
 
-  fetch("data/index.json").then(function (r) { return r.json(); }).then(function (d) { index = d; renderList(); })
+  var BUILD = document.documentElement.dataset.build || "";
+  function checkUpdate() {
+    if (!BUILD) return;
+    fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (v) {
+      if (v.build && v.build !== BUILD && audio.paused) location.reload();
+    }).catch(function () {});
+  }
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) checkUpdate(); });
+  setTimeout(checkUpdate, 1500);
+  fetch("data/index.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (d) { index = d; renderList(); })
     .catch(function () { $("eps").innerHTML = '<p class="lede">Couldn’t load the episode list. Pull to refresh.</p>'; });
 })();
 </script>
