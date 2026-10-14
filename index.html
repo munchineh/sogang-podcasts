@@ -1,11 +1,12 @@
 <!doctype html>
-<html lang="ko" data-build="e28b8c9462c8">
+<html lang="ko" data-build="1fc14745116f">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
-<link rel="icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png" sizes="32x32">
+<link rel="icon" href="icon-180.png" sizes="180x180">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Sogang Podcasts</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -55,16 +56,16 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .mast .refresh { margin-left: auto; color: var(--muted); }
 .mast .refresh.spin svg { animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.logo { width: 46px; height: 46px; flex: none; overflow: visible; }
-.logo .lg { font: 900 112px "Noto Sans KR", sans-serif; fill: #fff; }
-.logo .b2f { fill: var(--ink); }
+.logo { width: 64px; height: 64px; flex: none; overflow: visible; margin-left: -4px; }
+.logo .lg { font: 900 150px "Noto Sans KR", sans-serif; fill: #fff; text-anchor: middle; }
+.logo .b2f { fill: var(--ink); stroke: var(--bg); stroke-width: 14px; paint-order: stroke; }
 .logo .b2 text { fill: var(--bg); }
-.logo .b1 { transform-origin: 110px 290px; animation: lgpop 7s infinite cubic-bezier(.3,1.5,.5,1); }
-.logo .b2 { transform-origin: 430px 470px; animation: lgpop2 7s infinite cubic-bezier(.3,1.5,.5,1); }
-@keyframes lgpop { 0% { transform: scale(0); opacity: 0 } 5% { transform: scale(1); opacity: 1 } 90% { transform: scale(1); opacity: 1 } 97%, 100% { transform: scale(.9); opacity: 0 } }
-@keyframes lgpop2 { 0%, 9% { transform: scale(0); opacity: 0 } 14% { transform: scale(1); opacity: 1 } 90% { transform: scale(1); opacity: 1 } 97%, 100% { transform: scale(.9); opacity: 0 } }
+.logo .b1 { transform-origin: 90px 300px; animation: lgpop 8s infinite cubic-bezier(.3,1.5,.5,1); }
+.logo .b2 { transform-origin: 440px 464px; animation: lgpop2 8s infinite cubic-bezier(.3,1.5,.5,1); }
+@keyframes lgpop { 0% { transform: scale(0); opacity: 0 } 5% { transform: scale(1); opacity: 1 } 76% { transform: scale(1); opacity: 1 } 82%, 100% { transform: scale(.9); opacity: 0 } }
+@keyframes lgpop2 { 0%, 9% { transform: scale(0); opacity: 0 } 14% { transform: scale(1); opacity: 1 } 76% { transform: scale(1); opacity: 1 } 82%, 100% { transform: scale(.9); opacity: 0 } }
 @media (prefers-reduced-motion: reduce) { .logo .b1, .logo .b2 { animation: none; } }
-.mast h1 { font: 800 32px/1.15 var(--f-display); margin: 0; letter-spacing: -.03em; }
+.mast h1 { font: 800 clamp(22px, 6.6vw, 32px)/1.15 var(--f-display); margin: 0; letter-spacing: -.03em; white-space: nowrap; }
 .mast .count { font: 500 12px var(--f-mono); color: var(--muted); }
 .lede { color: var(--muted); font-size: 14px; font-family: var(--f-latin); margin: 0 0 22px; }
 .lvl { font: 600 11px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 10px 4px 10px; display: flex; justify-content: space-between; }
@@ -242,10 +243,8 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
 <body>
 <main id="list" class="wrap">
   <div class="mast"><svg class="logo" viewBox="0 0 512 512" aria-hidden="true">
-    <g class="b1"><path d="M92 70 h144 a44 44 0 0 1 44 44 v88 a44 44 0 0 1 -44 44 h-112 l-58 46 l6 -46 h-8 a44 44 0 0 1 -44 -44 v-88 a44 44 0 0 1 44 -44z" fill="#5b4fd6"/>
-      <text x="154" y="198" text-anchor="middle" class="lg">서</text></g>
-    <g class="b2"><path d="M276 252 h144 a44 44 0 0 1 44 44 v88 a44 44 0 0 1 -44 44 h-2 l6 46 l-58 -46 h-90 a44 44 0 0 1 -44 -44 v-88 a44 44 0 0 1 44 -44z" class="b2f"/>
-      <text x="344" y="380" text-anchor="middle" class="lg">강</text></g></svg><h1>Sogang Podcasts</h1><button class="ib refresh" id="refresh" aria-label="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4.5V9h-4.5"/></svg></button></div>
+    <g class="b1"><path d="M78 44 h168 a52 52 0 0 1 52 52 v108 a52 52 0 0 1 -52 52 h-108 l-58 46 l6 -46 h-8 a52 52 0 0 1 -52 -52 v-108 a52 52 0 0 1 52 -52z" fill="#5b4fd6"/><text x="150" y="208" class="lg">서</text></g>
+    <g class="b2"><path d="M266 206 h168 a52 52 0 0 1 52 52 v108 a52 52 0 0 1 -52 52 h-2 l6 46 l-58 -46 h-112 a52 52 0 0 1 -52 -52 v-108 a52 52 0 0 1 52 -52z" class="b2f"/><text x="350" y="366" class="lg">강</text></g></svg><h1>Sogang Podcasts</h1><button class="ib refresh" id="refresh" aria-label="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4.5V9h-4.5"/></svg></button></div>
   <p class="lede">서강 한국어 표현으로 만든 준과 수아의 수다 팟캐스트.<br>Tap a line to jump to that part of the audio.</p>
   <div class="search"><div class="wrapin">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
