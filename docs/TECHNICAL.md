@@ -34,6 +34,7 @@ Inside `podcast/` on the Mac:
 | `titles_en.json` | English episode titles. |
 | `zh/ep_XX.json` | Simplified Chinese per line; Traditional is generated with OpenCC `s2twp` at build time. |
 | `tr/{de,fr,ru}/ep_XX.json` | German, French and Russian per line. `*word*` marks romanised Korean terms (shown in italics). |
+| `ovl/{zh,de,fr,ru}.json` | Localised `{title, blurb, overview, setting, register}` per episode (`*term*` = italic); Traditional is OpenCC from `zh`. |
 | `roman_terms.json` | Romanised Korean words that get `*…*` in the English lines. |
 | `items.json` | Card details (meaning, example, notes, note id) used by the expression sheets. |
 | `note_decks.json` | Note id → current Anki deck, for tags like `4A.6 Grammar` / `4B.3 듣고 말하기 1`. |
@@ -65,7 +66,8 @@ time, 17:00 in winter). `touch podcast/run_podcast.flag` runs it immediately. Th
 
 - `build_player.py` builds `player/data/ep_XX.json`, `index.json`, `search.json` from everything above. Per line:
   `i, s (section), p (speaker), c (chip name), ko, en, zh, zt, de, fr, ru, t/e (line start/end), w (word starts),
-  cs (syllable start/end pairs), hl ([start, end, item] highlight spans)`.
+  cs (syllable start/end pairs), hl ([start, end, item] highlight spans)`. Episodes also carry `ovl` (localised overviews),
+  index entries `loc` (localised title/blurb), and `search_<lang>.json` holds each search row's text in that language.
 - Highlighting: `kiwi_hl.py` (kiwipiepy morphemes) plus a spelling fallback that conjugates verbs with Kiwi, pattern
   overrides for loose frames, then `hl_drop.json`. Bump `HLV` in `build_player.py` when the matcher changes.
 - `build_site.py` wraps the app into a standalone page, copies `ready/*.mp4` to `audio/`, writes `version.json`
@@ -73,6 +75,10 @@ time, 17:00 in winter). `touch podcast/run_podcast.flag` runs it immediately. Th
 
 ## App behaviour worth knowing
 
+- The translation setting is also the interface language (None → English): every label comes from the `I18N`
+  table in `index.html` (en, zh, zt, de, fr, ru). Add a key there for any new label. The language chip sits on
+  the home page (globe) and in the player bar; both open the same menu.
+- Wordmark: "Podcasts" in Poppins ExtraBold (Google Fonts); the logo carries 서강.
 - Settings in localStorage: `tr` (translation: off/en/zh/zt/de/fr/ru), `size` (0–3), `speed`, `ovOpen`, `pos_<ep>`,
   `done_<ep>`.
 - Grammar/expression marks are filled purple, vocab is dotted underline; tapping one opens its sheet (audio pauses
