@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="9d43b1846e1b">
+<html lang="ko" data-build="ccc21916f04f">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -177,7 +177,9 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
 .ctrls .mid { display: flex; align-items: center; gap: 4px; }
 .ctrls .side { display: flex; align-items: center; gap: 6px; flex: 1; }
 .ctrls .side.right { justify-content: flex-end; }
-.chip.en { height: 36px; border-radius: 10px; }
+.chip.en { height: 36px; border-radius: 10px; min-width: 44px; display: inline-grid; place-items: center; }
+.chip.en svg { width: 19px; height: 19px; }
+.mast .lang:has(#langcode[hidden]) { padding: 0 9px; }
 .play { width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: var(--surface); display: grid; place-items: center; }
 .play svg { width: 26px; height: 26px; }
 .speed { font: 600 13px var(--f-mono); min-width: 56px; height: 36px; border-radius: 10px; border: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
@@ -622,10 +624,12 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   var LANGS = [["off", "None", "KO"], ["en", "English", "EN"], ["zh", "简体中文", "简"], ["zt", "繁體中文", "繁"],
                ["de", "Deutsch", "DE"], ["fr", "Français", "FR"], ["ru", "Русский", "RU"]];
   var SIZES = [0.88, 1, 1.13, 1.27];
+  var GLOBE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.8 5.7 3.8 9s-1.2 6.3-3.8 9c-2.6-2.7-3.8-5.7-3.8-9S9.4 5.7 12 3z"/></svg>';
   function applyPrefs() {
     var lab = LANGS.filter(function (x) { return x[0] === TR; })[0] || LANGS[1];
-    $("enbtn").textContent = lab[2]; $("enbtn").setAttribute("aria-pressed", TR !== "off");
-    $("langcode").textContent = lab[2];
+    // no translation: just the globe; otherwise the language's short code
+    $("enbtn").innerHTML = TR === "off" ? GLOBE : lab[2]; $("enbtn").setAttribute("aria-pressed", TR !== "off");
+    $("langcode").textContent = lab[2]; $("langcode").hidden = TR === "off";
     applyUi();
     document.documentElement.style.setProperty("--ks", SIZES[SZ] || 1);
     if (!ep) return;
