@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="03d6d1c82384">
+<html lang="ko" data-build="a30e915d276e">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -128,7 +128,7 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .ep .b { grid-column: 1 / -1; font-family: var(--f-latin); font-size: 14px; line-height: 1.5; color: var(--ink); opacity: .82; min-width: 0; margin-top: 8px; }
 .ep[data-noaudio] .t, .ep[data-noaudio] .b { opacity: .62; }
 /* the two top bars (search here, the episode header in the player) share one look: frosted, with a hairline once content scrolls under */
-.search, .top { background: color-mix(in srgb, var(--bg) 86%, transparent); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+.search, .top { background: color-mix(in srgb, var(--bg) 96%, transparent); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
   border-bottom: 1px solid transparent; transition: border-color .2s ease; }
 .search.stuck, .top.stuck { border-bottom-color: var(--rule); }
 .search { position: sticky; top: 0; z-index: 2; padding: calc(env(safe-area-inset-top, 0px) + 8px) 0 12px;
@@ -221,8 +221,10 @@ body.searching .qcancel { max-width: 90px; opacity: 1; padding: 8px 4px 8px 14px
 /* Chinese and Japanese wrap between any two characters; keep-all (for Korean) would only break them at punctuation */
 :is([data-ui^="z"], [data-ui="ja"]) :is(.en, .ov p, .ov dd, .ep .te, .ep .b, .hit .e, .banner, .dt .use .e, .dt .mean, .dt .ex .e, .dt ul, .xp span, .lede, .top .ttl > i, .sheet p.h) { word-break: normal; }
 :is([data-ui^="z"], [data-ui="ja"]) .hg { word-break: keep-all; }
-.line mark.v { background: none; padding: 0; font-weight: 600; text-decoration: underline dotted var(--accent);
-  text-decoration-thickness: 2px; text-underline-offset: 5px; -webkit-text-decoration: underline dotted var(--accent); }
+.line mark.v, .xp.v b, .dt.v .use mark { text-decoration: none; -webkit-text-decoration: none; border-radius: 0;
+  background: radial-gradient(circle at 1px 1px, var(--accent) 1px, transparent 1.3px) left bottom / 4px 2px repeat-x;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 0 3px; }
+.line mark.v { font-weight: 600; }
 .line mark { cursor: pointer; background: var(--hl); color: inherit; border-radius: 4px; padding: 0 2px; font-weight: 700; }
 .line.past .ko, .script.live .line:not(.now) .ko { color: var(--muted); }
 .line.now { background: var(--now); box-shadow: var(--now-shadow); }
@@ -252,7 +254,8 @@ body.searching .qcancel { max-width: 90px; opacity: 1; padding: 8px 4px 8px 14px
 .transport .wrap { padding-block: 18px 14px; padding-inline: max(14px, env(safe-area-inset-left, 0px)); display: grid; gap: 17px; }
 .seek { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; font: 500 11.5px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
 .nowpl { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; font: 600 13.5px var(--f-body); color: var(--ink); margin-bottom: -6px; }
-.nowpl b { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+.nowpl b { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; }
+.nowpl .nowtag { flex: none; font: 600 11px/1 var(--f-mono); letter-spacing: .02em; color: var(--accent); background: var(--accent-soft); padding: 5px 7px; border-radius: 6px; }
 .nowpl svg { width: 16px; height: 16px; color: var(--muted); flex: none; }
 .nowpl .eq { display: inline-flex; gap: 2px; align-items: flex-end; height: 12px; flex: none; }
 .nowpl .eq i { width: 3px; border-radius: 2px; background: var(--accent); height: 40%; animation: eq 1s ease-in-out infinite alternate; }
@@ -267,6 +270,8 @@ input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 2
 .rng input[type=range]::-webkit-slider-thumb { width: 28px; }
 input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 1px 3px rgba(0,0,0,.25), 0 0 0 .5px rgba(0,0,0,.08); }
 .rng { position: relative; display: block; }
+#cur { transition: color .2s ease; }
+#cur.scrub { color: var(--accent); font-weight: 600; }
 .rng input[type=range]::-webkit-slider-thumb { opacity: 0; }
 .rng input[type=range]::-moz-range-thumb { opacity: 0; }
 .rng .thumb { position: absolute; top: 50%; left: calc(14px + (100% - 28px) * var(--f, 0)); width: 28px; height: 18px; margin: -9px 0 0 -14px; border-radius: 999px;
@@ -344,7 +349,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .xp .tag.v { background: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent); }
 .xp b { font-weight: 700; font-size: 16.5px; line-height: 1.45; justify-self: start; }
 .xp.g b { background: var(--hl); border-radius: 5px; padding: 0 5px; }
-.xp.v b { text-decoration: underline dotted var(--accent); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+
 .xp span { color: var(--muted); font-size: 13.5px; grid-column: 1; }
 .xp em { grid-row: 1 / 4; grid-column: 2; align-self: center; font: 600 11.5px var(--f-mono); color: var(--accent); font-style: normal; white-space: nowrap; }
 .xp em.none { color: var(--faint); font-weight: 500; }
@@ -387,7 +392,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .dt .use .k { font-size: 16px; font-weight: 500; line-height: 1.6; }
 .dt .use .e { font-family: var(--f-latin); font-size: 13.5px; color: var(--muted); }
 .dt .use mark { background: var(--hl); color: inherit; border-radius: 4px; padding: 0 2px; font-weight: 700; }
-.dt.v .use mark { background: none; padding: 0; text-decoration: underline dotted var(--accent); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+
 .dt .use .go { font: 500 11px var(--f-mono); color: var(--accent); }
 @media (prefers-reduced-motion: reduce) { .line { transition: none; } }
 </style>
@@ -423,7 +428,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 </section>
   <div class="speedmenu" id="speedmenu" role="menu" aria-label="Playback speed" hidden></div>
   <footer class="transport" id="transport" hidden><div class="wrap">
-    <button class="nowpl" id="nowpl" hidden><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><b id="nowtxt"></b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+    <button class="nowpl" id="nowpl" hidden><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="nowtag" id="nowtag"></span><b id="nowtxt"></b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
     <div class="seek"><span id="cur">0:00</span><span class="rng" id="rng"><input type="range" id="pos" min="0" max="1000" value="0" aria-label="Position"><i class="thumb" aria-hidden="true"></i></span><span id="tot">0:00</span></div>
     <div class="ctrls">
       <div class="side"><button class="speed" id="speed" aria-label="Playback speed">1×</button>
@@ -772,7 +777,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     if (!keep) audio.pause();
     $("backnow").hidden = true; $("player").hidden = true; $("list").hidden = false;
     document.body.classList.toggle("mini", !!keep); $("transport").hidden = !keep; $("nowpl").hidden = !keep;
-    if (keep) $("nowtxt").textContent = epLabel(ep) + " · " + ep.title;
+    if (keep) { $("nowtag").textContent = epLabel(ep).replace(" · ", " "); $("nowtxt").textContent = ep.title; }
     document.body.classList.toggle("searching", !!$("q").value.trim());
     renderList(); runSearch();
   }
@@ -815,8 +820,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   function tick(force) {
     if (!ep || !ep.ready) return;
     var t = audio.currentTime || 0, d = audio.duration || ep.dur;
-    $("cur").textContent = fmt(t);
-    if (!seeking) { $("pos").value = d ? Math.round(t / d * 1000) : 0; setFill(); }
+    if (!seeking) { $("cur").textContent = fmt(t); $("pos").value = d ? Math.round(t / d * 1000) : 0; setFill(); }   // while scrubbing, the time shows where you'll land
     setCurrent(lineAt(t), force);
     setWord(cur, t);
     if (t > 1) store.set("pos_" + ep.ep, t);
@@ -852,7 +856,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   var seeking = false;
   function setFill() { var v = +$("pos").value; $("pos").style.setProperty("--fill", (v / 10) + "%"); $("rng").style.setProperty("--f", v / 1000); }
   // the dot grows while a finger is on the bar, so it's clear the bar has been caught
-  function hold(on) { $("rng").classList.toggle("held", on); }
+  function hold(on) { $("rng").classList.toggle("held", on); $("cur").classList.toggle("scrub", on); }
   $("rng").addEventListener("pointerdown", function () { hold(true); });
   $("rng").addEventListener("touchstart", function () { hold(true); }, { passive: true });
   ["pointerup", "pointercancel", "touchend", "touchcancel"].forEach(function (n) { window.addEventListener(n, function () { hold(false); }, { passive: true }); });
