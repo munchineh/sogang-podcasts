@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="4c9e5c6134e4">
+<html lang="ko" data-build="6cb6b4060203">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -57,6 +57,11 @@
 [hidden] { display: none !important; }
 html, body { height: 100%; }
 :root { --dim: color-mix(in srgb, var(--ink) 32%, transparent); }
+/* --lb: the colour behind a line of text (lets the dotted underline trim its ends) */
+:root { --lb: var(--bg); }
+.line.now { --lb: var(--now); }
+.sheet .panel { --lb: var(--surface); }
+.dt .use { --lb: color-mix(in srgb, var(--ink) 4.5%, var(--surface)); }
 html[data-tr="ja"] { --f-latin: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Noto Sans KR", sans-serif;
   --f-body: "Dots", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Noto Sans KR", -apple-system, sans-serif; }
 body { background: var(--bg); color: var(--ink); font: 16px/1.6 var(--f-body); -webkit-text-size-adjust: 100%;
@@ -222,7 +227,9 @@ body.searching .qcancel { max-width: 90px; opacity: 1; padding: 8px 4px 8px 14px
 :is([data-ui^="z"], [data-ui="ja"]) :is(.en, .ov p, .ov dd, .ep .te, .ep .b, .hit .e, .banner, .dt .use .e, .dt .mean, .dt .ex .e, .dt ul, .xp span, .lede, .top .ttl > i, .sheet p.h) { word-break: normal; }
 :is([data-ui^="z"], [data-ui="ja"]) .hg { word-break: keep-all; }
 .line mark.v, .xp.v b, .dt.v .use mark { text-decoration: none; -webkit-text-decoration: none; border-radius: 0;
-  background: radial-gradient(circle at 1px 1px, var(--accent) 1px, transparent 1.3px) left bottom / 4px 2px repeat-x;
+  /* dots, with 3px trimmed off each end (painted over in the colour behind, --lb) so two highlights side by side read as two */
+  background: linear-gradient(var(--lb), var(--lb)) left bottom / 3px 3px no-repeat, linear-gradient(var(--lb), var(--lb)) right bottom / 3px 3px no-repeat,
+    radial-gradient(circle at 1px 1px, var(--accent) 1px, transparent 1.3px) left bottom / 4px 2px repeat-x;
   -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 0 3px; }
 .line mark.v { font-weight: 600; }
 .line mark { cursor: pointer; background: var(--hl); color: inherit; border-radius: 4px; padding: 0 2px; font-weight: 700; }
