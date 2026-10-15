@@ -121,3 +121,14 @@ time, 17:00 in winter). `touch podcast/run_podcast.flag` runs it immediately. Th
 - Open question: rename the browser tab / home-screen name from "Sogang Podcasts" (clashes with Apple Podcasts if just "Podcasts").
 - Syncing to the Mac: `device_commit_files` can leave a stale copy, and a Mac publish then overwrites GitHub with it.
   Commit under a new filename, check md5 on the Mac, then copy into place before touching `run_podcast.flag`.
+
+## Handbook extra grammar / vocab (Oct 2026)
+
+The Sogang handbooks' reference sections (참고문법 and extra vocab) are Anki decks "4A/4B Extra Grammar" and
+"3A/3B Extra Grammar / Extra Vocab" (flat decks, unit in tags `Sogang::4B::4B.2::…`). Their cards are in
+`items.json` / `items_l3.json` with `unit` + `extra` fields (sheet tag shows e.g. "4B.2 Extra Grammar"), exported by
+Anki one-off 53 to `extra_notes.json`. Every episode except ep_01 got 1–5 of them woven in lightly (one scene use and a
+short 해설 exchange each): `extra/assign.json` (item → episode), `extra/tasks/`, `extra/ops/<ep>.json` (line ops incl.
+zh/de/fr/ru), `extra/REWORK_SPEC.md`, `extra/apply_ops.py` (already applied; don't re-run). Highlight patterns for them
+are the "handbook extra items" block in `kiwi_hl.py`. Twin items for one pattern in the same episode were merged
+(a word can carry only one highlight). ep_01's rework is in BACKLOG.md.
