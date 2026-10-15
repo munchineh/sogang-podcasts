@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="36c771413154">
+<html lang="ko" data-build="7800a30b74db">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -92,10 +92,11 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .mast h1 { font: 800 clamp(24px, 7vw, 32px)/1.15 "Poppins", var(--f-display); margin: 0; letter-spacing: -.025em; white-space: nowrap; }
 .mast .count { font: 500 12px var(--f-mono); color: var(--muted); }
 .lede { color: var(--muted); font-size: 14px; font-family: var(--f-latin); margin: 0 0 22px; padding-inline: 8px; }
-.lvsw { display: flex; gap: 4px; margin: 14px 4px 2px; padding: 4px; border-radius: 12px; background: color-mix(in srgb, var(--ink) 6%, transparent); }
-.lvsw button { flex: 1; height: 36px; border-radius: 9px; font: 600 14px var(--f-body); color: var(--muted); }
-.lvsw button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 14%, transparent); }
-.lvsw[hidden] { display: none; }
+.lvpick { position: relative; display: inline-flex; align-items: center; gap: 6px; }
+.lvpick select { -webkit-appearance: none; appearance: none; border: 1px solid var(--rule); background: var(--surface); color: var(--ink);
+  font: 600 14px var(--f-body); letter-spacing: 0; text-transform: none; height: 36px; padding: 0 34px 0 14px; border-radius: 999px; }
+.lvpick svg { position: absolute; right: 12px; width: 14px; height: 14px; pointer-events: none; color: var(--muted); }
+.eps .lvl.pick { align-items: center; margin-top: 14px; }
 .lvl { font: 600 11px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 10px 8px 10px; display: flex; justify-content: space-between; }
 .lvl .count { letter-spacing: .02em; text-transform: none; font-weight: 500; }
 .eps { display: grid; gap: 10px; }
@@ -163,6 +164,7 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .line[data-p="Jun"] .who { color: var(--jun); background: var(--jun-soft); }
 .line[data-p="Sua"] .who { color: var(--sua); background: var(--sua-soft); }
 .line .ko { font-size: calc(18.5px * var(--ks, 1)); font-weight: 500; line-height: 1.52; min-width: 0; letter-spacing: -.01em; }
+.ko .nb { white-space: nowrap; }
 .line .en { grid-column: 2; color: var(--muted); font-family: var(--f-latin); font-size: calc(14.5px * var(--ks, 1)); line-height: 1.45; margin-top: 1px; }
 /* in translations: Korean left as Korean (names, quoted words) is set apart; romanised Korean terms are italic */
 .hg { font-family: "Noto Sans KR", sans-serif; font-weight: 600; color: var(--ink); opacity: .78; font-size: .96em; }
@@ -181,6 +183,8 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .line.now.kara .ko .w { color: transparent; -webkit-background-clip: text; background-clip: text;
   background-image: linear-gradient(90deg, var(--ink) 0 var(--p, 0%), var(--dim) var(--p, 0%) 100%); }
 .line.now.kara .ko .w.on { --p: 100%; }
+.line mark.ml { border-top-left-radius: 0; border-bottom-left-radius: 0; padding-left: 0; }
+.line mark.mr { border-top-right-radius: 0; border-bottom-right-radius: 0; padding-right: 0; }
 .line.now.kara .ko mark { color: inherit; }
 .line:active { background: var(--accent-soft); }
 .line.notime { cursor: default; }
@@ -232,7 +236,20 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
 @media (prefers-reduced-motion: reduce) { .back-now svg { animation: none; } }
 
 /* expressions sheet */
-.sheet { position: fixed; inset: 0; z-index: 6; display: flex; align-items: flex-end; background: rgba(10,10,20,.35); }
+.sheet { position: fixed; inset: 0; z-index: 6; display: flex; align-items: flex-end; background: rgba(10,10,20,0); transition: background-color .32s ease; }
+.sheet.open { background: rgba(10,10,20,.35); }
+.sheet.closing { pointer-events: none; transition-duration: .24s; }
+.sheet .panel { transform: translateY(100%); transition: transform .42s cubic-bezier(.22,1,.36,1), opacity .24s ease, height .3s cubic-bezier(.22,1,.36,1); will-change: transform; }
+.sheet.open .panel { transform: none; }
+.sheet.closing .panel { transition: transform .26s cubic-bezier(.5,0,.75,0), opacity .2s ease; }
+/* list ⇄ card: the dimmed backdrop stays put and the panels slide sideways */
+.sheet.swap { transition: none; background: rgba(10,10,20,.35); }
+.sheet.swap .panel { transform: translateX(var(--dx, 28px)); opacity: 0; transition: transform .34s cubic-bezier(.22,1,.36,1), opacity .22s ease, height .3s cubic-bezier(.22,1,.36,1); }
+.sheet.swap.open { background: rgba(10,10,20,.35); }
+.sheet.swap.open .panel { transform: none; opacity: 1; }
+.sheet.swap.closing { background: rgba(10,10,20,0); }
+.sheet.swap.closing .panel { transform: translateX(calc(var(--dx, 28px) * -1)); opacity: 0; transition: transform .26s ease, opacity .18s ease; }
+@media (prefers-reduced-motion: reduce) { .sheet, .sheet .panel { transition: none !important; } }
 .sheet .panel { background: var(--surface); width: 100%; max-height: 78%; overflow: auto; border-radius: 20px 20px 0 0;
   padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)); }
 .sheet .panel .wrap { padding-block: 18px 6px; }
@@ -282,7 +299,9 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
 .dt .ex { padding: 12px 14px; border-radius: 12px; background: var(--accent-soft); }
 .dt .ex .k { font-size: 17px; font-weight: 500; line-height: 1.6; }
 .dt .ex .e { font-size: 14px; color: var(--muted); margin-top: 2px; }
-.dt ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; font-size: 14.5px; line-height: 1.55; }
+.dt ul { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 8px; font-size: 14.5px; line-height: 1.55; }
+.dt ul li { position: relative; padding-left: 15px; }
+.dt ul li::before { content: ""; position: absolute; left: 2px; top: calc(.775em - 2px); width: 4px; height: 4px; border-radius: 50%; background: var(--muted); }
 .dt .uses { display: grid; gap: 8px; }
 .dt .use { display: grid; gap: 3px; text-align: left; width: 100%; padding: 12px 14px; border-radius: 12px;
   background: color-mix(in srgb, var(--ink) 4.5%, var(--surface)); }
@@ -307,7 +326,6 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   </div></div>
   <div class="results" id="results" hidden></div>
   <h2 class="lvl" id="lvl" hidden><span id="lvltxt"></span><span class="count" id="count"></span></h2>
-  <div class="lvsw" id="lvsw" role="tablist" aria-label="Level"></div>
   <div class="eps" id="eps"></div>
 </main>
 
@@ -475,10 +493,12 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     // one level at a time; the switch above the list picks it (remembered), Level 4 by default
     var lvs = []; index.forEach(function (e) { if (lvs.indexOf(e.level) < 0) lvs.push(e.level); });
     var lv = store.get("lv", lvs[0]); if (lvs.indexOf(lv) < 0) lv = lvs[0];
-    $("lvsw").hidden = lvs.length < 2 || !!($("q").value || "").trim();
-    $("lvsw").innerHTML = lvs.map(function (n) { return '<button role="tab" data-lv="' + n + '" aria-selected="' + (n === lv) + '">' + T("level", { n: n }) + '</button>'; }).join("");
     var inLv = index.filter(function (x) { return x.level === lv; });
-    var head = '<h2 class="lvl"><span>' + T("level", { n: lv }) + '</span><span class="count">' +
+    // with more than one level the heading is a picker (a native menu, so it scales to any number of levels)
+    var pick = lvs.length < 2 ? T("level", { n: lv }) :
+      '<span class="lvpick"><select id="lvsel" aria-label="Level">' + lvs.map(function (n) { return '<option value="' + n + '"' + (n === lv ? " selected" : "") + '>' + T("level", { n: n }) + '</option>'; }).join("") +
+      '</select><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>';
+    var head = '<h2 class="lvl' + (lvs.length < 2 ? "" : " pick") + '"><span>' + pick + '</span><span class="count">' +
       T("ready", { a: inLv.filter(function (x) { return x.ready; }).length, b: inLv.length }) + '</span></h2>';
     $("eps").innerHTML = head + inLv.map(function (e) {
       var pos = store.get("pos_" + e.ep, 0), done = store.get("done_" + e.ep, false), st, cls = "";
@@ -496,9 +516,9 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
         (pct ? '<span class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></span>' : "") + '</button>';
     }).join("");
   }
-  $("lvsw").addEventListener("click", function (ev) {
-    var b = ev.target.closest("button[data-lv]"); if (!b) return;
-    store.set("lv", +b.dataset.lv); renderList(); window.scrollTo({ top: 0 });
+  $("eps").addEventListener("change", function (ev) {
+    if (ev.target.id !== "lvsel") return;
+    store.set("lv", +ev.target.value); renderList();
   });
   $("eps").addEventListener("click", function (ev) {
     var b = ev.target.closest(".ep"); if (b) openEp(b.dataset.ep);
@@ -547,21 +567,40 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   // Line text as word spans (data-w = word number) so the playing word can light up; expression marks wrap pieces of words.
   var QUOTES = "\"'“”‘’「」『』";
   function koHtml(l) {
-    var t = l.ko, wordOf = [], posIn = [], w = 0, c = 0, mk = [], out = "", i;
-    for (i = 0; i < t.length; i++) { if (t[i] === " ") { wordOf.push(-1); posIn.push(-1); w++; c = 0; } else { wordOf.push(w); posIn.push(c++); } mk.push(-1); }
+    var t = l.ko, n = t.length, wordOf = [], posIn = [], w = 0, c = 0, mk = [], M = [], out = "", i, j;
+    for (i = 0; i < n; i++) { if (t[i] === " ") { wordOf.push(-1); posIn.push(-1); w++; c = 0; } else { wordOf.push(w); posIn.push(c++); } mk.push(-1); }
     (l.hl || []).forEach(function (h) { for (var k = h[0]; k < h[1]; k++) mk[k] = h[2]; });
-    var hasW = !!((l.w && l.w.length) || l.cs), open = null, mark = -1;
-    function close() { if (open !== null) { out += "</span>"; open = null; } }
-    for (i = 0; i < t.length; i++) {
-      var m = t[i] === " " ? (mk[i - 1] >= 0 && mk[i - 1] === mk[i + 1] ? mk[i - 1] : -1) : mk[i];
-      if (m !== mark) { close(); if (mark >= 0) out += "</mark>"; if (m >= 0) out += '<mark data-k="' + m + '"' + (ep.items[m] && ep.items[m].kind === "vocab" ? ' class="v"' : "") + '>'; mark = m; }
-      if (wordOf[i] < 0) { close(); out += " "; continue; }
-      if (hasW && open !== wordOf[i]) { close(); out += '<span class="w" data-w="' + wordOf[i] + '" data-a="' + posIn[i] + '">'; open = wordOf[i]; }
-      // keep a quote mark on the same line as the word it belongs to (a word joiner, not counted in any index)
-      var q = QUOTES.indexOf(t[i]) >= 0, prevSp = i === 0 || t[i - 1] === " ", nextSp = i === t.length - 1 || t[i + 1] === " ";
-      out += (q && !prevSp && nextSp ? "\u2060" : "") + esc(t[i]) + (q && prevSp && !nextSp ? "\u2060" : "");
+    for (i = 0; i < n; i++) M[i] = t[i] === " " ? (mk[i - 1] >= 0 && mk[i - 1] === mk[i + 1] ? mk[i - 1] : -1) : mk[i];
+    // A quote mark must stay on the line of the word it belongs to. Safari ignores word joiners under keep-all,
+    // so a word holding a quote mark becomes one no-wrap group; a highlight crossing the group's edge
+    // is split there (inner corners squared off so it still reads as one).
+    function sp(k) { return k < 0 || k >= n || t[k] === " "; }
+    var gs = {}, ge = {};
+    for (i = 0; i < n; i++) {                                // each space-free word that holds a quote mark
+      if (sp(i) || !sp(i - 1)) continue;
+      for (j = i; j < n && !sp(j); j++);
+      for (var k = i; k < j; k++) if (QUOTES.indexOf(t[k]) >= 0) { gs[i] = 1; ge[j] = 1; break; }
     }
-    close(); if (mark >= 0) out += "</mark>";
+    var bound = []; for (i = 0; i <= n; i++) bound.push(i === 0 || i === n || M[i] !== M[i - 1] || !!gs[i] || !!ge[i]);
+    var hasW = !!((l.w && l.w.length) || l.cs), open = null, markOpen = false, grp = false;
+    function close() { if (open !== null) { out += "</span>"; open = null; } }
+    for (i = 0; i < n; i++) {
+      if (bound[i]) {
+        close();
+        if (markOpen) { out += "</mark>"; markOpen = false; }
+        if (ge[i] && grp) { out += "</span>"; grp = false; }
+        if (gs[i]) { out += '<span class="nb">'; grp = true; }
+        if (M[i] >= 0) {
+          for (j = i + 1; j < n && !bound[j]; j++);
+          var cls = (ep.items[M[i]] && ep.items[M[i]].kind === "vocab" ? " v" : "") + (i > 0 && M[i - 1] === M[i] ? " ml" : "") + (j < n && M[j] === M[i] ? " mr" : "");
+          out += '<mark data-k="' + M[i] + '"' + (cls ? ' class="' + cls.trim() + '"' : "") + '>'; markOpen = true;
+        }
+      }
+      if (t[i] === " ") { close(); out += " "; continue; }
+      if (hasW && open !== wordOf[i]) { close(); out += '<span class="w" data-w="' + wordOf[i] + '" data-a="' + posIn[i] + '">'; open = wordOf[i]; }
+      out += esc(t[i]);
+    }
+    close(); if (markOpen) out += "</mark>"; if (grp) out += "</span>";
     return out;
   }
 
@@ -818,13 +857,33 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       (g.length ? '<div class="xpsec"><h3>문법 · 표현</h3><span>' + g.length + '</span></div>' + g.join("") : "") +
       (v.length ? '<div class="xpsec"><h3>어휘</h3><span>' + v.length + '</span></div>' + v.join("") : "");
   }
+  // ---------- sheet motion: slide up to open, down to close; sideways between the list and a card ----------
+  function sheetShow(el, dx, fromH) {
+    clearTimeout(el._t); el.hidden = false; el.classList.remove("closing", "open");
+    el.classList.toggle("swap", dx != null); el.style.setProperty("--dx", (dx || 0) + "px");
+    var p = el.querySelector(".panel");
+    if (fromH) {                                            // ease the height from the sheet it replaces
+      p.style.height = ""; var to = p.getBoundingClientRect().height;
+      p.style.height = fromH + "px"; void p.offsetHeight;
+      requestAnimationFrame(function () { p.style.height = to + "px"; });
+      clearTimeout(p._t); p._t = setTimeout(function () { p.style.height = ""; }, 360);
+    }
+    void el.offsetWidth; requestAnimationFrame(function () { el.classList.add("open"); });
+  }
+  function sheetHide(el, dx, after) {
+    if (el.hidden) { if (after) after(); return; }
+    clearTimeout(el._t); el.classList.remove("open"); el.classList.add("closing");
+    el.classList.toggle("swap", dx != null); el.style.setProperty("--dx", (dx || 0) + "px");
+    el._t = setTimeout(function () { el.hidden = true; el.classList.remove("closing", "swap"); if (after) after(); }, dx != null ? 270 : 280);
+  }
+  function panelH(el) { return el.hidden ? 0 : el.querySelector(".panel").getBoundingClientRect().height; }
   var xpScroll = 0;
-  function openXp(keepScroll) {
-    $("sheet").hidden = false;
+  function openXp(keepScroll, dx, fromH) {
+    sheetShow($("sheet"), dx, fromH);
     $("sheet").querySelector(".panel").scrollTop = keepScroll ? xpScroll : 0;
   }
   function closeXp() {
-    $("sheet").hidden = true;
+    sheetHide($("sheet"));
     if (resumeAfter) audio.play().catch(function () {});
     resumeAfter = false;
   }
@@ -833,7 +892,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     var b = ev.target.closest(".xp");
     if (b) {
       xpScroll = $("sheet").querySelector(".panel").scrollTop;
-      $("sheet").hidden = true; openDetail(+b.dataset.k);
+      var h = panelH($("sheet")); sheetHide($("sheet"), 28); openDetail(+b.dataset.k, 28, h);
       return;
     }
     if (ev.target === $("sheet") || ev.target.closest("[data-close]")) closeXp();
@@ -846,10 +905,10 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     (l.hl || []).forEach(function (h) { if (h[2] !== k) return; out += esc(l.ko.slice(p, h[0])) + "<mark>" + esc(l.ko.slice(h[0], h[1])) + "</mark>"; p = h[1]; });
     return out + esc(l.ko.slice(p));
   }
-  function openDetail(k) {
+  function openDetail(k, dx, fromH) {
     var it = ep.items[k]; if (!it) return;
     var kinds = { grammar: "Grammar", speaking: "Expression", vocab: "Vocab" };
-    var notes = cz(it, "note").split(/\s+\/\s+/).filter(Boolean);
+    var notes = cz(it, "note").split(/\s+[\/·・]\s+/).filter(Boolean);    // one bullet per part and per "·" pair
     var uses = [];
     ep.lines.forEach(function (l, i) { if ((l.hl || []).some(function (h) { return h[2] === k; })) uses.push(i); });
     $("detail").className = "wrap dt" + (it.kind === "vocab" ? " v" : "");
@@ -867,15 +926,15 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
           '<span class="go">' + (ep.ready && l.t != null ? "▶ " + T("playFrom") + " · " + fmt(l.t) : T("goLine")) + '</span></button>';
       }).join("") + '</div>' : '<p class="mean" style="color:var(--muted);font-size:14px">' + T("commentaryOnly") + '</p>');
     resumeAfter = resumeAfter || !audio.paused; audio.pause();
-    $("dsheet").hidden = false; $("dsheet").querySelector(".panel").scrollTop = 0;
+    sheetShow($("dsheet"), dx, fromH); $("dsheet").querySelector(".panel").scrollTop = 0;
   }
   function closeDetail(resume) {
-    $("dsheet").hidden = true;
+    sheetHide($("dsheet"));
     if (resume && resumeAfter) audio.play().catch(function () {});
     resumeAfter = false;
   }
   $("dsheet").addEventListener("click", function (ev) {
-    if (ev.target.closest("[data-all]")) { $("dsheet").hidden = true; openXp(true); return; }
+    if (ev.target.closest("[data-all]")) { var h = panelH($("dsheet")); sheetHide($("dsheet"), -28); openXp(true, -28, h); return; }
     var u = ev.target.closest(".use");
     if (u) {
       var l = ep.lines[+u.dataset.i]; closeDetail(false);
@@ -943,7 +1002,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   }
   function runSearch() {
     var q = $("q").value.trim();
-    $("eps").hidden = !!q; $("results").hidden = !q; $("lvsw").hidden = !!q || $("lvsw").children.length < 2;
+    $("eps").hidden = !!q; $("results").hidden = !q;
     if (!q) return;
     loadCorpus().then(function (rows) {
       if ($("q").value.trim() !== q) return;
