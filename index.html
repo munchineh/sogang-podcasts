@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="25c7e73840ca">
+<html lang="ko" data-build="9a61fa71c873">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -93,6 +93,8 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .lvl { font: 600 11px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 10px 8px 10px; display: flex; justify-content: space-between; }
 .lvl .count { letter-spacing: .02em; text-transform: none; font-weight: 500; }
 .eps { display: grid; gap: 10px; }
+.eps .lvl { margin: 18px 8px 0; }
+.eps .lvl:first-child { margin-top: 10px; }
 .ep { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; align-items: center; text-align: left; width: 100%;
   padding: 14px 16px 16px; background: var(--surface); border: 1px solid var(--rule); border-radius: 16px;
   box-shadow: 0 1px 2px rgba(23,24,31,.04); transition: transform .15s; }
@@ -299,7 +301,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     <input id="q" type="search" placeholder="Search Korean or English" autocomplete="off" aria-label="Search scripts">
   </div></div>
   <div class="results" id="results" hidden></div>
-  <h2 class="lvl" id="lvl"><span id="lvltxt">Level 4</span><span class="count" id="count"></span></h2>
+  <h2 class="lvl" id="lvl" hidden><span id="lvltxt"></span><span class="count" id="count"></span></h2>
   <div class="eps" id="eps"></div>
 </main>
 
@@ -416,15 +418,25 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     return v ? s.replace(/\{(\w+)\}/g, function (m, x) { return v[x] != null ? v[x] : m; }) : s;
   }
   // localised episode text (title, blurb, overview) for the chosen language, English otherwise
+  // card details in the chosen language (Chinese for now), English otherwise
+  function cz(it, k) { var z = it[UL()]; return (z && z[k]) || it[k] || ""; }
+  function epLabel(e) { return (e.level === 3 ? "L3 · " : "") + "EP " + String(e.n != null ? e.n : +e.ep.slice(3)).padStart(2, "0"); }
   function locE(e) { return (e.loc && e.loc[UL()]) || { t: e.title_en, b: e.blurb }; }
   function locOv(d) { return (d.ovl && d.ovl[UL()]) || d.ov || {}; }
   var audio = $("audio"), index = [], ep = null, cur = -1, lineEls = [], userScrolledAt = 0, autoScrolling = false;
 
   // ---------- list ----------
   function renderList() {
-    var ready = index.filter(function (e) { return e.ready; }).length;
-    $("count").textContent = T("ready", { a: ready, b: index.length });
+    // one section per level, in the order they come in the index (Level 4 first)
+    var lastLv = null;
     $("eps").innerHTML = index.map(function (e) {
+      var head = "";
+      if (e.level !== lastLv) {
+        lastLv = e.level;
+        var inLv = index.filter(function (x) { return x.level === e.level; });
+        head = '<h2 class="lvl"><span>' + T("level", { n: e.level }) + '</span><span class="count">' +
+          T("ready", { a: inLv.filter(function (x) { return x.ready; }).length, b: inLv.length }) + '</span></h2>';
+      }
       var pos = store.get("pos_" + e.ep, 0), done = store.get("done_" + e.ep, false), st, cls = "";
       if (!e.ready) st = T("scriptOnly");
       else if (done) { st = T("done"); cls = "done"; }
@@ -433,7 +445,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       if (e.ready && e.partial) st += " · " + T("preview");
       var lc = locE(e);
       var pct = e.ready && e.dur ? Math.min(100, (done ? 100 : pos / e.dur * 100)) : 0;
-      return '<button class="ep" data-ep="' + e.ep + '"' + (e.ready ? "" : ' data-noaudio="1"') + '>' +
+      return head + '<button class="ep" data-ep="' + e.ep + '"' + (e.ready ? "" : ' data-noaudio="1"') + '>' +
         '<span class="no">EP ' + String(e.n).padStart(2, "0") + '</span><span class="st ' + cls + '">' + st + '</span>' +
         '<span class="t">' + esc(e.title) + '</span>' + (lc.t ? '<span class="te">' + fmtTr(lc.t) + '</span>' : '') +
         (lc.b ? '<span class="b">' + fmtTr(lc.b) + '</span>' : '') +
@@ -451,7 +463,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       ep = d; cur = -1;
       timed = d.lines.map(function (l, k) { return l.t == null ? -1 : k; }).filter(function (k) { return k >= 0; });
       $("list").hidden = true; $("player").hidden = false; window.scrollTo(0, 0);
-      $("epno").textContent = "EP " + String(+id.slice(3)).padStart(2, "0") + (d.partial ? " · " + T("preview") : "");
+      $("epno").textContent = epLabel(d) + (d.partial ? " · " + T("preview") : "");
       $("eptitle").textContent = d.title;
       $("eptitle_en").innerHTML = fmtTr((locOv(d).title) || d.title_en || "");
       $("xpn").textContent = d.items.length;
@@ -710,7 +722,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     if (index.length) renderList();
     if ($("q").value.trim()) runSearch();
     if (!ep) return;
-    $("epno").textContent = "EP " + String(+ep.ep.slice(3)).padStart(2, "0") + (ep.partial ? " · " + T("preview") : "");
+    $("epno").textContent = epLabel(ep) + (ep.partial ? " · " + T("preview") : "");
     $("eptitle_en").innerHTML = fmtTr((locOv(ep).title) || ep.title_en || "");
     var ov = $("ov"); if (ov) ov.outerHTML = ovHtml(ep);
     var bn = $("banner"); if (bn) bn.outerHTML = bannerHtml(ep);
@@ -740,7 +752,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     function row(it, k) {
       var n = 0, v = it.kind === "vocab"; ep.lines.forEach(function (l) { (l.hl || []).forEach(function (h) { if (h[2] === k) n++; }); });
       return '<button class="xp ' + (v ? "v" : "g") + '" data-k="' + k + '">' + (it.tag ? '<span class="tag' + (v ? " v" : "") + '">' + esc(it.tag) + '</span>' : "") +
-        '<b>' + esc(it.item) + '</b><span>' + esc(it.gloss) + '</span><em' + (n ? "" : ' class="none"') + '>' + (n ? n + "×" : "해설") + '</em></button>';
+        '<b>' + esc(it.item) + '</b><span>' + esc(cz(it, "gloss")) + '</span><em' + (n ? "" : ' class="none"') + '>' + (n ? n + "×" : "해설") + '</em></button>';
     }
     var g = [], v = [];
     ep.items.forEach(function (it, k) { (it.kind === "vocab" ? v : g).push(row(it, k)); });
@@ -779,7 +791,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   function openDetail(k) {
     var it = ep.items[k]; if (!it) return;
     var kinds = { grammar: "Grammar", speaking: "Expression", vocab: "Vocab" };
-    var notes = (it.note || "").split(/\s+\/\s+/).filter(Boolean);
+    var notes = cz(it, "note").split(/\s+\/\s+/).filter(Boolean);
     var uses = [];
     ep.lines.forEach(function (l, i) { if ((l.hl || []).some(function (h) { return h[2] === k; })) uses.push(i); });
     $("detail").className = "wrap dt" + (it.kind === "vocab" ? " v" : "");
@@ -787,8 +799,8 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       '<div class="dt-top"><button class="dt-back" data-all="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>' + T("seeAll") + ' · ' + ep.items.length + '</button>' +
       '<button class="ib" data-close="1" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
       '<span class="dt-kind">' + esc(it.tag || kinds[it.kind] || "Expression") + '</span><h2>' + esc(it.item) + '</h2>' +
-      '<p class="mean">' + esc(it.meaning || it.gloss) + '</p>' +
-      (it.example ? '<h3>' + T("example") + '</h3><div class="ex"><div class="k">' + esc(it.example) + '</div><div class="e">' + esc(it.translation || "") + '</div></div>' : "") +
+      '<p class="mean">' + esc(cz(it, "meaning") || cz(it, "gloss")) + '</p>' +
+      (it.example ? '<h3>' + T("example") + '</h3><div class="ex"><div class="k">' + esc(it.example) + '</div><div class="e">' + esc(cz(it, "translation")) + '</div></div>' : "") +
       (notes.length ? '<h3>' + T("notes") + '</h3><ul>' + notes.map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + '</ul>' : "") +
       '<h3>' + T("inEp") + (uses.length ? " · " + uses.length + "×" : "") + '</h3>' +
       (uses.length ? '<div class="uses">' + uses.map(function (i) {
@@ -837,7 +849,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   function setMedia() {
     if (!("mediaSession" in navigator)) return;
     try {
-      navigator.mediaSession.metadata = new MediaMetadata({ title: ep.title, artist: "서강팟캐스트", album: "EP " + (+ep.ep.slice(3)) });
+      navigator.mediaSession.metadata = new MediaMetadata({ title: ep.title, artist: "서강팟캐스트", album: epLabel(ep) });
       navigator.mediaSession.setActionHandler("play", function () { audio.play(); });
       navigator.mediaSession.setActionHandler("pause", function () { audio.pause(); });
       navigator.mediaSession.setActionHandler("previoustrack", function () { $("prev").click(); });
@@ -873,7 +885,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   }
   function runSearch() {
     var q = $("q").value.trim();
-    $("eps").hidden = !!q; $("lvl").hidden = !!q; $("results").hidden = !q;
+    $("eps").hidden = !!q; $("results").hidden = !q;
     if (!q) return;
     loadCorpus().then(function (rows) {
       if ($("q").value.trim() !== q) return;
@@ -889,7 +901,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       var byEp = {}; index.forEach(function (e) { byEp[e.ep] = e; });
       $("results").innerHTML = '<p class="meta">' + T("lines", { n: hits.length >= 120 ? "120+" : hits.length }) + '</p>' + hits.map(function (r) {
         var e = byEp[r[0]] || {};
-        return '<button class="hit" data-ep="' + r[0] + '" data-i="' + r[1] + '"><span class="where"><b>EP ' + String(e.n).padStart(2, "0") + '</b> · ' + esc(e.title || "") + (e.ready ? "" : " · " + T("scriptOnly")) + '</span>' +
+        return '<button class="hit" data-ep="' + r[0] + '" data-i="' + r[1] + '"><span class="where"><b>' + (e.ep ? epLabel(e) : "") + '</b> · ' + esc(e.title || "") + (e.ready ? "" : " · " + T("scriptOnly")) + '</span>' +
           '<span class="k">' + (ko ? markText(r[2], q, true) : esc(r[2])) + '</span><span class="e">' + (ko ? esc(r[3]) : markText(r[3], q, false)) + '</span></button>';
       }).join("") || '<p class="meta">' + T("noMatch", { q: esc(q) }) + '</p>';
     });

@@ -37,11 +37,13 @@ Inside `podcast/` on the Mac:
 | `ovl/{zh,de,fr,ru}.json` | Localised `{title, blurb, overview, setting, register}` per episode (`*term*` = italic); Traditional is OpenCC from `zh`. |
 | `roman_terms.json` | Romanised Korean words that get `*…*` in the English lines. |
 | `items.json` | Card details (meaning, example, notes, note id) used by the expression sheets. |
+| `items_l3.json` | Same for Level 3, built from `level3_cards.json` (Anki one-off 40 export); Level 3 items match these only. |
+| `cardtr/zh.json` | Chinese card details {card id: {gloss, meaning, translation, note}} for every card the episodes use; zt via OpenCC. `cardtr/SPEC.md` is the brief. |
 | `card_map.json` | Script item → the Grammar + Vocab card it stands for when the names differ. Cards are picked Grammar + Vocab first, then Expressions (which mostly repeat them), then deckless notes; items that resolve to the same card merge. |
 | `note_decks.json` | Note id → current Anki deck, for tags like `4A.6 Grammar` / `4B.3 듣고 말하기 1`. |
 | `hl_drop.json` | Highlights judged wrong by review: `[item, hit, line or null]`. |
 | `player/index.html` | The app (single file). `player/icon-*.png` are the app icons. |
-| `l3/v2/l3_XX.json`, `l3/plan.json` | Level 3 scripts (25 episodes; l3_22–25 cover 3A Units 1–3 and 3B.1 reading vocab added Oct 15). Written, no audio yet, not in the site yet. `l3/extra_cards.json` holds card fields for cards newer than `level3_cards.json`; `l3/book_*.json` are the handbook unit lists. |
+| `l3/v2/l3_XX.json`, `l3/plan.json` | Level 3 scripts (25 episodes; l3_22–25 cover 3A Units 1–3 and 3B.1 reading vocab added Oct 15). In the site as script-only (no audio queued); overviews in `overviews/`, cast in `cast/`, Chinese in `zh/` and `ovl/zh.json`. `l3/extra_cards.json` holds card fields for cards newer than `level3_cards.json`; `l3/book_*.json` are the handbook unit lists. |
 | `cache/v2/<ep>/NN.wav` | Generated audio chunks (re-used across runs). |
 | `audio/v2/<ep>.mp4`, `.chunks.json`, `.words.json`, `.chars.json`, `.voice.json` | Per-episode outputs. |
 | `ready/<ep>.mp4`, `ready/<ep>.timing.json` | Finished episodes, picked up by the site build. |
@@ -65,7 +67,7 @@ time, 17:00 in winter). `touch podcast/run_podcast.flag` runs it immediately. Th
 
 ## Building the site
 
-- `build_player.py` builds `player/data/ep_XX.json`, `index.json`, `search.json` from everything above. Per line:
+- `build_player.py` reads `v2/ep_*.json` (Level 4) and `l3/v2/l3_*.json` (Level 3, `level: 3`; the list groups by level) and builds `player/data/ep_XX.json`, `index.json`, `search.json` from everything above. Per line:
   `i, s (section), p (speaker), c (chip name), ko, en, zh, zt, de, fr, ru, t/e (line start/end), w (word starts),
   cs (syllable start/end pairs), hl ([start, end, item] highlight spans)`. Episodes also carry `ovl` (localised overviews),
   index entries `loc` (localised title/blurb), and `search_<lang>.json` holds each search row's text in that language.
@@ -113,9 +115,7 @@ time, 17:00 in winter). `touch podcast/run_podcast.flag` runs it immediately. Th
 ## Status and open items (keep current)
 
 - On hold until Mancini says go (after his usage resets):
-  1. Level 3 scripts into the player (`l3/v2`, 25 episodes, script-only at first).
-  2. Full translations of card text (gloss, meaning, example translation, notes) into zh/de/fr/ru for both levels
-     (~1,551 Level 4 cards; zt via OpenCC). Done after Level 3, in one pass.
+  - Card text in de/fr/ru (Chinese is done). Level 3 script lines and overviews in de/fr/ru. Level 3 audio (not queued).
 - Level 3 Anki decks are sorted by unit (done Oct 15): `Sogang Level 3A::3A Grammar + Vocab::Unit N::3A Unit N · Grammar` and
   `… · Vocab::3A.N 듣고 말하기 / 3A.N 읽고 말하기`, 3B the same. 1,008 notes. Level 3/4 twins each keep their own sentence and notes.
 - Open question: rename the browser tab / home-screen name from "Sogang Podcasts" (clashes with Apple Podcasts if just "Podcasts").
