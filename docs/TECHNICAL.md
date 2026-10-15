@@ -124,8 +124,7 @@ time, 17:00 in winter). `touch podcast/run_podcast.flag` runs it immediately. Th
 
 ## Handbook extra grammar / vocab (Oct 2026)
 
-The Sogang handbooks' reference sections (참고문법 and extra vocab) are Anki decks "4A/4B Extra Grammar" and
-"3A/3B Extra Grammar / Extra Vocab" (flat decks, unit in tags `Sogang::4B::4B.2::…`). Their cards are in
+The Sogang handbooks' reference sections (참고문법 and extra vocab) are Anki decks "4A/4B/3A/3B Extra Grammar + Vocab" (one flat deck per book, unit in tags `Sogang::4B::4B.2::…`). Their cards are in
 `items.json` / `items_l3.json` with `unit` + `extra` fields (sheet tag shows e.g. "4B.2 Extra Grammar"), exported by
 Anki one-off 53 to `extra_notes.json`. Every episode except ep_01 got 1–5 of them woven in lightly (one scene use and a
 short 해설 exchange each): `extra/assign.json` (item → episode), `extra/tasks/`, `extra/ops/<ep>.json` (line ops incl.
