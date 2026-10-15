@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="e027f5b506d7">
+<html lang="ko" data-build="77f8f7375ad4">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -765,11 +765,12 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   function updateBackNow() {
     var bn = $("backnow"), el = lineEls[cur];
     if (!ep || !ep.ready || !el || $("player").hidden || autoScrolling) { bn.hidden = true; return; }
-    var top = document.querySelector(".top").getBoundingClientRect().bottom, bot = document.querySelector(".transport").getBoundingClientRect().top;
+    // the visible text area: below the header (when it is on screen) and above the transport
+    var top = Math.max(0, document.querySelector("#player .top, .top").getBoundingClientRect().bottom), bot = document.querySelector(".transport").getBoundingClientRect().top;
     var r = el.getBoundingClientRect(), c = (r.top + r.bottom) / 2, band = (bot - top) * 0.22;
-    var above = c < top + band, below = c > bot - band;
-    bn.hidden = !(above || below);
-    $("backnow").classList.toggle("up", above);
+    var off = c < top + band || c > bot - band;
+    bn.hidden = !off;
+    if (off) { var pr = bn.getBoundingClientRect(); bn.classList.toggle("up", c < (pr.height ? (pr.top + pr.bottom) / 2 : bot)); }   // arrow points at the line
   }
   var bnQueued = false;
   window.addEventListener("scroll", function () {
