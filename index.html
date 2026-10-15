@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="46c0016b6a26">
+<html lang="ko" data-build="03d6d1c82384">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -24,6 +24,10 @@
   --bg: #f3f4f8; --surface: #ffffff; --ink: #17181f; --muted: #646878; --faint: #a3a6b4; --rule: #e1e3ea;
   --accent: #5b4fd6; --accent-soft: #ecebfd; --hl: #e4e1fd;
   --jun: #237a6b; --jun-soft: #e1f2ee; --sua: #b9476e; --sua-soft: #fbe6ee;
+  --h0: #2d6cb5; --h0-s: #e3eefb; --h1: #b85a1c; --h1-s: #fbeadd;
+  --c0: #237a6b; --c0-s: #e1f2ee; --c1: #b9476e; --c1-s: #fbe6ee; --c2: #8a6d00; --c2-s: #f6eecd; --c3: #55607a; --c3-s: #e8ebf1;
+  --c4: #8a4592; --c4-s: #f4e5f6; --c5: #0e7490; --c5-s: #dcf1f7; --c6: #b23b2e; --c6-s: #fbe4e1; --c7: #5b7a1f; --c7-s: #ecf3dc; --c8: #7a4e2d; --c8-s: #f3e8df;
+  --warn: #7a5600; --warn-bg: #fff6d8; --warn-line: #f1d98a; --warn-dot: #e8b100;
   --now: #ffffff; --now-shadow: 0 1px 2px rgba(23,24,31,.06), 0 6px 22px rgba(91,79,214,.12);
   --f-display: "Dots", "Noto Sans KR", -apple-system, "Apple SD Gothic Neo", sans-serif;
   --f-body: "Dots", "Noto Sans KR", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
@@ -35,11 +39,19 @@
   --bg: #121318; --surface: #1b1c23; --ink: #eceef5; --muted: #9a9daf; --faint: #5f6273; --rule: #2a2c36;
   --accent: #a59cff; --accent-soft: #2a2747; --hl: #332f5c;
   --jun: #6fcdb9; --jun-soft: #173a33; --sua: #f08fb1; --sua-soft: #43202e;
+  --h0: #8bb8f0; --h0-s: #1c2c42; --h1: #f2a66b; --h1-s: #3d2617;
+  --c0: #6fcdb9; --c0-s: #173a33; --c1: #f08fb1; --c1-s: #43202e; --c2: #e2c35a; --c2-s: #3a3115; --c3: #aab3c8; --c3-s: #2a2e39;
+  --c4: #d39ad9; --c4-s: #3a2340; --c5: #67c7df; --c5-s: #12323b; --c6: #f0897d; --c6-s: #432019; --c7: #a9cf6a; --c7-s: #27321a; --c8: #d2a37f; --c8-s: #35271d;
+  --warn: #f3cf6a; --warn-bg: #2e2612; --warn-line: #5a4716; --warn-dot: #e8b100;
   --now: #20212b; --now-shadow: 0 1px 2px rgba(0,0,0,.4), 0 6px 22px rgba(0,0,0,.35); --field: #0b0c10; color-scheme: dark; } }
 :root[data-theme="dark"] {
   --bg: #121318; --surface: #1b1c23; --ink: #eceef5; --muted: #9a9daf; --faint: #5f6273; --rule: #2a2c36;
   --accent: #a59cff; --accent-soft: #2a2747; --hl: #332f5c;
   --jun: #6fcdb9; --jun-soft: #173a33; --sua: #f08fb1; --sua-soft: #43202e;
+  --h0: #8bb8f0; --h0-s: #1c2c42; --h1: #f2a66b; --h1-s: #3d2617;
+  --c0: #6fcdb9; --c0-s: #173a33; --c1: #f08fb1; --c1-s: #43202e; --c2: #e2c35a; --c2-s: #3a3115; --c3: #aab3c8; --c3-s: #2a2e39;
+  --c4: #d39ad9; --c4-s: #3a2340; --c5: #67c7df; --c5-s: #12323b; --c6: #f0897d; --c6-s: #432019; --c7: #a9cf6a; --c7-s: #27321a; --c8: #d2a37f; --c8-s: #35271d;
+  --warn: #f3cf6a; --warn-bg: #2e2612; --warn-line: #5a4716; --warn-dot: #e8b100;
   --now: #20212b; --now-shadow: 0 1px 2px rgba(0,0,0,.4), 0 6px 22px rgba(0,0,0,.35); --field: #0b0c10; color-scheme: dark; }
 
 [hidden] { display: none !important; }
@@ -91,7 +103,7 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 @media (prefers-reduced-motion: reduce) { .logo .b1, .logo .b2 { animation: none; } }
 .mast h1 { font: 800 clamp(24px, 7vw, 32px)/1.15 "Poppins", var(--f-display); margin: 0; letter-spacing: -.025em; white-space: nowrap; }
 .mast .count { font: 500 12px var(--f-mono); color: var(--muted); }
-.lede { color: var(--muted); font-size: 14px; font-family: var(--f-latin); margin: 0 0 22px; padding-inline: 8px; }
+.lede { color: var(--muted); font-size: 14px; font-family: var(--f-latin); margin: 0 0 15px; padding-inline: 8px; }
 .lvpick { position: relative; display: inline-flex; align-items: center; gap: 6px; }
 .lvpick select { -webkit-appearance: none; appearance: none; border: 1px solid var(--rule); background: var(--surface); color: var(--ink);
   font: 600 14px var(--f-body); letter-spacing: 0; text-transform: none; height: 36px; padding: 0 34px 0 14px; border-radius: 999px; }
@@ -115,10 +127,33 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .ep .te { grid-column: 1 / -1; font-family: var(--f-latin); font-size: 14px; font-weight: 500; color: var(--muted); min-width: 0; }
 .ep .b { grid-column: 1 / -1; font-family: var(--f-latin); font-size: 14px; line-height: 1.5; color: var(--ink); opacity: .82; min-width: 0; margin-top: 8px; }
 .ep[data-noaudio] .t, .ep[data-noaudio] .b { opacity: .62; }
-.search { position: sticky; top: 0; z-index: 2; background: var(--bg); padding: calc(env(safe-area-inset-top, 0px) + 8px) 0 12px;
+/* the two top bars (search here, the episode header in the player) share one look: frosted, with a hairline once content scrolls under */
+.search, .top { background: color-mix(in srgb, var(--bg) 86%, transparent); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  border-bottom: 1px solid transparent; transition: border-color .2s ease; }
+.search.stuck, .top.stuck { border-bottom-color: var(--rule); }
+.search { position: sticky; top: 0; z-index: 2; padding: calc(env(safe-area-inset-top, 0px) + 8px) 0 12px;
   margin-inline: calc(-1 * var(--edge)); padding-inline: var(--edge); }
-.search::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 18px; pointer-events: none;
-  background: linear-gradient(var(--bg), color-mix(in srgb, var(--bg) 0%, transparent)); }
+.srow { display: flex; align-items: center; }
+.srow .wrapin { flex: 1; min-width: 0; }
+.search input::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
+.search input:not(:placeholder-shown) { padding-right: 46px; }
+.qx { position: absolute; right: 8px; top: 8px; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+  background: color-mix(in srgb, var(--ink) 14%, transparent); color: var(--bg); }
+.search .qx svg { position: static; width: 14px; height: 14px; color: var(--bg); }
+.qcancel { font: 500 15.5px var(--f-latin); color: var(--accent); white-space: nowrap; max-width: 0; opacity: 0; overflow: hidden; padding: 0;
+  transition: max-width .32s cubic-bezier(.22,1,.36,1), opacity .2s ease, padding .32s cubic-bezier(.22,1,.36,1); }
+/* search mode: the logo and intro fold away and the bar slides to the top */
+.hdr { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .34s cubic-bezier(.22,1,.36,1), opacity .22s ease; }
+.hdr > div { min-height: 0; overflow: hidden; }
+#list { transition: padding-top .34s cubic-bezier(.22,1,.36,1); }
+body.searching #list { padding-top: 0; }
+body.searching .hdr { grid-template-rows: 0fr; opacity: 0; }
+body.searching .qcancel { max-width: 90px; opacity: 1; padding: 8px 4px 8px 14px; }
+.recent { display: flex; flex-wrap: wrap; gap: 8px; padding: 6px 0 4px; }
+.recent .lbl { width: 100%; font: 600 11px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin: 2px 0 2px; }
+.recent button { height: 34px; padding: 0 14px; border-radius: 999px; background: var(--surface); border: 1px solid var(--rule); font: 500 14px var(--f-body); }
+.recent button:active { background: var(--accent-soft); }
+@media (prefers-reduced-motion: reduce) { .hdr, #list, .qcancel { transition: none; } }
 .search input { width: 100%; height: 44px; border-radius: 999px; border: 1px solid transparent; background: var(--field); color: var(--ink);
   padding: 0 16px 0 44px; font: 16px var(--f-body); -webkit-appearance: none; appearance: none; }
 .search input:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
@@ -139,9 +174,8 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 
 /* ---------- player ---------- */
 #player { min-height: 100%; display: flex; flex-direction: column; }
-.top { position: sticky; top: 0; padding-top: env(safe-area-inset-top, 0px); z-index: 3; background: color-mix(in srgb, var(--bg) 88%, transparent);
-  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--rule); }
-.top { transition: transform .28s cubic-bezier(.22,1,.36,1); }
+.top { position: sticky; top: 0; padding-top: env(safe-area-inset-top, 0px); z-index: 3; }
+.top { transition: transform .28s cubic-bezier(.22,1,.36,1), border-color .2s ease; }
 .top.away { transform: translateY(-105%); }
 .top .wrap { display: flex; align-items: center; gap: 8px; padding-block: 10px; }
 .top .ttl { flex: 1; min-width: 0; }
@@ -166,6 +200,18 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .line .who.long { font-size: 9px; letter-spacing: -.06em; padding: 0 1px; }
 .line[data-p="Jun"] .who { color: var(--jun); background: var(--jun-soft); }
 .line[data-p="Sua"] .who { color: var(--sua); background: var(--sua-soft); }
+/* chip colours: the two hosts have their own; every character keeps one colour across episodes (assigned in build_player.py) */
+.line[data-r="h0"] .who { color: var(--h0); background: var(--h0-s); }
+.line[data-r="h1"] .who { color: var(--h1); background: var(--h1-s); }
+.line[data-r="c0"] .who { color: var(--c0); background: var(--c0-s); }
+.line[data-r="c1"] .who { color: var(--c1); background: var(--c1-s); }
+.line[data-r="c2"] .who { color: var(--c2); background: var(--c2-s); }
+.line[data-r="c3"] .who { color: var(--c3); background: var(--c3-s); }
+.line[data-r="c4"] .who { color: var(--c4); background: var(--c4-s); }
+.line[data-r="c5"] .who { color: var(--c5); background: var(--c5-s); }
+.line[data-r="c6"] .who { color: var(--c6); background: var(--c6-s); }
+.line[data-r="c7"] .who { color: var(--c7); background: var(--c7-s); }
+.line[data-r="c8"] .who { color: var(--c8); background: var(--c8-s); }
 .line .ko { font-size: calc(18.5px * var(--ks, 1)); font-weight: 500; line-height: 1.52; min-width: 0; letter-spacing: -.01em; }
 .ko .nb { white-space: nowrap; }
 .line .en { grid-column: 2; color: var(--muted); font-family: var(--f-latin); font-size: calc(14.5px * var(--ks, 1)); line-height: 1.45; margin-top: 1px; }
@@ -193,14 +239,17 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .line.notime { cursor: default; }
 .line.notime .ko { color: var(--muted); }
 .line.flash { box-shadow: 0 0 0 2px var(--accent) inset; }
-.banner { font-family: var(--f-latin); margin: 12px 4px 0; padding: 10px 12px; border-radius: 12px; background: var(--accent-soft); color: var(--accent); font-size: 13.5px; }
+.banner { font-family: var(--f-latin); margin: 12px 4px 0; padding: 11px 13px 11px 11px; border-radius: 12px; background: var(--warn-bg); color: var(--warn);
+  border: 1px solid var(--warn-line); font-size: 13.5px; line-height: 1.5; display: grid; grid-template-columns: 20px 1fr; gap: 9px; align-items: start; }
+.banner .bi { width: 20px; height: 20px; border-radius: 50%; background: var(--warn-dot); color: #2b2100; display: grid; place-items: center;
+  font: 800 13px/1 var(--f-latin); margin-top: 0; }
 .transport.off .seek, .transport.off .mid, .transport.off #speed, .transport.off #again { opacity: .4; pointer-events: none; }
 .top .ttl > i { display: block; font-style: normal; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .note { margin: 18px 4px 0; color: var(--muted); font-size: 13px; }
 
 .transport { position: fixed; left: 0; right: 0; bottom: 0; z-index: 4; background: var(--surface); border: 1px solid var(--rule); border-bottom: 0;
   border-radius: 22px 22px 0 0; box-shadow: 0 -8px 28px rgba(10,10,20,.07); padding-bottom: env(safe-area-inset-bottom, 0px); }
-.transport .wrap { padding-block: 22px 18px; padding-inline: max(14px, env(safe-area-inset-left, 0px)); display: grid; gap: 20px; }
+.transport .wrap { padding-block: 18px 14px; padding-inline: max(14px, env(safe-area-inset-left, 0px)); display: grid; gap: 17px; }
 .seek { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; font: 500 11.5px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
 .nowpl { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; font: 600 13.5px var(--f-body); color: var(--ink); margin-bottom: -6px; }
 .nowpl b { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
@@ -214,7 +263,18 @@ body.mini #list { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 200px)
 /* seek bar drawn by hand: a soft track instead of the browser's dark outline in dark mode */
 input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; height: 24px; margin: 0; width: 100%; --track: color-mix(in srgb, var(--ink) 13%, transparent); }
 input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--accent) 0 var(--fill, 0%), var(--track) var(--fill, 0%) 100%); }
+.rng input[type=range]::-webkit-slider-runnable-track { background: linear-gradient(90deg, var(--accent) 0 calc(14px + (100% - 28px) * var(--f, 0)), var(--track) calc(14px + (100% - 28px) * var(--f, 0)) 100%); }
+.rng input[type=range]::-webkit-slider-thumb { width: 28px; }
 input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 1px 3px rgba(0,0,0,.25), 0 0 0 .5px rgba(0,0,0,.08); }
+.rng { position: relative; display: block; }
+.rng input[type=range]::-webkit-slider-thumb { opacity: 0; }
+.rng input[type=range]::-moz-range-thumb { opacity: 0; }
+.rng .thumb { position: absolute; top: 50%; left: calc(14px + (100% - 28px) * var(--f, 0)); width: 28px; height: 18px; margin: -9px 0 0 -14px; border-radius: 999px;
+  background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25), 0 0 0 .5px rgba(0,0,0,.08); pointer-events: none;
+  transition: transform .5s cubic-bezier(.34,1.9,.5,1), box-shadow .3s ease; }
+.rng.held .thumb { transform: scale(1.4); transition: transform .42s cubic-bezier(.3,2.2,.45,1), box-shadow .25s ease;
+  box-shadow: 0 1px 4px rgba(0,0,0,.28), 0 0 0 5px color-mix(in srgb, var(--accent) 22%, transparent); }
+@media (prefers-reduced-motion: reduce) { .rng .thumb { transition: none; } }
 input[type=range]::-moz-range-track { height: 4px; border-radius: 2px; background: var(--track); }
 input[type=range]::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--accent); }
 input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
@@ -228,7 +288,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .play { width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: var(--surface); display: grid; place-items: center; }
 .play svg { width: 26px; height: 26px; }
 .speed { font: 600 13px var(--f-mono); min-width: 56px; height: 36px; border-radius: 10px; border: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
-.speedmenu { position: fixed; z-index: 7; bottom: calc(152px + env(safe-area-inset-bottom, 0px)); left: max(16px, calc(50% - 340px));
+.speedmenu { position: fixed; z-index: 7; bottom: calc(var(--tp, 140px) + 10px); left: max(16px, calc(50% - 340px));
   background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; padding: 6px; display: grid; gap: 2px; min-width: 120px;
   box-shadow: 0 10px 30px rgba(10,10,20,.18); }
 .speedmenu button { height: 44px; border-radius: 10px; font: 600 15px var(--f-mono); font-variant-numeric: tabular-nums; text-align: left; padding: 0 14px;
@@ -241,7 +301,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .langmenu button { font: 600 15px var(--f-body); }
 .langmenu .sizes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 2px 4px 4px; }
 .langmenu .sizes button { justify-content: center; padding: 0; font-weight: 700; }
-.back-now { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(166px + env(safe-area-inset-bottom, 0px)); z-index: 4;
+.back-now { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--tp, 140px) + 24px); z-index: 4;
   display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 16px 0 12px; border-radius: 999px; white-space: nowrap;
   font: 600 13.5px/1 var(--f-latin); color: var(--accent); background: color-mix(in srgb, var(--accent-soft) 95%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
@@ -334,14 +394,18 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 </head>
 <body>
 <main id="list" class="wrap">
+  <div class="hdr"><div>
   <div class="mast"><svg class="logo" viewBox="0 0 512 512" aria-hidden="true">
     <g class="b1"><path d="M78 44 h168 a52 52 0 0 1 52 52 v108 a52 52 0 0 1 -52 52 h-108 l-58 46 l6 -46 h-8 a52 52 0 0 1 -52 -52 v-108 a52 52 0 0 1 52 -52z" fill="#5b4fd6"/><text x="150" y="208" class="lg">서</text></g>
     <g class="b2"><path d="M266 206 h168 a52 52 0 0 1 52 52 v108 a52 52 0 0 1 -52 52 h-2 l6 46 l-58 -46 h-112 a52 52 0 0 1 -52 -52 v-108 a52 52 0 0 1 52 -52z" class="b2f"/><text x="350" y="366" class="lg">강</text></g></svg><h1 id="wordmark">Podcasts</h1><div class="tools"><button class="chip lang" id="langbtn" aria-haspopup="menu" aria-expanded="false" aria-label="Language"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.8 5.7 3.8 9s-1.2 6.3-3.8 9c-2.6-2.7-3.8-5.7-3.8-9S9.4 5.7 12 3z"/></svg><span id="langcode">EN</span></button><button class="ib refresh" id="refresh" aria-label="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4.5V9h-4.5"/></svg></button></div></div>
   <p class="lede" id="lede">서강 한국어 표현, 문법, 어휘를 생생한 대화로 익혀요. 에피소드를 골라 듣거나 궁금한 걸 검색해 보세요.</p>
-  <div class="search"><div class="wrapin">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-    <input id="q" type="search" placeholder="Search podcast, grammar or vocab" autocomplete="off" aria-label="Search scripts">
   </div></div>
+  <div class="search" id="searchbar"><div class="srow"><div class="wrapin">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input id="q" type="search" enterkeyhint="search" placeholder="Search podcast, grammar or vocab" autocomplete="off" aria-label="Search scripts">
+    <button class="qx" id="qx" type="button" hidden aria-label="Clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7.5 7.5l9 9M16.5 7.5l-9 9"/></svg></button>
+  </div><button class="qcancel" id="qcancel" type="button">Cancel</button></div></div>
+  <div class="recent" id="recent" hidden></div>
   <div class="results" id="results" hidden></div>
   <h2 class="lvl" id="lvl" hidden><span id="lvltxt"></span><span class="count" id="count"></span></h2>
   <div class="eps" id="eps"></div>
@@ -360,7 +424,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   <div class="speedmenu" id="speedmenu" role="menu" aria-label="Playback speed" hidden></div>
   <footer class="transport" id="transport" hidden><div class="wrap">
     <button class="nowpl" id="nowpl" hidden><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><b id="nowtxt"></b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
-    <div class="seek"><span id="cur">0:00</span><input type="range" id="pos" min="0" max="1000" value="0" aria-label="Position"><span id="tot">0:00</span></div>
+    <div class="seek"><span id="cur">0:00</span><span class="rng" id="rng"><input type="range" id="pos" min="0" max="1000" value="0" aria-label="Position"><i class="thumb" aria-hidden="true"></i></span><span id="tot">0:00</span></div>
     <div class="ctrls">
       <div class="side"><button class="speed" id="speed" aria-label="Playback speed">1×</button>
         <button class="chip en" id="enbtn" aria-haspopup="menu" aria-label="Translation and text size">EN</button></div>
@@ -398,6 +462,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   var TLANG = { en: "en", zh: "zh-Hans", zt: "zh-Hant", de: "de", fr: "fr", ru: "ru", tr: "tr", vi: "vi", th: "th", ja: "ja" };
   function tl() { return ' lang="' + (TLANG[TR] || "en") + '"'; }
   function fmtTr(t) {
+    if (UL() === "ko") return esc(t || "").replace(/\*([^*]+)\*/g, '<i class="rk">$1</i>');   // Korean copy: nothing to set apart
     return esc(t || "").replace(/\*([^*]+)\*/g, '<i class="rk">$1</i>')
       .replace(/[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3][\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3\s.,?!~…·\-]*[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3]|[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3]/g, '<span class="hg" lang="ko">$&</span>');
   }
@@ -411,7 +476,18 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "Back to the current line", translation: "Translation", textSize: "Text size", "default": "Default", none: "None",
       sheetH: "Tap to see its meaning and how it’s used.", example: "Example", notes: "Notes", inEp: "In this episode",
       playFrom: "Play from here", goLine: "Go to line", commentaryOnly: "Explained in the commentary rather than used in the scene.",
-      lines: "{n} lines", noMatch: "No lines match “{q}”.", loadFail: "Couldn’t load the episode list. Pull to refresh." },
+      lines: "{n} lines", noMatch: "No lines match “{q}”.", loadFail: "Couldn’t load the episode list. Pull to refresh.",
+      cancel: "Cancel", clear: "Clear", recent: "Recent searches" },
+    ko: { lede: "서강 한국어 표현, 문법, 어휘를 생생한 대화로 익혀요. 에피소드를 골라 듣거나 궁금한 걸 검색해 보세요.", search: "팟캐스트, 문법, 어휘 검색", level: "{n}급", ready: "오디오 {a} / {b}",
+      scriptOnly: "대본만", done: "다 들음", left: "{t} 남음", "new": "새 에피소드", preview: "미리 듣기",
+      about: "이번 회 소개", more: "더 보기", less: "접기", setting: "배경", formality: "말투", items: "문법 · 어휘", seeAll: "전체 보기",
+      bannerNone: "이 에피소드는 아직 녹음 전이에요. 대본은 지금 읽을 수 있고, 녹음이 끝나면 여기서 바로 들을 수 있어요.",
+      bannerPartial: "미리 듣기: 아직 앞부분만 녹음됐어요. 회색 줄은 아직 오디오가 없어요.",
+      backNow: "지금 듣는 줄로", translation: "번역", textSize: "글자 크기", "default": "기본", none: "없음",
+      sheetH: "눌러서 뜻과 쓰임을 확인해 보세요.", example: "예문", notes: "메모", inEp: "이번 회에서",
+      playFrom: "여기부터 재생", goLine: "이 줄로 가기", commentaryOnly: "장면 대화가 아니라 해설에서 다뤄요.",
+      lines: "{n}줄", noMatch: "“{q}” 검색 결과가 없어요.", loadFail: "에피소드 목록을 불러오지 못했어요. 당겨서 새로고침해 주세요.",
+      cancel: "취소", clear: "지우기", recent: "최근 검색" },
     ja: { lede: "日常会話を通して、西江大学の韓国語の表現・文法・語彙を学びましょう。エピソードを選ぶか、知りたいことを検索してください。", search: "ポッドキャスト・文法・語彙を検索", level: "レベル{n}", ready: "{a} / {b} 配信中",
       scriptOnly: "台本のみ", done: "聴き終わり", left: "残り{t}", "new": "新着", preview: "プレビュー",
       about: "このエピソードについて", more: "もっと見る", less: "閉じる", setting: "場面", formality: "話し方", items: "文法・語彙", seeAll: "すべて見る",
@@ -420,7 +496,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "再生中の行に戻る", translation: "翻訳", textSize: "文字サイズ", "default": "標準", none: "なし",
       sheetH: "タップすると意味と使い方が見られます。", example: "例文", notes: "メモ", inEp: "このエピソードでは",
       playFrom: "ここから再生", goLine: "この行へ", commentaryOnly: "場面の会話ではなく、解説の中で紹介しています。",
-      lines: "{n}行", noMatch: "「{q}」を含む行はありません。", loadFail: "エピソード一覧を読み込めませんでした。下に引いて更新してください。" },
+      lines: "{n}行", noMatch: "「{q}」を含む行はありません。", loadFail: "エピソード一覧を読み込めませんでした。下に引いて更新してください。", cancel: "キャンセル", clear: "消去", recent: "最近の検索" },
     zh: { lede: "通过日常对话，学习西江韩语的表达、语法和词汇。挑一集开始听，或搜索想学的内容。", search: "搜索播客、语法或词汇", level: "{n} 级", ready: "{a} / {b} 集可听",
       scriptOnly: "仅文本", done: "已听完", left: "剩余 {t}", "new": "新", preview: "预览",
       about: "本集简介", more: "展开", less: "收起", setting: "场景", formality: "语体", items: "语法词汇", seeAll: "查看全部",
@@ -429,7 +505,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "回到当前句", translation: "翻译", textSize: "字号", "default": "默认", none: "无",
       sheetH: "点击查看含义和用法。", example: "例句", notes: "笔记", inEp: "本集出现",
       playFrom: "从这里播放", goLine: "跳到该句", commentaryOnly: "只在讲解中出现，场景对话里没有用到。",
-      lines: "{n} 句", noMatch: "没有找到包含“{q}”的句子。", loadFail: "无法加载节目列表，请下拉刷新。" },
+      lines: "{n} 句", noMatch: "没有找到包含“{q}”的句子。", loadFail: "无法加载节目列表，请下拉刷新。", cancel: "取消", clear: "清除", recent: "最近搜索" },
     zt: { lede: "透過日常對話，學習西江韓語的表達、語法和詞彙。挑一集開始聽，或搜尋想學的內容。", search: "搜尋播客、語法或詞彙", level: "{n} 級", ready: "{a} / {b} 集可聽",
       scriptOnly: "僅文字", done: "已聽完", left: "剩餘 {t}", "new": "新", preview: "預覽",
       about: "本集簡介", more: "展開", less: "收合", setting: "場景", formality: "語體", items: "語法詞彙", seeAll: "查看全部",
@@ -438,7 +514,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "回到目前這句", translation: "翻譯", textSize: "字級", "default": "預設", none: "無",
       sheetH: "點一下查看意思和用法。", example: "例句", notes: "筆記", inEp: "本集出現",
       playFrom: "從這裡播放", goLine: "跳到這句", commentaryOnly: "只在講解中出現，情境對話裡沒有用到。",
-      lines: "{n} 句", noMatch: "找不到包含「{q}」的句子。", loadFail: "無法載入節目列表，請下拉重新整理。" },
+      lines: "{n} 句", noMatch: "找不到包含「{q}」的句子。", loadFail: "無法載入節目列表，請下拉重新整理。", cancel: "取消", clear: "清除", recent: "最近搜尋" },
     de: { lede: "Lerne Ausdrücke, Grammatik und Wortschatz aus dem Sogang-Koreanisch in Alltagsgesprächen. Such dir eine Folge aus oder suche gezielt nach etwas.", search: "Podcast, Grammatik oder Wortschatz suchen", level: "Stufe {n}", ready: "{a} / {b} bereit",
       scriptOnly: "Nur Skript", done: "Gehört", left: "noch {t}", "new": "Neu", preview: "Vorschau",
       about: "Über diese Folge", more: "Mehr", less: "Weniger", setting: "Schauplatz", formality: "Sprachebene", items: "Lernpunkte", seeAll: "Alle ansehen",
@@ -447,7 +523,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "Zurück zur aktuellen Zeile", translation: "Übersetzung", textSize: "Textgröße", "default": "Standard", none: "Keine",
       sheetH: "Tippe darauf, um Bedeutung und Verwendung zu sehen.", example: "Beispiel", notes: "Notizen", inEp: "In dieser Folge",
       playFrom: "Ab hier abspielen", goLine: "Zur Zeile", commentaryOnly: "Wird im Kommentar erklärt, kommt in der Szene aber nicht vor.",
-      lines: "{n} Zeilen", noMatch: "Keine Zeile enthält „{q}“.", loadFail: "Die Folgenliste konnte nicht geladen werden. Zum Aktualisieren nach unten ziehen." },
+      lines: "{n} Zeilen", noMatch: "Keine Zeile enthält „{q}“.", loadFail: "Die Folgenliste konnte nicht geladen werden. Zum Aktualisieren nach unten ziehen.", cancel: "Abbrechen", clear: "Löschen", recent: "Letzte Suchen" },
     fr: { lede: "Apprenez les expressions, la grammaire et le vocabulaire du coréen de Sogang à travers des conversations du quotidien. Choisissez un épisode ou lancez une recherche.", search: "Rechercher podcast, grammaire ou vocabulaire", level: "Niveau {n}", ready: "{a} / {b} disponibles",
       scriptOnly: "Texte seul", done: "Écouté", left: "encore {t}", "new": "Nouveau", preview: "Aperçu",
       about: "À propos de cet épisode", more: "Plus", less: "Moins", setting: "Cadre", formality: "Registre", items: "À apprendre", seeAll: "Tout voir",
@@ -456,7 +532,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "Revenir à la ligne en cours", translation: "Traduction", textSize: "Taille du texte", "default": "Normale", none: "Aucune",
       sheetH: "Touchez pour voir le sens et l’emploi.", example: "Exemple", notes: "Notes", inEp: "Dans cet épisode",
       playFrom: "Lire à partir d’ici", goLine: "Aller à la ligne", commentaryOnly: "Expliqué dans le commentaire, mais pas utilisé dans la scène.",
-      lines: "{n} lignes", noMatch: "Aucune ligne ne contient « {q} ».", loadFail: "Impossible de charger la liste des épisodes. Tirez pour actualiser." },
+      lines: "{n} lignes", noMatch: "Aucune ligne ne contient « {q} ».", loadFail: "Impossible de charger la liste des épisodes. Tirez pour actualiser.", cancel: "Annuler", clear: "Effacer", recent: "Recherches récentes" },
     ru: { lede: "Учите выражения, грамматику и лексику корейского по Sogang в живых диалогах. Выберите выпуск или найдите что-нибудь через поиск.", search: "Поиск по подкасту, грамматике и лексике", level: "Уровень {n}", ready: "готово {a} / {b}",
       scriptOnly: "Только текст", done: "Прослушано", left: "осталось {t}", "new": "Новое", preview: "Превью",
       about: "Об этом выпуске", more: "Ещё", less: "Свернуть", setting: "Место действия", formality: "Стиль речи", items: "Изучаем", seeAll: "Показать все",
@@ -465,7 +541,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "К текущей строке", translation: "Перевод", textSize: "Размер текста", "default": "Обычная", none: "Нет",
       sheetH: "Нажмите, чтобы увидеть значение и употребление.", example: "Пример", notes: "Заметки", inEp: "В этом выпуске",
       playFrom: "Слушать отсюда", goLine: "К строке", commentaryOnly: "Объясняется в комментарии, но в сцене не встречается.",
-      lines: "Строк: {n}", noMatch: "Нет строк с «{q}».", loadFail: "Не удалось загрузить список выпусков. Потяните вниз, чтобы обновить." },
+      lines: "Строк: {n}", noMatch: "Нет строк с «{q}».", loadFail: "Не удалось загрузить список выпусков. Потяните вниз, чтобы обновить.", cancel: "Отмена", clear: "Очистить", recent: "Недавние запросы" },
     tr: { lede: "Sogang Korece ifadelerini, dilbilgisini ve kelimelerini günlük konuşmalarla öğrenin. Başlamak için bir bölüm seçin ya da bir şey arayın.", search: "Podcast, dilbilgisi veya kelime ara", level: "Seviye {n}", ready: "{a} / {b} hazır",
       scriptOnly: "Yalnızca metin", done: "Bitti", left: "{t} kaldı", "new": "Yeni", preview: "Önizleme",
       about: "Bu bölüm hakkında", more: "Devamını göster", less: "Daha az göster", setting: "Ortam", formality: "Hitap düzeyi", items: "Dilbilgisi ve kelimeler", seeAll: "Tümünü gör",
@@ -474,7 +550,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "Geçerli satıra dön", translation: "Çeviri", textSize: "Yazı boyutu", "default": "Varsayılan", none: "Yok",
       sheetH: "Anlamını ve nasıl kullanıldığını görmek için dokunun.", example: "Örnek", notes: "Notlar", inEp: "Bu bölümde",
       playFrom: "Buradan oynat", goLine: "Satıra git", commentaryOnly: "Sahnede geçmiyor, yorum kısmında açıklanıyor.",
-      lines: "{n} satır", noMatch: "“{q}” ile eşleşen satır yok.", loadFail: "Bölüm listesi yüklenemedi. Yenilemek için aşağı çekin." },
+      lines: "{n} satır", noMatch: "“{q}” ile eşleşen satır yok.", loadFail: "Bölüm listesi yüklenemedi. Yenilemek için aşağı çekin.", cancel: "Vazgeç", clear: "Temizle", recent: "Son aramalar" },
     vi: { lede: "Học biểu hiện, ngữ pháp và từ vựng tiếng Hàn Sogang qua những cuộc trò chuyện đời thường. Chọn một tập để bắt đầu, hoặc tìm kiếm điều bạn muốn học.", search: "Tìm podcast, ngữ pháp hoặc từ vựng", level: "Cấp {n}", ready: "{a} / {b} tập sẵn sàng",
       scriptOnly: "Chỉ có lời thoại", done: "Đã nghe", left: "còn {t}", "new": "Mới", preview: "Nghe thử",
       about: "Về tập này", more: "Xem thêm", less: "Thu gọn", setting: "Bối cảnh", formality: "Mức độ trang trọng", items: "Ngữ pháp & từ vựng", seeAll: "Xem tất cả",
@@ -483,7 +559,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "Về dòng đang phát", translation: "Bản dịch", textSize: "Cỡ chữ", "default": "Mặc định", none: "Không",
       sheetH: "Chạm để xem nghĩa và cách dùng.", example: "Ví dụ", notes: "Ghi chú", inEp: "Trong tập này",
       playFrom: "Phát từ đây", goLine: "Đến dòng này", commentaryOnly: "Được giải thích trong phần bình luận, không xuất hiện trong cảnh.",
-      lines: "{n} dòng", noMatch: "Không có dòng nào khớp với “{q}”.", loadFail: "Không tải được danh sách tập. Kéo xuống để làm mới." },
+      lines: "{n} dòng", noMatch: "Không có dòng nào khớp với “{q}”.", loadFail: "Không tải được danh sách tập. Kéo xuống để làm mới.", cancel: "Hủy", clear: "Xóa", recent: "Tìm kiếm gần đây" },
     th: { lede: "เรียนสำนวน ไวยากรณ์ และคำศัพท์ภาษาเกาหลีของซอกังผ่านบทสนทนาในชีวิตประจำวัน เลือกตอนที่อยากฟัง หรือค้นหาสิ่งที่อยากรู้ได้เลย", search: "ค้นหาพอดแคสต์ ไวยากรณ์ หรือคำศัพท์", level: "ระดับ {n}", ready: "พร้อมฟัง {a} / {b}",
       scriptOnly: "มีแค่บท", done: "ฟังจบแล้ว", left: "เหลือ {t}", "new": "ใหม่", preview: "ตัวอย่าง",
       about: "เกี่ยวกับตอนนี้", more: "ดูเพิ่มเติม", less: "ย่อ", setting: "ฉาก", formality: "ระดับภาษา", items: "ไวยากรณ์และคำศัพท์", seeAll: "ดูทั้งหมด",
@@ -492,9 +568,9 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "กลับไปบรรทัดปัจจุบัน", translation: "คำแปล", textSize: "ขนาดตัวอักษร", "default": "ค่าเริ่มต้น", none: "ไม่มี",
       sheetH: "แตะเพื่อดูความหมายและวิธีใช้", example: "ตัวอย่าง", notes: "หมายเหตุ", inEp: "ในตอนนี้",
       playFrom: "เล่นจากตรงนี้", goLine: "ไปที่บรรทัด", commentaryOnly: "อธิบายไว้ในช่วงคอมเมนต์ ไม่ได้ใช้ในฉาก",
-      lines: "{n} บรรทัด", noMatch: "ไม่พบบรรทัดที่ตรงกับ “{q}”", loadFail: "โหลดรายชื่อตอนไม่ได้ ดึงลงเพื่อรีเฟรช" }
+      lines: "{n} บรรทัด", noMatch: "ไม่พบบรรทัดที่ตรงกับ “{q}”", loadFail: "โหลดรายชื่อตอนไม่ได้ ดึงลงเพื่อรีเฟรช", cancel: "ยกเลิก", clear: "ล้าง", recent: "ค้นหาล่าสุด" }
   };
-  function UL() { return I18N[TR] ? TR : "en"; }
+  function UL() { return TR === "off" ? "ko" : I18N[TR] ? TR : "en"; }   // no translation picked → Korean UI
   function T(k, v) {
     var s = (I18N[UL()][k] != null ? I18N[UL()][k] : I18N.en[k]) || "";
     return v ? s.replace(/\{(\w+)\}/g, function (m, x) { return v[x] != null ? v[x] : m; }) : s;
@@ -503,7 +579,11 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   // card details in the chosen language (Chinese for now), English otherwise
   function cz(it, k) { var z = it[UL()]; return (z && z[k]) || it[k] || ""; }
   function epLabel(e) { return (e.level === 3 ? "L3 · " : "") + "EP " + String(e.n != null ? e.n : +e.ep.slice(3)).padStart(2, "0"); }
-  function locE(e) { return (e.loc && e.loc[UL()]) || { t: e.title_en, b: e.blurb }; }
+  function locE(e) {
+    if (UL() === "ko") return { t: "", b: (e.loc && e.loc.ko && e.loc.ko.b) || e.summary || "" };   // the Korean title is already on the card
+    return (e.loc && e.loc[UL()]) || { t: e.title_en, b: e.blurb };
+  }
+  function subTitle(d) { return UL() === "ko" ? "" : fmtTr((locOv(d).title) || d.title_en || ""); }
   function locOv(d) { return (d.ovl && d.ovl[UL()]) || d.ov || {}; }
   var audio = $("audio"), index = [], ep = null, cur = -1, lineEls = [], userScrolledAt = 0, autoScrolling = false;
 
@@ -553,13 +633,13 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       document.body.classList.remove("mini"); $("nowpl").hidden = true; $("transport").hidden = false; $("player").querySelector(".top").classList.remove("away");
       $("epno").textContent = epLabel(d) + (d.partial ? " · " + T("preview") : "");
       $("eptitle").textContent = d.title;
-      $("eptitle_en").innerHTML = fmtTr((locOv(d).title) || d.title_en || "");
+      $("eptitle_en").innerHTML = subTitle(d);
       $("xpn").textContent = d.items.length;
       var html = "", sec = null;
       d.lines.forEach(function (l, i) {
         if (l.s !== sec) { sec = l.s; html += '<div class="sec">' + esc(sec) + '</div>'; }
         var ko = koHtml(l);
-        html += '<div class="line' + (l.t == null ? " notime" : "") + '" tabindex="0" data-i="' + i + '" data-p="' + l.p + '"><span class="who' + ((l.c || "").length > 3 ? " long" : (l.c || "").length > 2 ? " mid" : "") + '">' + esc(l.c || (l.p === "Jun" ? "준" : "수아")) +
+        html += '<div class="line' + (l.t == null ? " notime" : "") + '" tabindex="0" data-i="' + i + '" data-p="' + l.p + '"' + (l.r ? ' data-r="' + l.r + '"' : "") + '><span class="who' + ((l.c || "").length > 3 ? " long" : (l.c || "").length > 2 ? " mid" : "") + '">' + esc(l.c || (l.p === "Jun" ? "준" : "수아")) +
           '</span><div class="ko">' + ko + '</div>' + '<div class="en"' + tl() + (TR === "off" ? " hidden" : "") + '>' + fmtTr(trOf(l)) + '</div></div>';
       });
       $("script").innerHTML = ovHtml(d) + bannerHtml(d) + html;
@@ -582,7 +662,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     });
   }
   function bannerHtml(d) {
-    return !d.ready ? '<p class="banner" id="banner">' + T("bannerNone") + '</p>' : d.partial ? '<p class="banner" id="banner">' + T("bannerPartial") + '</p>' : "";
+    var t = !d.ready ? T("bannerNone") : d.partial ? T("bannerPartial") : "";
+    return t ? '<p class="banner" id="banner" role="note"><span class="bi" aria-hidden="true">!</span><span>' + t + '</span></p>' : "";
   }
   // Line text as word spans (data-w = word number) so the playing word can light up; expression marks wrap pieces of words.
   var QUOTES = "\"'“”‘’「」『』";
@@ -692,6 +773,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     $("backnow").hidden = true; $("player").hidden = true; $("list").hidden = false;
     document.body.classList.toggle("mini", !!keep); $("transport").hidden = !keep; $("nowpl").hidden = !keep;
     if (keep) $("nowtxt").textContent = epLabel(ep) + " · " + ep.title;
+    document.body.classList.toggle("searching", !!$("q").value.trim());
     renderList(); runSearch();
   }
   function showPlayer() {                                   // back to the episode that's playing, without reloading it
@@ -734,7 +816,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     if (!ep || !ep.ready) return;
     var t = audio.currentTime || 0, d = audio.duration || ep.dur;
     $("cur").textContent = fmt(t);
-    if (!seeking) { $("pos").value = d ? Math.round(t / d * 1000) : 0; $("pos").style.setProperty("--fill", ($("pos").value / 10) + "%"); }
+    if (!seeking) { $("pos").value = d ? Math.round(t / d * 1000) : 0; setFill(); }
     setCurrent(lineAt(t), force);
     setWord(cur, t);
     if (t > 1) store.set("pos_" + ep.ep, t);
@@ -768,7 +850,13 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     var l = ev.target.closest(".line"); if (l && (ev.key === "Enter" || ev.key === " ") && ep.ready && ep.lines[+l.dataset.i].t != null) { ev.preventDefault(); playFrom(ep.lines[+l.dataset.i].t); }
   });
   var seeking = false;
-  $("pos").addEventListener("input", function () { seeking = true; this.style.setProperty("--fill", (this.value / 10) + "%"); var d = audio.duration || ep.dur; $("cur").textContent = fmt(this.value / 1000 * d); });
+  function setFill() { var v = +$("pos").value; $("pos").style.setProperty("--fill", (v / 10) + "%"); $("rng").style.setProperty("--f", v / 1000); }
+  // the dot grows while a finger is on the bar, so it's clear the bar has been caught
+  function hold(on) { $("rng").classList.toggle("held", on); }
+  $("rng").addEventListener("pointerdown", function () { hold(true); });
+  $("rng").addEventListener("touchstart", function () { hold(true); }, { passive: true });
+  ["pointerup", "pointercancel", "touchend", "touchcancel"].forEach(function (n) { window.addEventListener(n, function () { hold(false); }, { passive: true }); });
+  $("pos").addEventListener("input", function () { seeking = true; setFill(); var d = audio.duration || ep.dur; $("cur").textContent = fmt(this.value / 1000 * d); });
   $("pos").addEventListener("change", function () { var d = audio.duration || ep.dur; audio.currentTime = this.value / 1000 * d; seeking = false; userScrolledAt = 0; tick(true); });
   function fmtSpeed(r) { return (r === 1 ? "1" : String(r)) + "×"; }
   // speed: tap opens a menu, pick one
@@ -848,18 +936,20 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   function applyUi() {
     document.documentElement.dataset.ui = UL();
     $("wordmark").textContent = TR === "off" ? "팟캐스트" : { zh: "播客", zt: "播客", ru: "Подкасты", tr: "Podcastler", vi: "Podcast", th: "พอดแคสต์", ja: "ポッドキャスト" }[TR] || "Podcasts";
-    $("lede").textContent = TR === "off" ? "서강 한국어 표현, 문법, 어휘를 생생한 대화로 익혀요. 에피소드를 골라 듣거나 궁금한 걸 검색해 보세요." : T("lede"); $("q").placeholder = T("search"); $("lvltxt").textContent = T("level", { n: 4 });
+    $("lede").textContent = T("lede"); $("q").placeholder = T("search"); $("qcancel").textContent = T("cancel"); $("qx").setAttribute("aria-label", T("clear")); $("lvltxt").textContent = T("level", { n: 4 });
     $("backnowt").textContent = T("backNow"); $("sheeth").textContent = T("sheetH");
     if (index.length) renderList();
     if ($("q").value.trim()) runSearch();
     if (!ep) return;
     $("epno").textContent = epLabel(ep) + (ep.partial ? " · " + T("preview") : "");
-    $("eptitle_en").innerHTML = fmtTr((locOv(ep).title) || ep.title_en || "");
+    $("eptitle_en").innerHTML = subTitle(ep);
     var ov = $("ov"); if (ov) ov.outerHTML = ovHtml(ep);
     var bn = $("banner"); if (bn) bn.outerHTML = bannerHtml(ep);
     renderXp();
   }
   applyPrefs();
+  // the pill and the speed menu sit just above the player bar, whatever its height (mini player, safe area)
+  if (window.ResizeObserver) new ResizeObserver(function (en) { document.documentElement.style.setProperty("--tp", Math.round(en[0].target.getBoundingClientRect().height) + "px"); }).observe($("transport"));
   ["wheel", "touchmove"].forEach(function (evn) { window.addEventListener(evn, function () { if (!autoScrolling) userScrolledAt = Date.now(); }, { passive: true }); });
   $("backnow").addEventListener("click", function () { userScrolledAt = 0; setCurrent(cur, true); });
   // the pill shows whenever the current line has left the middle of the screen, pointing the way back to it
@@ -1050,7 +1140,9 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   function runSearch() {
     var q = $("q").value.trim();
-    $("eps").hidden = !!q; $("results").hidden = !q;
+    $("qx").hidden = !$("q").value;
+    if (q) $("recent").hidden = true; else renderRecent();
+    $("eps").hidden = !!q || !$("recent").hidden; $("results").hidden = !q;
     if (!q) return;
     loadCorpus().then(function (rows) {
       if ($("q").value.trim() !== q) return;
@@ -1073,8 +1165,49 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   $("q").addEventListener("input", function () { clearTimeout(qTimer); qTimer = setTimeout(runSearch, 160); });
   $("q").addEventListener("focus", loadCorpus);
+  // ---------- search mode: the header folds away, the bar stays at the top, Cancel and × to get out ----------
+  var RECENT_N = 6;
+  function recentList() { var r = store.get("recentQ", []); return Array.isArray(r) ? r : []; }
+  function remember(q) {
+    q = (q || "").trim(); if (!q) return;
+    store.set("recentQ", [q].concat(recentList().filter(function (x) { return x !== q; })).slice(0, RECENT_N));
+  }
+  function renderRecent() {
+    var r = recentList(), show = document.body.classList.contains("searching") && !$("q").value.trim() && r.length > 0;
+    $("recent").hidden = !show;
+    if (show) $("recent").innerHTML = '<div class="lbl">' + T("recent") + '</div>' + r.map(function (x) { return '<button type="button" data-q="' + esc(x).replace(/"/g, "&quot;") + '">' + esc(x) + '</button>'; }).join("");
+  }
+  function enterSearch() {
+    if (document.body.classList.contains("searching")) return;
+    document.body.classList.add("searching"); window.scrollTo(0, 0); runSearch();
+  }
+  function exitSearch() {
+    $("q").value = ""; $("q").blur(); document.body.classList.remove("searching"); runSearch(); window.scrollTo(0, 0);
+  }
+  $("q").addEventListener("focus", enterSearch);
+  $("q").addEventListener("blur", function () { setTimeout(function () {       // tapping away with nothing typed leaves search mode
+    if (document.activeElement !== $("q") && !$("q").value.trim() && !$("list").hidden) { document.body.classList.remove("searching"); runSearch(); }
+  }, 120); });
+  $("q").addEventListener("keydown", function (ev) { if (ev.key === "Enter") { remember(this.value); this.blur(); } });
+  $("qcancel").addEventListener("click", exitSearch);
+  $("qx").addEventListener("mousedown", function (ev) { ev.preventDefault(); });          // keep the keyboard up
+  $("qx").addEventListener("click", function () { $("q").value = ""; runSearch(); $("q").focus(); });
+  $("recent").addEventListener("mousedown", function (ev) { ev.preventDefault(); });
+  $("recent").addEventListener("click", function (ev) {
+    var b = ev.target.closest("button[data-q]"); if (!b) return;
+    $("q").value = b.dataset.q; runSearch(); $("q").blur();
+  });
+  // scrolling the results puts the keyboard away so more of them show
+  $("results").addEventListener("touchstart", function () { if (document.activeElement === $("q")) $("q").blur(); }, { passive: true });
+  // a hairline under each top bar once content has scrolled beneath it
+  function markStuck() {
+    var y = window.scrollY;
+    if (!$("list").hidden) { var sb = $("searchbar"); sb.classList.toggle("stuck", sb.getBoundingClientRect().top <= 0.5 && y > 2); }
+    else topEl.classList.toggle("stuck", y > 2);
+  }
+  window.addEventListener("scroll", markStuck, { passive: true });
   $("results").addEventListener("click", function (ev) {
-    var h = ev.target.closest(".hit"); if (h) openEp(h.dataset.ep, +h.dataset.i);
+    var h = ev.target.closest(".hit"); if (h) { remember($("q").value); openEp(h.dataset.ep, +h.dataset.i); }
   });
 
   var BUILD = document.documentElement.dataset.build || "";
