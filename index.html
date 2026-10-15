@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="f97142f7859b">
+<html lang="ko" data-build="c485954673f7">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -163,7 +163,7 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .rk { font-style: italic; }
 /* Chinese wraps between any two characters; keep-all (for Korean) would only break it at punctuation */
 [data-ui^="z"] .en, [data-ui^="z"] .ov p, [data-ui^="z"] .ov dd, [data-ui^="z"] .ep .te, [data-ui^="z"] .ep .b, [data-ui^="z"] .hit .e,
-[data-ui^="z"] .banner, [data-ui^="z"] .dt .use .e, [data-ui^="z"] .lede, [data-ui^="z"] .top .ttl i, [data-ui^="z"] .sheet p.h { word-break: normal; }
+[data-ui^="z"] .banner, [data-ui^="z"] .dt .use .e, [data-ui^="z"] .lede, [data-ui^="z"] .top .ttl > i, [data-ui^="z"] .sheet p.h { word-break: normal; }
 [data-ui^="z"] .hg { word-break: keep-all; }
 .line mark.v { background: none; padding: 0; font-weight: 600; text-decoration: underline dotted var(--accent);
   text-decoration-thickness: 2px; text-underline-offset: 5px; -webkit-text-decoration: underline dotted var(--accent); }
@@ -183,7 +183,7 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .line.flash { box-shadow: 0 0 0 2px var(--accent) inset; }
 .banner { font-family: var(--f-latin); margin: 12px 4px 0; padding: 10px 12px; border-radius: 12px; background: var(--accent-soft); color: var(--accent); font-size: 13.5px; }
 .transport.off .seek, .transport.off .mid, .transport.off #speed, .transport.off #again { opacity: .4; pointer-events: none; }
-.top .ttl i { display: block; font-style: normal; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top .ttl > i { display: block; font-style: normal; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .note { margin: 18px 4px 0; color: var(--muted); font-size: 13px; }
 
 .transport { position: fixed; left: 0; right: 0; bottom: 0; z-index: 4; background: var(--surface); border: 1px solid var(--rule); border-bottom: 0;
@@ -410,7 +410,34 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       backNow: "К текущей строке", translation: "Перевод", textSize: "Размер текста", "default": "Обычная", none: "Нет",
       sheetH: "Нажмите, чтобы увидеть значение и употребление.", example: "Пример", notes: "Заметки", inEp: "В этом выпуске",
       playFrom: "Слушать отсюда", goLine: "К строке", commentaryOnly: "Объясняется в комментарии, но в сцене не встречается.",
-      lines: "Строк: {n}", noMatch: "Нет строк с «{q}».", loadFail: "Не удалось загрузить список выпусков. Потяните вниз, чтобы обновить." }
+      lines: "Строк: {n}", noMatch: "Нет строк с «{q}».", loadFail: "Не удалось загрузить список выпусков. Потяните вниз, чтобы обновить." },
+    tr: { lede: "Sogang Korece ifadelerini, dilbilgisini ve kelimelerini günlük konuşmalarla öğrenin. Başlamak için bir bölüm seçin ya da bir şey arayın.", search: "Podcast, dilbilgisi veya kelime ara", level: "Seviye {n}", ready: "{a} / {b} hazır",
+      scriptOnly: "Yalnızca metin", done: "Bitti", left: "{t} kaldı", "new": "Yeni", preview: "Önizleme",
+      about: "Bu bölüm hakkında", more: "Devamını göster", less: "Daha az göster", setting: "Ortam", formality: "Hitap düzeyi", items: "Dilbilgisi ve kelimeler", seeAll: "Tümünü gör",
+      bannerNone: "Bu bölümün sesi henüz kaydedilmedi. Metni şimdi okuyabilirsiniz; ses hazır olduğunda burada çalacak.",
+      bannerPartial: "Önizleme: Şimdilik yalnızca ilk kısım kaydedildi. Gri satırların henüz sesi yok.",
+      backNow: "Geçerli satıra dön", translation: "Çeviri", textSize: "Yazı boyutu", "default": "Varsayılan", none: "Yok",
+      sheetH: "Anlamını ve nasıl kullanıldığını görmek için dokunun.", example: "Örnek", notes: "Notlar", inEp: "Bu bölümde",
+      playFrom: "Buradan oynat", goLine: "Satıra git", commentaryOnly: "Sahnede geçmiyor, yorum kısmında açıklanıyor.",
+      lines: "{n} satır", noMatch: "“{q}” ile eşleşen satır yok.", loadFail: "Bölüm listesi yüklenemedi. Yenilemek için aşağı çekin." },
+    vi: { lede: "Học biểu hiện, ngữ pháp và từ vựng tiếng Hàn Sogang qua những cuộc trò chuyện đời thường. Chọn một tập để bắt đầu, hoặc tìm kiếm điều bạn muốn học.", search: "Tìm podcast, ngữ pháp hoặc từ vựng", level: "Cấp {n}", ready: "{a} / {b} tập sẵn sàng",
+      scriptOnly: "Chỉ có lời thoại", done: "Đã nghe", left: "còn {t}", "new": "Mới", preview: "Nghe thử",
+      about: "Về tập này", more: "Xem thêm", less: "Thu gọn", setting: "Bối cảnh", formality: "Mức độ trang trọng", items: "Ngữ pháp & từ vựng", seeAll: "Xem tất cả",
+      bannerNone: "Tập này chưa được thu âm. Bạn có thể đọc lời thoại ngay bây giờ, và âm thanh sẽ phát ở đây khi sẵn sàng.",
+      bannerPartial: "Nghe thử: Hiện mới thu âm phần đầu. Các dòng màu xám chưa có âm thanh.",
+      backNow: "Về dòng đang phát", translation: "Bản dịch", textSize: "Cỡ chữ", "default": "Mặc định", none: "Không",
+      sheetH: "Chạm để xem nghĩa và cách dùng.", example: "Ví dụ", notes: "Ghi chú", inEp: "Trong tập này",
+      playFrom: "Phát từ đây", goLine: "Đến dòng này", commentaryOnly: "Được giải thích trong phần bình luận, không xuất hiện trong cảnh.",
+      lines: "{n} dòng", noMatch: "Không có dòng nào khớp với “{q}”.", loadFail: "Không tải được danh sách tập. Kéo xuống để làm mới." },
+    th: { lede: "เรียนสำนวน ไวยากรณ์ และคำศัพท์ภาษาเกาหลีของซอกังผ่านบทสนทนาในชีวิตประจำวัน เลือกตอนที่อยากฟัง หรือค้นหาสิ่งที่อยากรู้ได้เลย", search: "ค้นหาพอดแคสต์ ไวยากรณ์ หรือคำศัพท์", level: "ระดับ {n}", ready: "พร้อมฟัง {a} / {b}",
+      scriptOnly: "มีแค่บท", done: "ฟังจบแล้ว", left: "เหลือ {t}", "new": "ใหม่", preview: "ตัวอย่าง",
+      about: "เกี่ยวกับตอนนี้", more: "ดูเพิ่มเติม", less: "ย่อ", setting: "ฉาก", formality: "ระดับภาษา", items: "ไวยากรณ์และคำศัพท์", seeAll: "ดูทั้งหมด",
+      bannerNone: "ตอนนี้ยังไม่ได้อัดเสียง อ่านบทได้เลยตอนนี้ แล้วเสียงจะเล่นตรงนี้เมื่อพร้อม",
+      bannerPartial: "ตัวอย่าง: ตอนนี้อัดเสียงไว้แค่ช่วงแรก บรรทัดสีเทายังไม่มีเสียง",
+      backNow: "กลับไปบรรทัดปัจจุบัน", translation: "คำแปล", textSize: "ขนาดตัวอักษร", "default": "ค่าเริ่มต้น", none: "ไม่มี",
+      sheetH: "แตะเพื่อดูความหมายและวิธีใช้", example: "ตัวอย่าง", notes: "หมายเหตุ", inEp: "ในตอนนี้",
+      playFrom: "เล่นจากตรงนี้", goLine: "ไปที่บรรทัด", commentaryOnly: "อธิบายไว้ในช่วงคอมเมนต์ ไม่ได้ใช้ในฉาก",
+      lines: "{n} บรรทัด", noMatch: "ไม่พบบรรทัดที่ตรงกับ “{q}”", loadFail: "โหลดรายชื่อตอนไม่ได้ ดึงลงเพื่อรีเฟรช" }
   };
   function UL() { return I18N[TR] ? TR : "en"; }
   function T(k, v) {
@@ -665,7 +692,8 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") $("speedmenu").hidden = true; });
   // translation (none / English / 简体 / 繁體) and text size, remembered on this device
   var LANGS = [["off", "None", "KO"], ["en", "English", "EN"], ["zh", "简体中文", "简"], ["zt", "繁體中文", "繁"],
-               ["de", "Deutsch", "DE"], ["fr", "Français", "FR"], ["ru", "Русский", "RU"]];
+               ["de", "Deutsch", "DE"], ["fr", "Français", "FR"], ["ru", "Русский", "RU"],
+               ["tr", "Türkçe", "TR"]];
   var SIZES = [0.88, 1, 1.13, 1.27];
   var GLOBE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.8 5.7 3.8 9s-1.2 6.3-3.8 9c-2.6-2.7-3.8-5.7-3.8-9S9.4 5.7 12 3z"/></svg>';
   function applyPrefs() {
@@ -716,7 +744,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   // every label on screen in the chosen language
   function applyUi() {
     document.documentElement.dataset.ui = UL();
-    $("wordmark").textContent = TR === "off" ? "팟캐스트" : { zh: "播客", zt: "播客", ru: "Подкасты" }[TR] || "Podcasts";
+    $("wordmark").textContent = TR === "off" ? "팟캐스트" : { zh: "播客", zt: "播客", ru: "Подкасты", tr: "Podcastler", vi: "Podcast", th: "พอดแคสต์" }[TR] || "Podcasts";
     $("lede").textContent = TR === "off" ? "서강 한국어 표현, 문법, 어휘를 생생한 대화로 익혀요. 에피소드를 골라 듣거나 궁금한 걸 검색해 보세요." : T("lede"); $("q").placeholder = T("search"); $("lvltxt").textContent = T("level", { n: 4 });
     $("backnowt").textContent = T("backNow"); $("sheeth").textContent = T("sheetH");
     if (index.length) renderList();
