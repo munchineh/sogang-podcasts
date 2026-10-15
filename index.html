@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="7800a30b74db">
+<html lang="ko" data-build="c150a9591eba">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -96,7 +96,8 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .lvpick select { -webkit-appearance: none; appearance: none; border: 1px solid var(--rule); background: var(--surface); color: var(--ink);
   font: 600 14px var(--f-body); letter-spacing: 0; text-transform: none; height: 36px; padding: 0 34px 0 14px; border-radius: 999px; }
 .lvpick svg { position: absolute; right: 12px; width: 14px; height: 14px; pointer-events: none; color: var(--muted); }
-.eps .lvl.pick { align-items: center; margin-top: 14px; }
+.eps .lvl.pick { align-items: center; margin: 0 0 6px; }
+.eps .lvl.pick .count { padding-right: 4px; }
 .lvl { font: 600 11px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 10px 8px 10px; display: flex; justify-content: space-between; }
 .lvl .count { letter-spacing: .02em; text-transform: none; font-weight: 500; }
 .eps { display: grid; gap: 10px; }
@@ -137,9 +138,11 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .bar i { display: block; height: 100%; background: var(--accent); }
 
 /* ---------- player ---------- */
-#player { height: 100%; display: flex; flex-direction: column; }
+#player { min-height: 100%; display: flex; flex-direction: column; }
 .top { position: sticky; top: 0; padding-top: env(safe-area-inset-top, 0px); z-index: 3; background: color-mix(in srgb, var(--bg) 88%, transparent);
   -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--rule); }
+.top { transition: transform .28s cubic-bezier(.22,1,.36,1); }
+.top.away { transform: translateY(-105%); }
 .top .wrap { display: flex; align-items: center; gap: 8px; padding-block: 10px; }
 .top .ttl { flex: 1; min-width: 0; }
 .top .ttl b { display: block; font: 900 17px/1.3 var(--f-display); letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -197,9 +200,24 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 
 .transport { position: fixed; left: 0; right: 0; bottom: 0; z-index: 4; background: var(--surface); border: 1px solid var(--rule); border-bottom: 0;
   border-radius: 22px 22px 0 0; box-shadow: 0 -8px 28px rgba(10,10,20,.07); padding-bottom: env(safe-area-inset-bottom, 0px); }
-.transport .wrap { padding-block: 22px 12px; padding-inline: max(14px, env(safe-area-inset-left, 0px)); display: grid; gap: 14px; }
+.transport .wrap { padding-block: 22px 18px; padding-inline: max(14px, env(safe-area-inset-left, 0px)); display: grid; gap: 20px; }
 .seek { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; font: 500 11.5px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
-input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; margin: 0; }
+.nowpl { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; font: 600 13.5px var(--f-body); color: var(--ink); margin-bottom: -6px; }
+.nowpl b { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+.nowpl svg { width: 16px; height: 16px; color: var(--muted); flex: none; }
+.nowpl .eq { display: inline-flex; gap: 2px; align-items: flex-end; height: 12px; flex: none; }
+.nowpl .eq i { width: 3px; border-radius: 2px; background: var(--accent); height: 40%; animation: eq 1s ease-in-out infinite alternate; }
+.nowpl .eq i:nth-child(2) { animation-delay: -.35s; } .nowpl .eq i:nth-child(3) { animation-delay: -.7s; }
+.paused .nowpl .eq i { animation-play-state: paused; }
+@keyframes eq { from { height: 30%; } to { height: 100%; } }
+body.mini #list { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 200px); }
+/* seek bar drawn by hand: a soft track instead of the browser's dark outline in dark mode */
+input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; height: 24px; margin: 0; width: 100%; --track: color-mix(in srgb, var(--ink) 13%, transparent); }
+input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--accent) 0 var(--fill, 0%), var(--track) var(--fill, 0%) 100%); }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 1px 3px rgba(0,0,0,.25), 0 0 0 .5px rgba(0,0,0,.08); }
+input[type=range]::-moz-range-track { height: 4px; border-radius: 2px; background: var(--track); }
+input[type=range]::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--accent); }
+input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
 .ctrls { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
 .ctrls .mid { display: flex; align-items: center; gap: 4px; }
 .ctrls .side { display: flex; align-items: center; gap: 6px; flex: 1; }
@@ -210,7 +228,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
 .play { width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: var(--surface); display: grid; place-items: center; }
 .play svg { width: 26px; height: 26px; }
 .speed { font: 600 13px var(--f-mono); min-width: 56px; height: 36px; border-radius: 10px; border: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
-.speedmenu { position: fixed; z-index: 7; bottom: calc(140px + env(safe-area-inset-bottom, 0px)); left: max(16px, calc(50% - 340px));
+.speedmenu { position: fixed; z-index: 7; bottom: calc(152px + env(safe-area-inset-bottom, 0px)); left: max(16px, calc(50% - 340px));
   background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; padding: 6px; display: grid; gap: 2px; min-width: 120px;
   box-shadow: 0 10px 30px rgba(10,10,20,.18); }
 .speedmenu button { height: 44px; border-radius: 10px; font: 600 15px var(--f-mono); font-variant-numeric: tabular-nums; text-align: left; padding: 0 14px;
@@ -223,7 +241,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
 .langmenu button { font: 600 15px var(--f-body); }
 .langmenu .sizes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 2px 4px 4px; }
 .langmenu .sizes button { justify-content: center; padding: 0; font-weight: 700; }
-.back-now { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(154px + env(safe-area-inset-bottom, 0px)); z-index: 4;
+.back-now { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(166px + env(safe-area-inset-bottom, 0px)); z-index: 4;
   display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 16px 0 12px; border-radius: 999px; white-space: nowrap;
   font: 600 13.5px/1 var(--f-latin); color: var(--accent); background: color-mix(in srgb, var(--accent-soft) 95%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
@@ -337,7 +355,11 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   </div></header>
   <div class="script wrap" id="script"></div>
   <button class="back-now" id="backnow" hidden><svg id="backarrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5.5v12"/><path d="M6.8 12.6 12 17.8l5.2-5.2"/></svg><span id="backnowt">Back to the current line</span></button>
-  <footer class="transport"><div class="wrap">
+  <audio id="audio" preload="metadata"></audio>
+</section>
+  <div class="speedmenu" id="speedmenu" role="menu" aria-label="Playback speed" hidden></div>
+  <footer class="transport" id="transport" hidden><div class="wrap">
+    <button class="nowpl" id="nowpl" hidden><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><b id="nowtxt"></b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
     <div class="seek"><span id="cur">0:00</span><input type="range" id="pos" min="0" max="1000" value="0" aria-label="Position"><span id="tot">0:00</span></div>
     <div class="ctrls">
       <div class="side"><button class="speed" id="speed" aria-label="Playback speed">1×</button>
@@ -350,9 +372,6 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       <div class="side right"><button class="ib" id="again" aria-label="Replay this line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button></div>
     </div>
   </div></footer>
-  <div class="speedmenu" id="speedmenu" role="menu" aria-label="Playback speed" hidden></div>
-  <audio id="audio" preload="metadata"></audio>
-</section>
 
 <div class="speedmenu langmenu" id="langmenu" role="menu" aria-label="Translation and text size" hidden></div>
 <div class="sheet" id="dsheet" hidden><div class="panel"><div class="wrap dt" id="detail"></div></div></div>
@@ -531,6 +550,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       ep = d; cur = -1;
       timed = d.lines.map(function (l, k) { return l.t == null ? -1 : k; }).filter(function (k) { return k >= 0; });
       $("list").hidden = true; $("player").hidden = false; window.scrollTo(0, 0);
+      document.body.classList.remove("mini"); $("nowpl").hidden = true; $("transport").hidden = false; $("player").querySelector(".top").classList.remove("away");
       $("epno").textContent = epLabel(d) + (d.partial ? " · " + T("preview") : "");
       $("eptitle").textContent = d.title;
       $("eptitle_en").innerHTML = fmtTr((locOv(d).title) || d.title_en || "");
@@ -665,7 +685,21 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     });
   }
 
-  $("back").addEventListener("click", function () { audio.pause(); $("backnow").hidden = true; $("player").hidden = true; $("list").hidden = false; renderList(); runSearch(); });
+  // leaving an episode while it plays keeps the player at the bottom of the list (tap its title to go back)
+  function showList() {
+    var keep = ep && ep.ready && !audio.paused;
+    if (!keep) audio.pause();
+    $("backnow").hidden = true; $("player").hidden = true; $("list").hidden = false;
+    document.body.classList.toggle("mini", !!keep); $("transport").hidden = !keep; $("nowpl").hidden = !keep;
+    if (keep) $("nowtxt").textContent = epLabel(ep) + " · " + ep.title;
+    renderList(); runSearch();
+  }
+  function showPlayer() {                                   // back to the episode that's playing, without reloading it
+    document.body.classList.remove("mini"); $("nowpl").hidden = true; $("transport").hidden = false;
+    $("list").hidden = true; $("player").hidden = false; userScrolledAt = 0; setCurrent(cur, true);
+  }
+  $("back").addEventListener("click", showList);
+  $("nowpl").addEventListener("click", showPlayer);
 
   var timed = [];
   function lineAt(t) {
@@ -700,15 +734,16 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     if (!ep || !ep.ready) return;
     var t = audio.currentTime || 0, d = audio.duration || ep.dur;
     $("cur").textContent = fmt(t);
-    if (!seeking) $("pos").value = d ? Math.round(t / d * 1000) : 0;
+    if (!seeking) { $("pos").value = d ? Math.round(t / d * 1000) : 0; $("pos").style.setProperty("--fill", ($("pos").value / 10) + "%"); }
     setCurrent(lineAt(t), force);
     setWord(cur, t);
     if (t > 1) store.set("pos_" + ep.ep, t);
   }
   audio.addEventListener("timeupdate", function () { tick(false); });
-  audio.addEventListener("play", function () { setPlayIcon(true); });
-  audio.addEventListener("pause", function () { setPlayIcon(false); });
-  audio.addEventListener("ended", function () { if (!ep.partial) store.set("done_" + ep.ep, true); store.set("pos_" + ep.ep, 0); });
+  audio.addEventListener("play", function () { setPlayIcon(true); $("transport").classList.remove("paused"); });
+  audio.addEventListener("pause", function () { setPlayIcon(false); $("transport").classList.add("paused"); });
+  audio.addEventListener("ended", function () { if (!ep.partial) store.set("done_" + ep.ep, true); store.set("pos_" + ep.ep, 0);
+    if (document.body.classList.contains("mini")) { document.body.classList.remove("mini"); $("transport").hidden = true; } });
   var rafOn = false;
   function raf() { if (!audio.paused) { tick(false); requestAnimationFrame(raf); } else rafOn = false; }
   audio.addEventListener("playing", function () { if (!rafOn) { rafOn = true; requestAnimationFrame(raf); } });
@@ -733,7 +768,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     var l = ev.target.closest(".line"); if (l && (ev.key === "Enter" || ev.key === " ") && ep.ready && ep.lines[+l.dataset.i].t != null) { ev.preventDefault(); playFrom(ep.lines[+l.dataset.i].t); }
   });
   var seeking = false;
-  $("pos").addEventListener("input", function () { seeking = true; var d = audio.duration || ep.dur; $("cur").textContent = fmt(this.value / 1000 * d); });
+  $("pos").addEventListener("input", function () { seeking = true; this.style.setProperty("--fill", (this.value / 10) + "%"); var d = audio.duration || ep.dur; $("cur").textContent = fmt(this.value / 1000 * d); });
   $("pos").addEventListener("change", function () { var d = audio.duration || ep.dur; audio.currentTime = this.value / 1000 * d; seeking = false; userScrolledAt = 0; tick(true); });
   function fmtSpeed(r) { return (r === 1 ? "1" : String(r)) + "×"; }
   // speed: tap opens a menu, pick one
@@ -838,6 +873,13 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
     bn.hidden = !off;
     if (off) { var pr = bn.getBoundingClientRect(); bn.classList.toggle("up", c < (pr.height ? (pr.top + pr.bottom) / 2 : bot)); }   // arrow points at the line
   }
+  var lastY = window.scrollY, topEl = document.querySelector("#player .top");
+  window.addEventListener("scroll", function () {
+    if ($("player").hidden) return;
+    var y = window.scrollY, dy = y - lastY; lastY = y;
+    if (y < 80 || dy < -4) topEl.classList.remove("away");
+    else if (dy > 6 && !autoScrolling) topEl.classList.add("away");
+  }, { passive: true });
   var bnQueued = false;
   window.addEventListener("scroll", function () {
     if (bnQueued) return; bnQueued = true;
@@ -908,7 +950,13 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   function openDetail(k, dx, fromH) {
     var it = ep.items[k]; if (!it) return;
     var kinds = { grammar: "Grammar", speaking: "Expression", vocab: "Vocab" };
-    var notes = cz(it, "note").split(/\s+[\/·・]\s+/).filter(Boolean);    // one bullet per part and per "·" pair
+    // one bullet per line of the note; a "·" list becomes separate bullets only when every piece is an "X = Y" pair
+    var notes = [];
+    cz(it, "note").split(/\n+/).forEach(function (part) {
+      var bits = part.split(/\s+[·・]\s+/);
+      if (bits.length > 1 && bits.every(function (b) { return /=|＝/.test(b); })) notes = notes.concat(bits); else notes.push(part);
+    });
+    notes = notes.map(function (x) { return x.trim(); }).filter(Boolean);
     var uses = [];
     ep.lines.forEach(function (l, i) { if ((l.hl || []).some(function (h) { return h[2] === k; })) uses.push(i); });
     $("detail").className = "wrap dt" + (it.kind === "vocab" ? " v" : "");
