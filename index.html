@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="2d3e540fe6f9">
+<html lang="ko" data-build="3cec3a771b1d">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -92,6 +92,10 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .mast h1 { font: 800 clamp(24px, 7vw, 32px)/1.15 "Poppins", var(--f-display); margin: 0; letter-spacing: -.025em; white-space: nowrap; }
 .mast .count { font: 500 12px var(--f-mono); color: var(--muted); }
 .lede { color: var(--muted); font-size: 14px; font-family: var(--f-latin); margin: 0 0 22px; padding-inline: 8px; }
+.lvsw { display: flex; gap: 4px; margin: 14px 4px 2px; padding: 4px; border-radius: 12px; background: color-mix(in srgb, var(--ink) 6%, transparent); }
+.lvsw button { flex: 1; height: 36px; border-radius: 9px; font: 600 14px var(--f-body); color: var(--muted); }
+.lvsw button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 14%, transparent); }
+.lvsw[hidden] { display: none; }
 .lvl { font: 600 11px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 10px 8px 10px; display: flex; justify-content: space-between; }
 .lvl .count { letter-spacing: .02em; text-transform: none; font-weight: 500; }
 .eps { display: grid; gap: 10px; }
@@ -303,6 +307,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   </div></div>
   <div class="results" id="results" hidden></div>
   <h2 class="lvl" id="lvl" hidden><span id="lvltxt"></span><span class="count" id="count"></span></h2>
+  <div class="lvsw" id="lvsw" role="tablist" aria-label="Level"></div>
   <div class="eps" id="eps"></div>
 </main>
 
@@ -467,16 +472,15 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
 
   // ---------- list ----------
   function renderList() {
-    // one section per level, in the order they come in the index (Level 4 first)
-    var lastLv = null;
-    $("eps").innerHTML = index.map(function (e) {
-      var head = "";
-      if (e.level !== lastLv) {
-        lastLv = e.level;
-        var inLv = index.filter(function (x) { return x.level === e.level; });
-        head = '<h2 class="lvl"><span>' + T("level", { n: e.level }) + '</span><span class="count">' +
-          T("ready", { a: inLv.filter(function (x) { return x.ready; }).length, b: inLv.length }) + '</span></h2>';
-      }
+    // one level at a time; the switch above the list picks it (remembered), Level 4 by default
+    var lvs = []; index.forEach(function (e) { if (lvs.indexOf(e.level) < 0) lvs.push(e.level); });
+    var lv = store.get("lv", lvs[0]); if (lvs.indexOf(lv) < 0) lv = lvs[0];
+    $("lvsw").hidden = lvs.length < 2 || !!($("q").value || "").trim();
+    $("lvsw").innerHTML = lvs.map(function (n) { return '<button role="tab" data-lv="' + n + '" aria-selected="' + (n === lv) + '">' + T("level", { n: n }) + '</button>'; }).join("");
+    var inLv = index.filter(function (x) { return x.level === lv; });
+    var head = '<h2 class="lvl"><span>' + T("level", { n: lv }) + '</span><span class="count">' +
+      T("ready", { a: inLv.filter(function (x) { return x.ready; }).length, b: inLv.length }) + '</span></h2>';
+    $("eps").innerHTML = head + inLv.map(function (e) {
       var pos = store.get("pos_" + e.ep, 0), done = store.get("done_" + e.ep, false), st, cls = "";
       if (!e.ready) st = T("scriptOnly");
       else if (done) { st = T("done"); cls = "done"; }
@@ -485,13 +489,17 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       if (e.ready && e.partial) st += " · " + T("preview");
       var lc = locE(e);
       var pct = e.ready && e.dur ? Math.min(100, (done ? 100 : pos / e.dur * 100)) : 0;
-      return head + '<button class="ep" data-ep="' + e.ep + '"' + (e.ready ? "" : ' data-noaudio="1"') + '>' +
+      return '<button class="ep" data-ep="' + e.ep + '"' + (e.ready ? "" : ' data-noaudio="1"') + '>' +
         '<span class="no">EP ' + String(e.n).padStart(2, "0") + '</span><span class="st ' + cls + '">' + st + '</span>' +
         '<span class="t">' + esc(e.title) + '</span>' + (lc.t ? '<span class="te">' + fmtTr(lc.t) + '</span>' : '') +
         (lc.b ? '<span class="b">' + fmtTr(lc.b) + '</span>' : '') +
         (pct ? '<span class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></span>' : "") + '</button>';
     }).join("");
   }
+  $("lvsw").addEventListener("click", function (ev) {
+    var b = ev.target.closest("button[data-lv]"); if (!b) return;
+    store.set("lv", +b.dataset.lv); renderList(); window.scrollTo({ top: 0 });
+  });
   $("eps").addEventListener("click", function (ev) {
     var b = ev.target.closest(".ep"); if (b) openEp(b.dataset.ep);
   });
@@ -933,7 +941,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   }
   function runSearch() {
     var q = $("q").value.trim();
-    $("eps").hidden = !!q; $("results").hidden = !q;
+    $("eps").hidden = !!q; $("results").hidden = !q; $("lvsw").hidden = !!q || $("lvsw").children.length < 2;
     if (!q) return;
     loadCorpus().then(function (rows) {
       if ($("q").value.trim() !== q) return;
