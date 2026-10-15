@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="9a61fa71c873">
+<html lang="ko" data-build="aebc7f81641a">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -298,7 +298,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   <p class="lede" id="lede">서강 한국어 표현, 문법, 어휘를 생생한 대화로 익혀요. 에피소드를 골라 듣거나 궁금한 걸 검색해 보세요.</p>
   <div class="search"><div class="wrapin">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-    <input id="q" type="search" placeholder="Search Korean or English" autocomplete="off" aria-label="Search scripts">
+    <input id="q" type="search" placeholder="Search podcast, grammar or vocab" autocomplete="off" aria-label="Search scripts">
   </div></div>
   <div class="results" id="results" hidden></div>
   <h2 class="lvl" id="lvl" hidden><span id="lvltxt"></span><span class="count" id="count"></span></h2>
@@ -357,7 +357,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
   }
   // UI text in the chosen translation language (None → English)
   var I18N = {
-    en: { lede: "Learn Sogang Korean expressions, grammar and vocab through everyday conversations. Pick an episode to start, or search for something.", search: "Search Korean or English", level: "Level {n}", ready: "{a} / {b} ready",
+    en: { lede: "Learn Sogang Korean expressions, grammar and vocab through everyday conversations. Pick an episode to start, or search for something.", search: "Search podcast, grammar or vocab", level: "Level {n}", ready: "{a} / {b} ready",
       scriptOnly: "Script only", done: "Done", left: "{t} left", "new": "New", preview: "Preview",
       about: "About this episode", more: "Show more", less: "Show less", setting: "Setting", formality: "Formality", items: "Grammar & vocab", seeAll: "See all",
       bannerNone: "Audio for this episode isn’t recorded yet. You can read the script now, and it will play here once it’s ready.",
@@ -366,7 +366,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       sheetH: "Tap to see its meaning and how it’s used.", example: "Example", notes: "Notes", inEp: "In this episode",
       playFrom: "Play from here", goLine: "Go to line", commentaryOnly: "Explained in the commentary rather than used in the scene.",
       lines: "{n} lines", noMatch: "No lines match “{q}”.", loadFail: "Couldn’t load the episode list. Pull to refresh." },
-    zh: { lede: "通过日常对话，学习西江韩语的表达、语法和词汇。挑一集开始听，或搜索想学的内容。", search: "搜索韩语或中文", level: "{n} 级", ready: "{a} / {b} 集可听",
+    zh: { lede: "通过日常对话，学习西江韩语的表达、语法和词汇。挑一集开始听，或搜索想学的内容。", search: "搜索播客、语法或词汇", level: "{n} 级", ready: "{a} / {b} 集可听",
       scriptOnly: "仅文本", done: "已听完", left: "剩余 {t}", "new": "新", preview: "预览",
       about: "本集简介", more: "展开", less: "收起", setting: "场景", formality: "语体", items: "语法词汇", seeAll: "查看全部",
       bannerNone: "本集音频尚未录制。现在可以先阅读脚本，录好后即可在此播放。",
@@ -375,7 +375,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       sheetH: "点击查看含义和用法。", example: "例句", notes: "笔记", inEp: "本集出现",
       playFrom: "从这里播放", goLine: "跳到该句", commentaryOnly: "只在讲解中出现，场景对话里没有用到。",
       lines: "{n} 句", noMatch: "没有找到包含“{q}”的句子。", loadFail: "无法加载节目列表，请下拉刷新。" },
-    zt: { lede: "透過日常對話，學習西江韓語的表達、語法和詞彙。挑一集開始聽，或搜尋想學的內容。", search: "搜尋韓語或中文", level: "{n} 級", ready: "{a} / {b} 集可聽",
+    zt: { lede: "透過日常對話，學習西江韓語的表達、語法和詞彙。挑一集開始聽，或搜尋想學的內容。", search: "搜尋播客、語法或詞彙", level: "{n} 級", ready: "{a} / {b} 集可聽",
       scriptOnly: "僅文字", done: "已聽完", left: "剩餘 {t}", "new": "新", preview: "預覽",
       about: "本集簡介", more: "展開", less: "收合", setting: "場景", formality: "語體", items: "語法詞彙", seeAll: "查看全部",
       bannerNone: "本集音訊尚未錄製。現在可以先閱讀腳本，錄好後就能在這裡播放。",
@@ -384,7 +384,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       sheetH: "點一下查看意思和用法。", example: "例句", notes: "筆記", inEp: "本集出現",
       playFrom: "從這裡播放", goLine: "跳到這句", commentaryOnly: "只在講解中出現，情境對話裡沒有用到。",
       lines: "{n} 句", noMatch: "找不到包含「{q}」的句子。", loadFail: "無法載入節目列表，請下拉重新整理。" },
-    de: { lede: "Lerne Ausdrücke, Grammatik und Wortschatz aus dem Sogang-Koreanisch in Alltagsgesprächen. Such dir eine Folge aus oder suche gezielt nach etwas.", search: "Koreanisch oder Deutsch suchen", level: "Stufe {n}", ready: "{a} / {b} bereit",
+    de: { lede: "Lerne Ausdrücke, Grammatik und Wortschatz aus dem Sogang-Koreanisch in Alltagsgesprächen. Such dir eine Folge aus oder suche gezielt nach etwas.", search: "Podcast, Grammatik oder Wortschatz suchen", level: "Stufe {n}", ready: "{a} / {b} bereit",
       scriptOnly: "Nur Skript", done: "Gehört", left: "noch {t}", "new": "Neu", preview: "Vorschau",
       about: "Über diese Folge", more: "Mehr", less: "Weniger", setting: "Schauplatz", formality: "Sprachebene", items: "Lernpunkte", seeAll: "Alle ansehen",
       bannerNone: "Für diese Folge gibt es noch keine Aufnahme. Du kannst das Skript schon lesen, und sobald sie fertig ist, läuft sie hier.",
@@ -393,7 +393,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       sheetH: "Tippe darauf, um Bedeutung und Verwendung zu sehen.", example: "Beispiel", notes: "Notizen", inEp: "In dieser Folge",
       playFrom: "Ab hier abspielen", goLine: "Zur Zeile", commentaryOnly: "Wird im Kommentar erklärt, kommt in der Szene aber nicht vor.",
       lines: "{n} Zeilen", noMatch: "Keine Zeile enthält „{q}“.", loadFail: "Die Folgenliste konnte nicht geladen werden. Zum Aktualisieren nach unten ziehen." },
-    fr: { lede: "Apprenez les expressions, la grammaire et le vocabulaire du coréen de Sogang à travers des conversations du quotidien. Choisissez un épisode ou lancez une recherche.", search: "Rechercher en coréen ou en français", level: "Niveau {n}", ready: "{a} / {b} disponibles",
+    fr: { lede: "Apprenez les expressions, la grammaire et le vocabulaire du coréen de Sogang à travers des conversations du quotidien. Choisissez un épisode ou lancez une recherche.", search: "Rechercher podcast, grammaire ou vocabulaire", level: "Niveau {n}", ready: "{a} / {b} disponibles",
       scriptOnly: "Texte seul", done: "Écouté", left: "encore {t}", "new": "Nouveau", preview: "Aperçu",
       about: "À propos de cet épisode", more: "Plus", less: "Moins", setting: "Cadre", formality: "Registre", items: "À apprendre", seeAll: "Tout voir",
       bannerNone: "L’audio de cet épisode n’est pas encore enregistré. Vous pouvez déjà lire le texte ; il sera lu ici dès qu’il sera prêt.",
@@ -402,7 +402,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 24px; marg
       sheetH: "Touchez pour voir le sens et l’emploi.", example: "Exemple", notes: "Notes", inEp: "Dans cet épisode",
       playFrom: "Lire à partir d’ici", goLine: "Aller à la ligne", commentaryOnly: "Expliqué dans le commentaire, mais pas utilisé dans la scène.",
       lines: "{n} lignes", noMatch: "Aucune ligne ne contient « {q} ».", loadFail: "Impossible de charger la liste des épisodes. Tirez pour actualiser." },
-    ru: { lede: "Учите выражения, грамматику и лексику корейского по Sogang в живых диалогах. Выберите выпуск или найдите что-нибудь через поиск.", search: "Поиск на корейском или русском", level: "Уровень {n}", ready: "готово {a} / {b}",
+    ru: { lede: "Учите выражения, грамматику и лексику корейского по Sogang в живых диалогах. Выберите выпуск или найдите что-нибудь через поиск.", search: "Поиск по подкасту, грамматике и лексике", level: "Уровень {n}", ready: "готово {a} / {b}",
       scriptOnly: "Только текст", done: "Прослушано", left: "осталось {t}", "new": "Новое", preview: "Превью",
       about: "Об этом выпуске", more: "Ещё", less: "Свернуть", setting: "Место действия", formality: "Стиль речи", items: "Изучаем", seeAll: "Показать все",
       bannerNone: "Аудио для этого выпуска ещё не записано. Текст можно читать уже сейчас, а когда запись будет готова, она появится здесь.",
