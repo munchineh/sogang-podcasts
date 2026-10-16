@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="fa38d631cdf2">
+<html lang="ko" data-build="3fc21bb71a1c">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -144,6 +144,11 @@ body { margin-top: 0; }
    anything translucent makes it fall back to a soft blur that smears over the top of the field. */
 /* a solid strip fixed behind the status bar: iOS Safari only swaps its soft top-edge blur for a flat colour when an opaque
    element is FIXED at the very top (a sticky bar doesn't count), so this keeps the strip clean in search mode and while scrolling */
+/* while search or find is open the bar is swapped from sticky to truly fixed (same spot, the space it leaves is padded back), because
+   iOS 26 only skips its top-edge blur for a solid FIXED bar on the edge; a sticky bar that isn't stuck yet (top of the page) doesn't count */
+.search.pinned { position: fixed; top: 0; left: 0; right: 0; margin: 0; z-index: 3; padding-inline: max(16px, calc((100% - 664px) / 2)); }
+.top.pinned { position: fixed; top: 0; left: 0; right: 0; }
+.top.pinned > .wrap { padding-left: calc(max(var(--edge), env(safe-area-inset-left, 0px)) + 8px); padding-right: calc(max(var(--edge), env(safe-area-inset-right, 0px)) + 8px); }
 .sbar { position: fixed; top: 0; left: 0; right: 0; height: env(safe-area-inset-top, 0px); background: var(--bg); z-index: 5; pointer-events: none; }
 .search, .top { background: var(--bg);
   border-bottom: 1px solid transparent; transition: border-color .2s ease; }
@@ -1396,7 +1401,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   function enterFind() {
     finding = true; topHold = Date.now(); topEl.classList.remove("away");
-    morphFind(true); topEl.classList.add("finding");
+    pinBar(topEl, true); morphFind(true); topEl.classList.add("finding");
     try { $("fq").focus({ preventScroll: true }); } catch (e) { $("fq").focus(); }   // no page jump when the keyboard opens
     if ($("fq").value.trim()) runFind();
   }
@@ -1404,12 +1409,31 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     if (!finding) return;
     finding = false; topHold = Date.now(); $("fq").blur(); clearFind(); $("fcount").textContent = "";
     morphFind(false); topEl.classList.remove("finding", "away"); pinTop();
+    setTimeout(function () { if (!finding) pinBar(topEl, false); }, 300);
     setTimeout(function () { if (!finding) $("fq").value = ""; }, 340);
   }
   // with the keyboard up, iOS slides the page under it; keep the find bar in view and the player bar out of the way
   // with the keyboard up, iOS slides the whole page (fixed things included) up behind the status bar. Slide the status-bar
   // strip and whichever top bar is in use back down by the same amount, so iOS keeps seeing a solid bar under the clock
   var sbarEl = document.querySelector(".sbar"), searchEl = document.querySelector(".search");
+  function pinBar(bar, on) {
+    if (!bar || bar.classList.contains("pinned") === on) return;
+    var host = bar.parentElement;
+    if (on) {
+      if (bar.getBoundingClientRect().top > 1) return;         // only when it already sits on the top edge
+      bar._pad = host.style.paddingTop;
+      var pad = parseFloat(getComputedStyle(host).paddingTop) || 0, h = bar.offsetHeight;
+      host.style.transition = "none"; host.style.paddingTop = (pad + h) + "px"; bar.classList.add("pinned");
+    } else {
+      bar.classList.remove("pinned"); host.style.paddingTop = bar._pad || ""; host.style.transition = "";
+    }
+  }
+  var pinT;
+  new MutationObserver(function () {
+    clearTimeout(pinT);
+    if (document.body.classList.contains("searching")) pinT = setTimeout(function () { if (document.body.classList.contains("searching")) pinBar(searchEl, true); }, 380);
+    else pinBar(searchEl, false);
+  }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
   function pinTop() {
     var vv = window.visualViewport, off = vv && vv.offsetTop > 0 ? vv.offsetTop : 0, tf = off ? "translateY(" + off + "px)" : "";
     topEl.style.transform = finding ? tf : "";
