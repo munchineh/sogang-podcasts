@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="806836b019fa">
+<html lang="ko" data-build="491c5aaf8722">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -210,13 +210,17 @@ body.searching .qcancel { max-width: 90px; opacity: 1; padding: 8px 4px 8px 14px
 .top .ttl { flex: 1; min-width: 0; }
 /* find in this episode: the header turns into a find bar (like Safari's Find on Page) */
 #findbtn, #xpbtn { color: var(--muted); }
+/* header icons: grey wash on press; the book stays "on" (darker, washed) while its list or one of its cards is open */
+#back:active, #findbtn:active, #xpbtn:active, #xpbtn.on { background: color-mix(in srgb, var(--ink) 9%, transparent); color: var(--ink); }
 #findbtn { margin-right: -4px; }
 /* The find bar lies over the title row (same height, so nothing jumps). Opening morphs the search icon into the
    field: the pill stretches out of the icon on a spring (a small overshoot, then it settles) with the magnifier riding
    its left edge; the arrows and Done pop in after it on the same spring. Closing folds the pill back into the icon.
    The motion itself runs from JS (morphFind) so it can start from the icon's real position. */
 .top .wrap { position: relative; }
-.top .ttl, #back, #xpbtn { transition: opacity .2s ease .12s, transform .4s cubic-bezier(.22,1,.36,1) .08s; }
+.top .ttl { transition: opacity .2s ease .12s, transform .4s cubic-bezier(.22,1,.36,1) .08s; }
+#back, #xpbtn { transition: opacity .2s ease .12s, transform .45s var(--spring), background-color .2s ease, color .2s ease; }
+#back:active, #xpbtn:active, #findbtn:active { transform: scale(.88); transition: transform .08s ease-out, background-color .08s ease, color .08s ease; }
 .top.finding .ttl, .top.finding #back, .top.finding #xpbtn { transition: opacity .16s ease, transform .4s cubic-bezier(.22,1,.36,1); }
 #findbtn { transition: opacity .12s ease .19s; }
 .top.finding .ttl, .top.finding #back, .top.finding #xpbtn, .top.finding #findbtn { opacity: 0; pointer-events: none; }
@@ -1167,8 +1171,11 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       (v.length ? '<div class="xpsec"><h3>어휘</h3><span>' + v.length + '</span></div>' + v.join("") : "");
   }
   // ---------- sheet motion: slide up to open, down to close; sideways between the list and a card ----------
+  var xpFlow = false;                                       // the card sheet was reached from the grammar & vocab list
+  function shown(el) { return !el.hidden && !el.classList.contains("closing"); }
+  function syncXpOn() { $("xpbtn").classList.toggle("on", shown($("sheet")) || (xpFlow && shown($("dsheet")))); }
   function sheetShow(el, dx, fromH) {
-    clearTimeout(el._t); el.hidden = false; el.classList.remove("closing", "open");
+    clearTimeout(el._t); el.hidden = false; el.classList.remove("closing", "open"); setTimeout(syncXpOn, 0);
     el.classList.toggle("swap", dx != null); el.style.setProperty("--dx", (dx || 0) + "px");
     var p = el.querySelector(".panel");
     if (fromH) {                                            // ease the height from the sheet it replaces
@@ -1181,13 +1188,14 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   function sheetHide(el, dx, after) {
     if (el.hidden) { if (after) after(); return; }
-    clearTimeout(el._t); el.classList.remove("open"); el.classList.add("closing");
+    clearTimeout(el._t); el.classList.remove("open"); el.classList.add("closing"); setTimeout(syncXpOn, 0);
     el.classList.toggle("swap", dx != null); el.style.setProperty("--dx", (dx || 0) + "px");
     el._t = setTimeout(function () { el.hidden = true; el.classList.remove("closing", "swap"); if (after) after(); }, dx != null ? 270 : 280);
   }
   function panelH(el) { return el.hidden ? 0 : el.querySelector(".panel").getBoundingClientRect().height; }
   var xpScroll = 0;
   function openXp(keepScroll, dx, fromH) {
+    xpFlow = true;
     sheetShow($("sheet"), dx, fromH);
     $("sheet").querySelector(".panel").scrollTop = keepScroll ? xpScroll : 0;
   }
@@ -1215,6 +1223,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     return out + esc(l.ko.slice(p));
   }
   function openDetail(k, dx, fromH) {
+    xpFlow = dx != null;                                    // dx is only passed when coming from the list
     var it = ep.items[k]; if (!it) return;
     var kinds = { grammar: "Grammar", speaking: "Expression", vocab: "Vocab" };
     // one bullet per line of the note; a "·" list becomes separate bullets only when every piece is an "X = Y" pair
