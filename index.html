@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="f022ad3ab15a">
+<html lang="ko" data-build="87ff729768f1">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -72,7 +72,10 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .sheet .wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 
 /* ---------- episode list ---------- */
-#list { padding-block: calc(env(safe-area-inset-top, 0px) + 28px) 48px; }
+/* no default 8px margin at the top of the page: in search mode and at the top of an episode the top bar must sit right on the
+   top edge, or iOS 26 draws its soft blur under the status bar (WebKit only skips it for a solid bar touching the edge) */
+body { margin-top: 0; }
+#list { padding-block: calc(env(safe-area-inset-top, 0px) + 36px) 48px; }
 .mast { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; padding-inline: 8px; }
 .mast .tools { margin-left: auto; display: flex; align-items: center; gap: 4px; margin-right: -6px; }
 .mast .refresh { color: var(--muted); }
@@ -189,8 +192,7 @@ body.searching .qcancel { max-width: 90px; opacity: 1; padding: 8px 4px 8px 14px
 /* while the keyboard is up iOS draws a soft blur band just under the status bar; give the bar a little extra room at the
    top so the field sits below it, and ease back when the keyboard goes */
 .search { transition: border-color .2s ease, padding-top .26s cubic-bezier(.22,1,.36,1); }
-body.kbd .search { padding-top: calc(env(safe-area-inset-top, 0px) + 16px); }
-body.kbd .top { padding-top: calc(env(safe-area-inset-top, 0px) + 8px); }
+
 .top.away { transform: translateY(-105%); }
 .top .wrap { display: flex; align-items: center; gap: 8px; padding-block: 10px; }
 .top .ttl { flex: 1; min-width: 0; }
@@ -1361,6 +1363,25 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     document.body.classList.toggle("kbd", up);
   }
   if (window.visualViewport) visualViewport.addEventListener("resize", kbdCheck);
+  // diagnostics for the iOS top-edge blur: open the site with #dbg to show live viewport numbers
+  if (location.hash === "#dbg") {
+    var dbg = document.createElement("pre");
+    dbg.style.cssText = "position:fixed;left:8px;right:8px;top:40%;z-index:99;margin:0;padding:8px 10px;border-radius:10px;background:rgba(0,0,0,.78);color:#7CFC9A;font:11px/1.45 ui-monospace,monospace;pointer-events:none;white-space:pre-wrap";
+    document.body.appendChild(dbg);
+    var dbgTick = function () {
+      var vv = window.visualViewport || {}, box = function (sel) {
+        var el = document.querySelector(sel); if (!el || !el.offsetParent && sel !== ".sbar") return sel + " hidden";
+        var r = el.getBoundingClientRect(), cs = getComputedStyle(el);
+        return sel + " " + cs.position + " top " + Math.round(r.top) + " h " + Math.round(r.height) + " w " + Math.round(r.width) + " " + cs.backgroundColor + (cs.transform !== "none" ? " moved" : "");
+      };
+      dbg.textContent = "vv.offsetTop " + Math.round(vv.offsetTop || 0) + "  vv.h " + Math.round(vv.height || 0) + "  innerH " + innerHeight +
+        "\nscrollY " + Math.round(scrollY) + "  kbd " + document.body.classList.contains("kbd") + "  focus " + (document.activeElement && document.activeElement.id) +
+        "\n" + box(".sbar") + "\n" + box(".search") + "\n" + box("#player .top") +
+        "\nsafe-top " + getComputedStyle(document.querySelector(".sbar")).height;
+      requestAnimationFrame(dbgTick);
+    };
+    dbgTick();
+  }
   document.addEventListener("focusin", function () { setTimeout(kbdCheck, 60); });
   document.addEventListener("focusout", function () { setTimeout(kbdCheck, 60); });
   // like iOS's own search screens: dragging the page with something typed puts the keyboard away (the search stays open),
