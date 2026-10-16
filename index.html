@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="e98395b9e2d6">
+<html lang="ko" data-build="dc2dc1b197ae">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -185,7 +185,12 @@ body.searching .qcancel { max-width: 90px; opacity: 1; padding: 8px 4px 8px 14px
 /* ---------- player ---------- */
 #player { min-height: 100%; display: flex; flex-direction: column; }
 .top { position: sticky; top: 0; padding-top: env(safe-area-inset-top, 0px); z-index: 3; }
-.top { transition: transform .28s cubic-bezier(.22,1,.36,1), border-color .2s ease; }
+.top { transition: transform .28s cubic-bezier(.22,1,.36,1), border-color .2s ease, padding-top .26s cubic-bezier(.22,1,.36,1); }
+/* while the keyboard is up iOS draws a soft blur band just under the status bar; give the bar a little extra room at the
+   top so the field sits below it, and ease back when the keyboard goes */
+.search { transition: border-color .2s ease, padding-top .26s cubic-bezier(.22,1,.36,1); }
+body.kbd .search { padding-top: calc(env(safe-area-inset-top, 0px) + 22px); }
+body.kbd .top { padding-top: calc(env(safe-area-inset-top, 0px) + 14px); }
 .top.away { transform: translateY(-105%); }
 .top .wrap { display: flex; align-items: center; gap: 8px; padding-block: 10px; }
 .top .ttl { flex: 1; min-width: 0; }
@@ -1339,11 +1344,25 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     setTimeout(function () { if (!finding) $("fq").value = ""; }, 340);
   }
   // with the keyboard up, iOS slides the page under it; keep the find bar in view and the player bar out of the way
+  // with the keyboard up, iOS slides the whole page (fixed things included) up behind the status bar. Slide the status-bar
+  // strip and whichever top bar is in use back down by the same amount, so iOS keeps seeing a solid bar under the clock
+  var sbarEl = document.querySelector(".sbar"), searchEl = document.querySelector(".search");
   function pinTop() {
-    var vv = window.visualViewport;
-    topEl.style.transform = finding && vv && vv.offsetTop > 0 ? "translateY(" + vv.offsetTop + "px)" : "";
+    var vv = window.visualViewport, off = vv && vv.offsetTop > 0 ? vv.offsetTop : 0, tf = off ? "translateY(" + off + "px)" : "";
+    topEl.style.transform = finding ? tf : "";
+    if (sbarEl) sbarEl.style.transform = tf;
+    if (searchEl) searchEl.style.transform = document.body.classList.contains("searching") ? tf : "";
   }
   if (window.visualViewport) { visualViewport.addEventListener("resize", pinTop); visualViewport.addEventListener("scroll", pinTop); }
+  // keyboard up while typing in a top-bar field (podcast search or find) → body.kbd
+  function kbdCheck() {
+    var vv = window.visualViewport, el = document.activeElement;
+    var up = !!vv && window.innerHeight - vv.height > 120 && !!el && (el.id === "q" || el.id === "fq");
+    document.body.classList.toggle("kbd", up);
+  }
+  if (window.visualViewport) visualViewport.addEventListener("resize", kbdCheck);
+  document.addEventListener("focusin", function () { setTimeout(kbdCheck, 60); });
+  document.addEventListener("focusout", function () { setTimeout(kbdCheck, 60); });
   $("fq").addEventListener("focus", function () { document.body.classList.add("findtype"); });
   $("fq").addEventListener("blur", function () { document.body.classList.remove("findtype"); setTimeout(pinTop, 300); });
   window.addEventListener("resize", function () { if (finding && fhits.length) drawHits(); });
