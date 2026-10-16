@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="f38b4d9e45fd">
+<html lang="ko" data-build="ea8549ba4648">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -350,6 +350,7 @@ input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 2
 .rng input[type=range]::-webkit-slider-thumb { width: 28px; }
 input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 1px 3px rgba(0,0,0,.25), 0 0 0 .5px rgba(0,0,0,.08); }
 .rng { position: relative; display: block; }
+.rng input[type=range] { display: block; }          /* inline, it sat on the text baseline: .rng grew to 27px and the pill drew 1.5px below the track */
 #cur { transition: color .2s ease; }
 #cur.scrub { color: var(--accent); font-weight: 600; }
 .rng input[type=range]::-webkit-slider-thumb { opacity: 0; }
