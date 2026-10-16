@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="d7e23f4e4773">
+<html lang="ko" data-build="2c9653be5208">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -23,6 +23,7 @@
 :root {
   --bg: #f3f4f8; --surface: #ffffff; --ink: #17181f; --muted: #646878; --faint: #a3a6b4; --rule: #e1e3ea;
   --accent: #5b4fd6; --accent-soft: #ecebfd; --hl: #e4e1fd;
+  --dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='d' width='4' height='2' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='1' cy='1' r='1' fill='%235b4fd6'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23d)'/%3E%3C/svg%3E");
   --jun: #237a6b; --jun-soft: #e1f2ee; --sua: #b9476e; --sua-soft: #fbe6ee;
   --h0: #2d6cb5; --h0-s: #e3eefb; --h1: #b85a1c; --h1-s: #fbeadd;
   --c0: #237a6b; --c0-s: #e1f2ee; --c1: #b9476e; --c1-s: #fbe6ee; --c2: #8a6d00; --c2-s: #f6eecd; --c3: #55607a; --c3-s: #e8ebf1;
@@ -38,6 +39,7 @@
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #121318; --surface: #1b1c23; --ink: #eceef5; --muted: #9a9daf; --faint: #5f6273; --rule: #2a2c36;
   --accent: #a59cff; --accent-soft: #2a2747; --hl: #332f5c;
+  --dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='d' width='4' height='2' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23a59cff'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23d)'/%3E%3C/svg%3E");
   --jun: #6fcdb9; --jun-soft: #173a33; --sua: #f08fb1; --sua-soft: #43202e;
   --h0: #8bb8f0; --h0-s: #1c2c42; --h1: #f2a66b; --h1-s: #3d2617;
   --c0: #6fcdb9; --c0-s: #173a33; --c1: #f08fb1; --c1-s: #43202e; --c2: #e2c35a; --c2-s: #3a3115; --c3: #aab3c8; --c3-s: #2a2e39;
@@ -47,6 +49,7 @@
 :root[data-theme="dark"] {
   --bg: #121318; --surface: #1b1c23; --ink: #eceef5; --muted: #9a9daf; --faint: #5f6273; --rule: #2a2c36;
   --accent: #a59cff; --accent-soft: #2a2747; --hl: #332f5c;
+  --dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='d' width='4' height='2' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23a59cff'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23d)'/%3E%3C/svg%3E");
   --jun: #6fcdb9; --jun-soft: #173a33; --sua: #f08fb1; --sua-soft: #43202e;
   --h0: #8bb8f0; --h0-s: #1c2c42; --h1: #f2a66b; --h1-s: #3d2617;
   --c0: #6fcdb9; --c0-s: #173a33; --c1: #f08fb1; --c1-s: #43202e; --c2: #e2c35a; --c2-s: #3a3115; --c3: #aab3c8; --c3-s: #2a2e39;
@@ -57,11 +60,6 @@
 [hidden] { display: none !important; }
 html, body { height: 100%; }
 :root { --dim: color-mix(in srgb, var(--ink) 32%, transparent); }
-/* --lb: the colour behind a line of text (lets the dotted underline trim its ends) */
-:root { --lb: var(--bg); }
-.line.now { --lb: var(--now); }
-.sheet .panel { --lb: var(--surface); }
-.dt .use { --lb: color-mix(in srgb, var(--ink) 4.5%, var(--surface)); }
 html[data-tr="ja"] { --f-latin: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Noto Sans KR", sans-serif;
   --f-body: "Dots", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Noto Sans KR", -apple-system, sans-serif; }
 body { background: var(--bg); color: var(--ink); font: 16px/1.6 var(--f-body); -webkit-text-size-adjust: 100%;
@@ -299,11 +297,12 @@ body.findtype .transport { transform: translateY(110%); }
 :is([data-ui^="z"], [data-ui="ja"]) :is(.en, .ov p, .ov dd, .ep .te, .ep .b, .hit .e, .banner, .dt .use .e, .dt .mean, .dt .ex .e, .dt ul, .xp span, .lede, .top .ttl > i, .sheet p.h) { word-break: normal; }
 :is([data-ui^="z"], [data-ui="ja"]) .hg { word-break: keep-all; }
 .line mark.v, .xp.v b, .dt.v .use mark { text-decoration: none; -webkit-text-decoration: none; border-radius: 0;
-  /* dots, with 3px trimmed off each end (painted over in the colour behind, --lb) so two highlights side by side read as two */
-  background: linear-gradient(var(--lb), var(--lb)) left bottom / 3px 3px no-repeat, linear-gradient(var(--lb), var(--lb)) right bottom / 3px 3px no-repeat,
-    radial-gradient(circle at 1px 1px, var(--accent) 1px, transparent 1.3px) left bottom / 4px 2px repeat-x;
+  /* dots (an SVG pattern in the accent colour), inset 3px at each end so two highlights side by side read as two.
+     Nothing opaque is painted at the ends, so the dots can sit on top of a grammar box in the row below without notching it */
+  background: var(--dots) 3px bottom / calc(100% - 6px) 2px no-repeat;
   -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 0 3px; }
 .line mark.v { font-weight: 600; }
+.line .ko mark.v { position: relative; z-index: 1; }   /* the dotted line paints over a grammar box in the next row where they touch */
 .line mark { cursor: pointer; background: var(--hl); color: inherit; border-radius: 4px; padding: 0 2px; font-weight: 700; }
 .line.past .ko, .script.live .line:not(.now) .ko { color: var(--muted); }
 .line.now { background: var(--now); box-shadow: var(--now-shadow); }
