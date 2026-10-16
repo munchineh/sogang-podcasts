@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="6cb6b4060203">
+<html lang="ko" data-build="0c188e9765b4">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -184,6 +184,24 @@ body.searching .qcancel { max-width: 90px; opacity: 1; padding: 8px 4px 8px 14px
 .top.away { transform: translateY(-105%); }
 .top .wrap { display: flex; align-items: center; gap: 8px; padding-block: 10px; }
 .top .ttl { flex: 1; min-width: 0; }
+/* find in this episode: the header turns into a find bar (like Safari's Find on Page) */
+#findbtn { color: var(--muted); margin-right: -4px; }
+.top.finding .ttl, .top.finding #xpbtn, .top.finding #findbtn, .top.finding #back { display: none; }
+.findbar { flex: 1; display: flex; align-items: center; gap: 2px; min-width: 0; min-height: 52px; }
+.findbar .fwrap { flex: 1; position: relative; min-width: 0; }
+.findbar input { width: 100%; height: 40px; border-radius: 999px; border: 0; background: var(--field); color: var(--ink); padding: 0 62px 0 38px;
+  font: 16px var(--f-body); -webkit-appearance: none; appearance: none; }
+.findbar input::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
+.findbar input:focus { outline: 2px solid var(--accent); outline-offset: 0; }
+.findbar .fwrap svg { position: absolute; left: 12px; top: 11px; width: 18px; height: 18px; color: var(--faint); pointer-events: none; }
+#fcount { position: absolute; right: 14px; top: 0; font: 500 12px/40px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; pointer-events: none; }
+.findbar .ib { width: 36px; height: 36px; color: var(--ink); }
+.findbar .ib:disabled { color: var(--faint); }
+.fdone { font: 500 15.5px var(--f-latin); color: var(--accent); padding: 8px 2px 8px 8px; white-space: nowrap; }
+::highlight(find-all) { background-color: color-mix(in srgb, #ffd23f 45%, transparent); }
+::highlight(find-cur) { background-color: #ffc21a; color: #1d1600; }
+.line.fhit .ko { box-shadow: inset 0 -.5em color-mix(in srgb, #ffd23f 35%, transparent); }   /* browsers without highlight ranges */
+.line.fcur { outline: 2px solid #ffc21a; outline-offset: -2px; }
 .top .ttl b { display: block; font: 900 17px/1.3 var(--f-display); letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .top .ttl small { font: 500 11px var(--f-mono); color: var(--muted); letter-spacing: .04em; }
 .ib { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; flex: none; }
@@ -427,7 +445,14 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   <header class="top"><div class="wrap">
     <button class="ib" id="back" aria-label="Back to episodes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
     <div class="ttl"><small id="epno"></small><b id="eptitle"></b><i id="eptitle_en"></i></div>
+    <button class="ib" id="findbtn" aria-label="Find in this episode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
     <button class="chip xpc" id="xpbtn" aria-label="Grammar and vocab in this episode"><span id="xpn"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg></button>
+    <div class="findbar" id="findbar" hidden><div class="fwrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="fq" type="search" enterkeyhint="search" autocomplete="off" aria-label="Find in this episode"><span id="fcount" aria-live="polite"></span></div>
+      <button class="ib" id="fprev" aria-label="Previous match"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></button>
+      <button class="ib" id="fnext" aria-label="Next match"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+      <button class="fdone" id="fdone" type="button">Done</button></div>
   </div></header>
   <div class="script wrap" id="script"></div>
   <button class="back-now" id="backnow" hidden><svg id="backarrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5.5v12"/><path d="M6.8 12.6 12 17.8l5.2-5.2"/></svg><span id="backnowt">Back to the current line</span></button>
@@ -489,7 +514,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Tap to see its meaning and how it’s used.", example: "Example", notes: "Notes", inEp: "In this episode",
       playFrom: "Play from here", goLine: "Go to line", commentaryOnly: "Explained in the commentary rather than used in the scene.",
       lines: "{n} lines", noMatch: "No lines match “{q}”.", loadFail: "Couldn’t load the episode list. Pull to refresh.",
-      cancel: "Cancel", clear: "Clear", recent: "Recent searches" },
+      cancel: "Cancel", clear: "Clear", recent: "Recent searches", findPh: "Find in this episode", close: "Done" },
     ko: { lede: "서강 한국어 표현, 문법, 어휘를 생생한 대화로 익혀요. 에피소드를 골라 듣거나 궁금한 걸 검색해 보세요.", search: "팟캐스트, 문법, 어휘 검색", level: "{n}급", ready: "오디오 {a} / {b}",
       scriptOnly: "대본만", done: "다 들음", left: "{t} 남음", "new": "새 에피소드", preview: "미리 듣기",
       about: "이번 회 소개", more: "더 보기", less: "접기", setting: "배경", formality: "말투", items: "문법 · 어휘", seeAll: "전체 보기",
@@ -499,7 +524,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "눌러서 뜻과 쓰임을 확인해 보세요.", example: "예문", notes: "메모", inEp: "이번 회에서",
       playFrom: "여기부터 재생", goLine: "이 줄로 가기", commentaryOnly: "장면 대화가 아니라 해설에서 다뤄요.",
       lines: "{n}줄", noMatch: "“{q}” 검색 결과가 없어요.", loadFail: "에피소드 목록을 불러오지 못했어요. 당겨서 새로고침해 주세요.",
-      cancel: "취소", clear: "지우기", recent: "최근 검색" },
+      cancel: "취소", clear: "지우기", recent: "최근 검색", findPh: "이번 회에서 찾기", close: "완료" },
     ja: { lede: "日常会話を通して、西江大学の韓国語の表現・文法・語彙を学びましょう。エピソードを選ぶか、知りたいことを検索してください。", search: "ポッドキャスト・文法・語彙を検索", level: "レベル{n}", ready: "{a} / {b} 配信中",
       scriptOnly: "台本のみ", done: "聴き終わり", left: "残り{t}", "new": "新着", preview: "プレビュー",
       about: "このエピソードについて", more: "もっと見る", less: "閉じる", setting: "場面", formality: "話し方", items: "文法・語彙", seeAll: "すべて見る",
@@ -508,7 +533,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "再生中の行に戻る", translation: "翻訳", textSize: "文字サイズ", "default": "標準", none: "なし",
       sheetH: "タップすると意味と使い方が見られます。", example: "例文", notes: "メモ", inEp: "このエピソードでは",
       playFrom: "ここから再生", goLine: "この行へ", commentaryOnly: "場面の会話ではなく、解説の中で紹介しています。",
-      lines: "{n}行", noMatch: "「{q}」を含む行はありません。", loadFail: "エピソード一覧を読み込めませんでした。下に引いて更新してください。", cancel: "キャンセル", clear: "消去", recent: "最近の検索" },
+      lines: "{n}行", noMatch: "「{q}」を含む行はありません。", loadFail: "エピソード一覧を読み込めませんでした。下に引いて更新してください。", cancel: "キャンセル", clear: "消去", recent: "最近の検索", findPh: "このエピソード内を検索", close: "完了" },
     zh: { lede: "通过日常对话，学习西江韩语的表达、语法和词汇。挑一集开始听，或搜索想学的内容。", search: "搜索播客、语法或词汇", level: "{n} 级", ready: "{a} / {b} 集可听",
       scriptOnly: "仅文本", done: "已听完", left: "剩余 {t}", "new": "新", preview: "预览",
       about: "本集简介", more: "展开", less: "收起", setting: "场景", formality: "语体", items: "语法词汇", seeAll: "查看全部",
@@ -517,7 +542,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "回到当前句", translation: "翻译", textSize: "字号", "default": "默认", none: "无",
       sheetH: "点击查看含义和用法。", example: "例句", notes: "笔记", inEp: "本集出现",
       playFrom: "从这里播放", goLine: "跳到该句", commentaryOnly: "只在讲解中出现，场景对话里没有用到。",
-      lines: "{n} 句", noMatch: "没有找到包含“{q}”的句子。", loadFail: "无法加载节目列表，请下拉刷新。", cancel: "取消", clear: "清除", recent: "最近搜索" },
+      lines: "{n} 句", noMatch: "没有找到包含“{q}”的句子。", loadFail: "无法加载节目列表，请下拉刷新。", cancel: "取消", clear: "清除", recent: "最近搜索", findPh: "在本集中查找", close: "完成" },
     zt: { lede: "透過日常對話，學習西江韓語的表達、語法和詞彙。挑一集開始聽，或搜尋想學的內容。", search: "搜尋播客、語法或詞彙", level: "{n} 級", ready: "{a} / {b} 集可聽",
       scriptOnly: "僅文字", done: "已聽完", left: "剩餘 {t}", "new": "新", preview: "預覽",
       about: "本集簡介", more: "展開", less: "收合", setting: "場景", formality: "語體", items: "語法詞彙", seeAll: "查看全部",
@@ -526,7 +551,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "回到目前這句", translation: "翻譯", textSize: "字級", "default": "預設", none: "無",
       sheetH: "點一下查看意思和用法。", example: "例句", notes: "筆記", inEp: "本集出現",
       playFrom: "從這裡播放", goLine: "跳到這句", commentaryOnly: "只在講解中出現，情境對話裡沒有用到。",
-      lines: "{n} 句", noMatch: "找不到包含「{q}」的句子。", loadFail: "無法載入節目列表，請下拉重新整理。", cancel: "取消", clear: "清除", recent: "最近搜尋" },
+      lines: "{n} 句", noMatch: "找不到包含「{q}」的句子。", loadFail: "無法載入節目列表，請下拉重新整理。", cancel: "取消", clear: "清除", recent: "最近搜尋", findPh: "在本集中尋找", close: "完成" },
     de: { lede: "Lerne Ausdrücke, Grammatik und Wortschatz aus dem Sogang-Koreanisch in Alltagsgesprächen. Such dir eine Folge aus oder suche gezielt nach etwas.", search: "Podcast, Grammatik oder Wortschatz suchen", level: "Stufe {n}", ready: "{a} / {b} bereit",
       scriptOnly: "Nur Skript", done: "Gehört", left: "noch {t}", "new": "Neu", preview: "Vorschau",
       about: "Über diese Folge", more: "Mehr", less: "Weniger", setting: "Schauplatz", formality: "Sprachebene", items: "Lernpunkte", seeAll: "Alle ansehen",
@@ -535,7 +560,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "Zurück zur aktuellen Zeile", translation: "Übersetzung", textSize: "Textgröße", "default": "Standard", none: "Keine",
       sheetH: "Tippe darauf, um Bedeutung und Verwendung zu sehen.", example: "Beispiel", notes: "Notizen", inEp: "In dieser Folge",
       playFrom: "Ab hier abspielen", goLine: "Zur Zeile", commentaryOnly: "Wird im Kommentar erklärt, kommt in der Szene aber nicht vor.",
-      lines: "{n} Zeilen", noMatch: "Keine Zeile enthält „{q}“.", loadFail: "Die Folgenliste konnte nicht geladen werden. Zum Aktualisieren nach unten ziehen.", cancel: "Abbrechen", clear: "Löschen", recent: "Letzte Suchen" },
+      lines: "{n} Zeilen", noMatch: "Keine Zeile enthält „{q}“.", loadFail: "Die Folgenliste konnte nicht geladen werden. Zum Aktualisieren nach unten ziehen.", cancel: "Abbrechen", clear: "Löschen", recent: "Letzte Suchen", findPh: "In dieser Folge suchen", close: "Fertig" },
     fr: { lede: "Apprenez les expressions, la grammaire et le vocabulaire du coréen de Sogang à travers des conversations du quotidien. Choisissez un épisode ou lancez une recherche.", search: "Rechercher podcast, grammaire ou vocabulaire", level: "Niveau {n}", ready: "{a} / {b} disponibles",
       scriptOnly: "Texte seul", done: "Écouté", left: "encore {t}", "new": "Nouveau", preview: "Aperçu",
       about: "À propos de cet épisode", more: "Plus", less: "Moins", setting: "Cadre", formality: "Registre", items: "À apprendre", seeAll: "Tout voir",
@@ -544,7 +569,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "Revenir à la ligne en cours", translation: "Traduction", textSize: "Taille du texte", "default": "Normale", none: "Aucune",
       sheetH: "Touchez pour voir le sens et l’emploi.", example: "Exemple", notes: "Notes", inEp: "Dans cet épisode",
       playFrom: "Lire à partir d’ici", goLine: "Aller à la ligne", commentaryOnly: "Expliqué dans le commentaire, mais pas utilisé dans la scène.",
-      lines: "{n} lignes", noMatch: "Aucune ligne ne contient « {q} ».", loadFail: "Impossible de charger la liste des épisodes. Tirez pour actualiser.", cancel: "Annuler", clear: "Effacer", recent: "Recherches récentes" },
+      lines: "{n} lignes", noMatch: "Aucune ligne ne contient « {q} ».", loadFail: "Impossible de charger la liste des épisodes. Tirez pour actualiser.", cancel: "Annuler", clear: "Effacer", recent: "Recherches récentes", findPh: "Chercher dans l’épisode", close: "OK" },
     ru: { lede: "Учите выражения, грамматику и лексику корейского по Sogang в живых диалогах. Выберите выпуск или найдите что-нибудь через поиск.", search: "Поиск по подкасту, грамматике и лексике", level: "Уровень {n}", ready: "готово {a} / {b}",
       scriptOnly: "Только текст", done: "Прослушано", left: "осталось {t}", "new": "Новое", preview: "Превью",
       about: "Об этом выпуске", more: "Ещё", less: "Свернуть", setting: "Место действия", formality: "Стиль речи", items: "Изучаем", seeAll: "Показать все",
@@ -553,7 +578,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "К текущей строке", translation: "Перевод", textSize: "Размер текста", "default": "Обычная", none: "Нет",
       sheetH: "Нажмите, чтобы увидеть значение и употребление.", example: "Пример", notes: "Заметки", inEp: "В этом выпуске",
       playFrom: "Слушать отсюда", goLine: "К строке", commentaryOnly: "Объясняется в комментарии, но в сцене не встречается.",
-      lines: "Строк: {n}", noMatch: "Нет строк с «{q}».", loadFail: "Не удалось загрузить список выпусков. Потяните вниз, чтобы обновить.", cancel: "Отмена", clear: "Очистить", recent: "Недавние запросы" },
+      lines: "Строк: {n}", noMatch: "Нет строк с «{q}».", loadFail: "Не удалось загрузить список выпусков. Потяните вниз, чтобы обновить.", cancel: "Отмена", clear: "Очистить", recent: "Недавние запросы", findPh: "Поиск в выпуске", close: "Готово" },
     tr: { lede: "Sogang Korece ifadelerini, dilbilgisini ve kelimelerini günlük konuşmalarla öğrenin. Başlamak için bir bölüm seçin ya da bir şey arayın.", search: "Podcast, dilbilgisi veya kelime ara", level: "Seviye {n}", ready: "{a} / {b} hazır",
       scriptOnly: "Yalnızca metin", done: "Bitti", left: "{t} kaldı", "new": "Yeni", preview: "Önizleme",
       about: "Bu bölüm hakkında", more: "Devamını göster", less: "Daha az göster", setting: "Ortam", formality: "Hitap düzeyi", items: "Dilbilgisi ve kelimeler", seeAll: "Tümünü gör",
@@ -562,7 +587,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "Geçerli satıra dön", translation: "Çeviri", textSize: "Yazı boyutu", "default": "Varsayılan", none: "Yok",
       sheetH: "Anlamını ve nasıl kullanıldığını görmek için dokunun.", example: "Örnek", notes: "Notlar", inEp: "Bu bölümde",
       playFrom: "Buradan oynat", goLine: "Satıra git", commentaryOnly: "Sahnede geçmiyor, yorum kısmında açıklanıyor.",
-      lines: "{n} satır", noMatch: "“{q}” ile eşleşen satır yok.", loadFail: "Bölüm listesi yüklenemedi. Yenilemek için aşağı çekin.", cancel: "Vazgeç", clear: "Temizle", recent: "Son aramalar" },
+      lines: "{n} satır", noMatch: "“{q}” ile eşleşen satır yok.", loadFail: "Bölüm listesi yüklenemedi. Yenilemek için aşağı çekin.", cancel: "Vazgeç", clear: "Temizle", recent: "Son aramalar", findPh: "Bu bölümde ara", close: "Bitti" },
     vi: { lede: "Học biểu hiện, ngữ pháp và từ vựng tiếng Hàn Sogang qua những cuộc trò chuyện đời thường. Chọn một tập để bắt đầu, hoặc tìm kiếm điều bạn muốn học.", search: "Tìm podcast, ngữ pháp hoặc từ vựng", level: "Cấp {n}", ready: "{a} / {b} tập sẵn sàng",
       scriptOnly: "Chỉ có lời thoại", done: "Đã nghe", left: "còn {t}", "new": "Mới", preview: "Nghe thử",
       about: "Về tập này", more: "Xem thêm", less: "Thu gọn", setting: "Bối cảnh", formality: "Mức độ trang trọng", items: "Ngữ pháp & từ vựng", seeAll: "Xem tất cả",
@@ -571,7 +596,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "Về dòng đang phát", translation: "Bản dịch", textSize: "Cỡ chữ", "default": "Mặc định", none: "Không",
       sheetH: "Chạm để xem nghĩa và cách dùng.", example: "Ví dụ", notes: "Ghi chú", inEp: "Trong tập này",
       playFrom: "Phát từ đây", goLine: "Đến dòng này", commentaryOnly: "Được giải thích trong phần bình luận, không xuất hiện trong cảnh.",
-      lines: "{n} dòng", noMatch: "Không có dòng nào khớp với “{q}”.", loadFail: "Không tải được danh sách tập. Kéo xuống để làm mới.", cancel: "Hủy", clear: "Xóa", recent: "Tìm kiếm gần đây" },
+      lines: "{n} dòng", noMatch: "Không có dòng nào khớp với “{q}”.", loadFail: "Không tải được danh sách tập. Kéo xuống để làm mới.", cancel: "Hủy", clear: "Xóa", recent: "Tìm kiếm gần đây", findPh: "Tìm trong tập này", close: "Xong" },
     th: { lede: "เรียนสำนวน ไวยากรณ์ และคำศัพท์ภาษาเกาหลีของซอกังผ่านบทสนทนาในชีวิตประจำวัน เลือกตอนที่อยากฟัง หรือค้นหาสิ่งที่อยากรู้ได้เลย", search: "ค้นหาพอดแคสต์ ไวยากรณ์ หรือคำศัพท์", level: "ระดับ {n}", ready: "พร้อมฟัง {a} / {b}",
       scriptOnly: "มีแค่บท", done: "ฟังจบแล้ว", left: "เหลือ {t}", "new": "ใหม่", preview: "ตัวอย่าง",
       about: "เกี่ยวกับตอนนี้", more: "ดูเพิ่มเติม", less: "ย่อ", setting: "ฉาก", formality: "ระดับภาษา", items: "ไวยากรณ์และคำศัพท์", seeAll: "ดูทั้งหมด",
@@ -580,7 +605,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       backNow: "กลับไปบรรทัดปัจจุบัน", translation: "คำแปล", textSize: "ขนาดตัวอักษร", "default": "ค่าเริ่มต้น", none: "ไม่มี",
       sheetH: "แตะเพื่อดูความหมายและวิธีใช้", example: "ตัวอย่าง", notes: "หมายเหตุ", inEp: "ในตอนนี้",
       playFrom: "เล่นจากตรงนี้", goLine: "ไปที่บรรทัด", commentaryOnly: "อธิบายไว้ในช่วงคอมเมนต์ ไม่ได้ใช้ในฉาก",
-      lines: "{n} บรรทัด", noMatch: "ไม่พบบรรทัดที่ตรงกับ “{q}”", loadFail: "โหลดรายชื่อตอนไม่ได้ ดึงลงเพื่อรีเฟรช", cancel: "ยกเลิก", clear: "ล้าง", recent: "ค้นหาล่าสุด" }
+      lines: "{n} บรรทัด", noMatch: "ไม่พบบรรทัดที่ตรงกับ “{q}”", loadFail: "โหลดรายชื่อตอนไม่ได้ ดึงลงเพื่อรีเฟรช", cancel: "ยกเลิก", clear: "ล้าง", recent: "ค้นหาล่าสุด", findPh: "ค้นหาในตอนนี้", close: "เสร็จ" }
   };
   function UL() { return TR === "off" ? "ko" : I18N[TR] ? TR : "en"; }   // no translation picked → Korean UI
   function T(k, v) {
@@ -597,7 +622,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   function subTitle(d) { return UL() === "ko" ? "" : fmtTr((locOv(d).title) || d.title_en || ""); }
   function locOv(d) { return (d.ovl && d.ovl[UL()]) || d.ov || {}; }
-  var audio = $("audio"), index = [], ep = null, cur = -1, lineEls = [], userScrolledAt = 0, autoScrolling = false;
+  var audio = $("audio"), index = [], ep = null, cur = -1, lineEls = [], userScrolledAt = 0, autoScrolling = false, finding = false;
 
   // ---------- list ----------
   function renderList() {
@@ -637,7 +662,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 
   // ---------- player ----------
   function openEp(id, atLine) {
-    audio.pause();
+    audio.pause(); if (finding) exitFind();
     fetch("data/" + id + ".json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (d) {
       ep = d; cur = -1;
       timed = d.lines.map(function (l, k) { return l.t == null ? -1 : k; }).filter(function (k) { return k >= 0; });
@@ -818,7 +843,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       lineEls[i].querySelectorAll(".w").forEach(function (s) { var q = +s.dataset.w; (wordEls[q] = wordEls[q] || []).push(s); });
     }
     var el = lineEls[i]; if (!el) return;
-    if (Date.now() - userScrolledAt > 4000) {
+    if (!finding && Date.now() - userScrolledAt > 4000) {
       autoScrolling = true; el.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
       $("backnow").hidden = true;
       setTimeout(function () { autoScrolling = false; updateBackNow(); }, 700);
@@ -947,7 +972,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   function applyUi() {
     document.documentElement.dataset.ui = UL();
     $("wordmark").textContent = TR === "off" ? "팟캐스트" : { zh: "播客", zt: "播客", ru: "Подкасты", tr: "Podcastler", vi: "Podcast", th: "พอดแคสต์", ja: "ポッドキャスト" }[TR] || "Podcasts";
-    $("lede").textContent = T("lede"); $("q").placeholder = T("search"); $("qcancel").textContent = T("cancel"); $("qx").setAttribute("aria-label", T("clear")); $("lvltxt").textContent = T("level", { n: 4 });
+    $("lede").textContent = T("lede"); $("q").placeholder = T("search"); $("fq").placeholder = T("findPh"); $("fdone").textContent = T("close"); $("findbtn").setAttribute("aria-label", T("findPh")); $("qcancel").textContent = T("cancel"); $("qx").setAttribute("aria-label", T("clear")); $("lvltxt").textContent = T("level", { n: 4 });
     $("backnowt").textContent = T("backNow"); $("sheeth").textContent = T("sheetH");
     if (index.length) renderList();
     if ($("q").value.trim()) runSearch();
@@ -974,12 +999,12 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     bn.hidden = !off;
     if (off) { var pr = bn.getBoundingClientRect(); bn.classList.toggle("up", c < (pr.height ? (pr.top + pr.bottom) / 2 : bot)); }   // arrow points at the line
   }
-  var lastY = window.scrollY, topEl = document.querySelector("#player .top");
+  var lastY = window.scrollY, topEl = document.querySelector("#player .top"), topHold = 0;
   window.addEventListener("scroll", function () {
     if ($("player").hidden) return;
     var y = window.scrollY, dy = y - lastY; lastY = y;
     if (y < 80 || dy < -4) topEl.classList.remove("away");
-    else if (dy > 6 && !autoScrolling) topEl.classList.add("away");
+    else if (dy > 6 && !autoScrolling && !finding && Date.now() - topHold > 600) topEl.classList.add("away");   // topHold: the header's own height change nudges the page
   }, { passive: true });
   var bnQueued = false;
   window.addEventListener("scroll", function () {
@@ -1176,6 +1201,67 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   $("q").addEventListener("input", function () { clearTimeout(qTimer); qTimer = setTimeout(runSearch, 160); });
   $("q").addEventListener("focus", loadCorpus);
+
+  // ---------- find in this episode ----------
+  // Korean is matched ignoring spaces (like the main search); anything else is matched in the translation on screen.
+  var fhits = [], fi = -1, fTimer = null, HL = window.CSS && CSS.highlights && window.Highlight;
+  function clearFind() {
+    if (HL) { CSS.highlights.delete("find-all"); CSS.highlights.delete("find-cur"); }
+    lineEls.forEach(function (el) { el.classList.remove("fhit", "fcur"); });
+    fhits = []; fi = -1;
+  }
+  function rangesIn(el, q, ko) {
+    var chars = [], str = "", w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), n, out = [];
+    while ((n = w.nextNode())) for (var i = 0; i < n.data.length; i++) {
+      var c = n.data[i]; if (ko && /\s/.test(c)) continue;
+      chars.push([n, i]); str += ko ? c : c.toLowerCase();
+    }
+    for (var p = str.indexOf(q); p >= 0 && q; p = str.indexOf(q, p + q.length)) {
+      var r = document.createRange(), a = chars[p], b = chars[p + q.length - 1];
+      r.setStart(a[0], a[1]); r.setEnd(b[0], b[1] + 1); out.push(r);
+    }
+    return out;
+  }
+  function runFind(keep) {
+    var raw = $("fq").value.trim(), ko = /[\u3131-\u318F\uAC00-\uD7A3]/.test(raw), q = ko ? raw.replace(/\s+/g, "") : raw.toLowerCase();
+    var was = keep && fhits[fi] ? fhits[fi].line : null;
+    clearFind();
+    if (q) lineEls.forEach(function (el, k) {
+      var t = el.querySelector(ko ? ".ko" : ".en"); if (!t || t.hidden) return;
+      rangesIn(t, q, ko).forEach(function (r) { fhits.push({ range: r, line: k }); });
+    });
+    if (HL && fhits.length) CSS.highlights.set("find-all", new Highlight(...fhits.map(function (h) { return h.range; })));
+    if (!HL) fhits.forEach(function (h) { lineEls[h.line].classList.add("fhit"); });
+    // start at the playing line (or where the last match was), not the top of the episode
+    var from = was != null ? was : Math.max(cur, 0), k0 = fhits.findIndex(function (h) { return h.line >= from; });
+    goFind(fhits.length ? (k0 < 0 ? 0 : k0) : -1, !keep);
+  }
+  function goFind(k, scroll) {
+    var n = fhits.length;
+    $("fcount").textContent = !$("fq").value.trim() ? "" : n ? (k + 1) + "/" + n : "0";
+    $("fprev").disabled = $("fnext").disabled = n < 2;
+    lineEls.forEach(function (el) { el.classList.remove("fcur"); });
+    if (!n) { fi = -1; if (HL) CSS.highlights.delete("find-cur"); return; }
+    fi = (k + n) % n; var h = fhits[fi];
+    if (HL) CSS.highlights.set("find-cur", new Highlight(h.range)); else lineEls[h.line].classList.add("fcur");
+    if (scroll !== false) { userScrolledAt = Date.now(); lineEls[h.line].scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }
+  }
+  function enterFind() {
+    finding = true; topHold = Date.now(); topEl.classList.add("finding"); topEl.classList.remove("away"); $("findbar").hidden = false;
+    $("fq").focus(); if ($("fq").value.trim()) runFind();
+  }
+  function exitFind() {
+    finding = false; topHold = Date.now(); topEl.classList.remove("finding", "away"); $("findbar").hidden = true; $("fq").value = ""; $("fq").blur(); clearFind(); $("fcount").textContent = "";
+  }
+  $("findbtn").addEventListener("click", enterFind);
+  $("fdone").addEventListener("click", exitFind);
+  $("fq").addEventListener("input", function () { clearTimeout(fTimer); fTimer = setTimeout(runFind, 140); });
+  $("fq").addEventListener("keydown", function (ev) {
+    if (ev.key === "Enter") { ev.preventDefault(); goFind(fi + (ev.shiftKey ? -1 : 1)); }
+    if (ev.key === "Escape") exitFind();
+  });
+  $("fprev").addEventListener("click", function () { goFind(fi - 1); });
+  $("fnext").addEventListener("click", function () { goFind(fi + 1); });
   // ---------- search mode: the header folds away, the bar stays at the top, Cancel and × to get out ----------
   var RECENT_N = 6;
   function recentList() { var r = store.get("recentQ", []); return Array.isArray(r) ? r : []; }
