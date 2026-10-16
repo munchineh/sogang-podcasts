@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="762b647dbf6c">
+<html lang="ko" data-build="2727a17e4e06">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -389,6 +389,24 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .ctrls .mid { display: flex; align-items: center; gap: 4px; }
 .ctrls .side { display: flex; align-items: center; gap: 6px; flex: 1; }
 .ctrls .side.right { justify-content: flex-end; }
+.ctrls .side.right { gap: 2px; }
+#nextep[disabled] { opacity: .3; }
+/* skip-episode confirmation: a centred alert that springs in (same motion language as the menus) */
+.alert { position: fixed; inset: 0; z-index: 9; display: grid; place-items: center; padding: 0 36px; background: rgba(10,10,20,0); transition: background-color .24s ease; touch-action: none; }
+.alert.open { background: rgba(10,10,20,.42); }
+.alert .abox { width: 100%; max-width: 300px; background: var(--surface); color: var(--ink); border-radius: 22px; padding: 22px 20px 14px; text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,.28); transform: scale(1.1); opacity: 0; transition: transform .42s var(--spring), opacity .18s ease; }
+.alert.open .abox { transform: none; opacity: 1; }
+.alert.closing .abox { transform: scale(.96); opacity: 0; transition: transform .2s ease-in, opacity .16s ease-in; }
+.alert h2 { font: 700 17px/1.35 var(--f-body); margin: 0 0 8px; letter-spacing: -.01em; }
+.alert p { font: 400 14px/1.5 var(--f-body); color: var(--muted); margin: 0 0 14px; word-break: keep-all; }
+.alert .nask { display: inline-flex; align-items: center; gap: 8px; font: 500 13.5px var(--f-body); color: var(--muted); margin-bottom: 14px; cursor: pointer; }
+.alert .nask input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
+.alert .abtns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.alert .abtns button { height: 44px; border-radius: 12px; font: 600 15px var(--f-body); background: color-mix(in srgb, var(--ink) 9%, var(--surface)); color: var(--ink); border: 0; transition: transform .45s var(--spring), background-color .2s ease; }
+.alert .abtns button.pri { background: var(--accent); color: #fff; }
+.alert .abtns button:active { transform: scale(.95); transition: transform .08s ease-out; }
+@media (prefers-reduced-motion: reduce) { .alert, .alert .abox { transition: none !important; } }
 .chip.en { height: 36px; border-radius: 10px; min-width: 44px; display: inline-grid; place-items: center; padding-bottom: 1.5px; }   /* Noto Sans KR sits its glyphs ~1px low in the line box (big ascent); measured: EN/繁/KO now within 0.25px of centre */
 .chip.en svg { width: 19px; height: 19px; }
 /* Labels centred on their cap height (text-box trim: line box = cap height to baseline), so EN, 繁 and 1× sit in the optical
@@ -579,9 +597,14 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
         <button class="play" id="play" aria-label="Play"><svg id="picon" viewBox="0 0 24 24" fill="currentColor"><path d="M7.6 6.2v11.6a1.2 1.2 0 0 0 1.8 1l9.1-5.8a1.2 1.2 0 0 0 0-2l-9.1-5.8A1.2 1.2 0 0 0 7.6 6.2z"/></svg></button>
         <button class="ib" id="next" aria-label="Next line"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M16.5 6v12"/><path d="M6 6.6v10.8a.8.8 0 0 0 1.2.7l7.2-5.4a.8.8 0 0 0 0-1.4L7.2 5.9A.8.8 0 0 0 6 6.6z"/></svg></button>
       </div>
-      <div class="side right"><button class="ib" id="again" aria-label="Replay this line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button></div>
+      <div class="side right"><button class="ib" id="nextep" aria-label="Next episode"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M3 7.3v9.4a.7.7 0 0 0 1.1.6l6.3-4.7a.7.7 0 0 0 0-1.2L4.1 6.7A.7.7 0 0 0 3 7.3z"/><path d="M11 7.3v9.4a.7.7 0 0 0 1.1.6l6.3-4.7a.7.7 0 0 0 0-1.2l-6.3-4.7A.7.7 0 0 0 11 7.3z"/><path d="M20.6 6.5v11" fill="none" stroke-width="2"/></svg></button><button class="ib" id="again" aria-label="Replay this line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button></div>
     </div>
   </div></footer>
+  <div class="alert" id="skipdlg" hidden role="alertdialog" aria-modal="true" aria-labelledby="skipt" aria-describedby="skipb"><div class="abox">
+    <h2 id="skipt"></h2><p id="skipb"></p>
+    <label class="nask"><input type="checkbox" id="skipnask"><span id="skipnaskt"></span></label>
+    <div class="abtns"><button id="skipno"></button><button id="skipyes" class="pri"></button></div>
+  </div></div>
 
 <div class="speedmenu langmenu" id="langmenu" role="menu" aria-label="Translation and text size" hidden></div>
 <div class="sheet" id="dsheet" hidden><div class="panel"><div class="wrap dt" id="detail"></div></div></div>
@@ -614,7 +637,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   // UI text in the chosen translation language (None → English)
   var I18N = {
-    en: { lede: "Learn Sogang Korean expressions, grammar and vocab through everyday conversations. Pick an episode to start, or search for something.", search: "Search podcasts", level: "Level {n}", ready: "{a} / {b} ready",
+    en: { nextEp: "Next episode", skipT: "Skip to the next episode?", skipB: "Up next: {t}. Your place in this episode is saved.", skipNoAsk: "Don’t ask again", cancel: "Cancel", skip: "Skip",
+      lede: "Learn Sogang Korean expressions, grammar and vocab through everyday conversations. Pick an episode to start, or search for something.", search: "Search podcasts", level: "Level {n}", ready: "{a} / {b} ready",
       scriptOnly: "Script only", audioBy: "Audio by {d}", done: "Done", left: "{t} left", "new": "New", preview: "Preview",
       about: "About this episode", more: "Show more", less: "Show less", setting: "Setting", formality: "Formality", items: "Grammar & vocab", seeAll: "See all",
       bannerNone: "Audio for this episode isn’t recorded yet. You can read the script now, and it will play here once it’s ready.",
@@ -624,7 +648,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       playFrom: "Play from here", goLine: "Go to line", commentaryOnly: "Explained in the commentary rather than used in the scene.",
       lines: "{n} lines", noMatch: "No lines match “{q}”.", loadFail: "Couldn’t load the episode list. Pull to refresh.",
       cancel: "Cancel", clear: "Clear", recent: "Recent searches", findPh: "Find in this episode", close: "Done" },
-    ko: { lede: "서강 한국어 표현, 문법, 어휘를 생생한 대화로 익혀요. 에피소드를 골라 듣거나 궁금한 걸 검색해 보세요.", search: "팟캐스트 검색", level: "{n}급", ready: "오디오 {a} / {b}",
+    ko: { nextEp: "다음 회", skipT: "다음 회로 넘어갈까요?", skipB: "다음 회: {t}. 지금 듣던 위치는 저장돼요.", skipNoAsk: "다시 묻지 않기", cancel: "취소", skip: "넘어가기",
+      lede: "서강 한국어 표현, 문법, 어휘를 생생한 대화로 익혀요. 에피소드를 골라 듣거나 궁금한 걸 검색해 보세요.", search: "팟캐스트 검색", level: "{n}급", ready: "오디오 {a} / {b}",
       scriptOnly: "대본만", audioBy: "오디오 {d} 예정", done: "다 들음", left: "{t} 남음", "new": "새 에피소드", preview: "미리 듣기",
       about: "이번 회 소개", more: "더 보기", less: "접기", setting: "배경", formality: "말투", items: "문법 · 어휘", seeAll: "전체 보기",
       bannerNone: "이 에피소드는 아직 녹음 전이에요. 대본은 지금 읽을 수 있고, 녹음이 끝나면 여기서 바로 들을 수 있어요.",
@@ -634,7 +659,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       playFrom: "여기부터 재생", goLine: "이 줄로 가기", commentaryOnly: "장면 대화가 아니라 해설에서 다뤄요.",
       lines: "{n}줄", noMatch: "“{q}” 검색 결과가 없어요.", loadFail: "에피소드 목록을 불러오지 못했어요. 당겨서 새로고침해 주세요.",
       cancel: "취소", clear: "지우기", recent: "최근 검색", findPh: "이번 회에서 찾기", close: "완료" },
-    ja: { lede: "日常会話を通して、西江大学の韓国語の表現・文法・語彙を学びましょう。エピソードを選ぶか、知りたいことを検索してください。", search: "ポッドキャストを検索", level: "レベル{n}", ready: "{a} / {b} 配信中",
+    ja: { nextEp: "次のエピソード", skipT: "次のエピソードに進みますか？", skipB: "次は「{t}」。このエピソードの再生位置は保存されます。", skipNoAsk: "今後は確認しない", cancel: "キャンセル", skip: "進む",
+      lede: "日常会話を通して、西江大学の韓国語の表現・文法・語彙を学びましょう。エピソードを選ぶか、知りたいことを検索してください。", search: "ポッドキャストを検索", level: "レベル{n}", ready: "{a} / {b} 配信中",
       scriptOnly: "台本のみ", audioBy: "音声は{d}頃", done: "聴き終わり", left: "残り{t}", "new": "新着", preview: "プレビュー",
       about: "このエピソードについて", more: "もっと見る", less: "閉じる", setting: "場面", formality: "話し方", items: "文法・語彙", seeAll: "すべて見る",
       bannerNone: "このエピソードの音声はまだ収録されていません。台本は今すぐ読めます。音声ができ次第ここで再生できます。",
@@ -643,7 +669,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "タップすると意味と使い方が見られます。", example: "例文", notes: "メモ", inEp: "このエピソードでは",
       playFrom: "ここから再生", goLine: "この行へ", commentaryOnly: "場面の会話ではなく、解説の中で紹介しています。",
       lines: "{n}行", noMatch: "「{q}」を含む行はありません。", loadFail: "エピソード一覧を読み込めませんでした。下に引いて更新してください。", cancel: "キャンセル", clear: "消去", recent: "最近の検索", findPh: "このエピソード内を検索", close: "完了" },
-    zh: { lede: "通过日常对话，学习西江韩语的表达、语法和词汇。挑一集开始听，或搜索想学的内容。", search: "搜索播客", level: "{n} 级", ready: "{a} / {b} 集可听",
+    zh: { nextEp: "下一集", skipT: "跳到下一集吗？", skipB: "下一集：{t}。这一集的进度会保存。", skipNoAsk: "不再提示", cancel: "取消", skip: "跳过",
+      lede: "通过日常对话，学习西江韩语的表达、语法和词汇。挑一集开始听，或搜索想学的内容。", search: "搜索播客", level: "{n} 级", ready: "{a} / {b} 集可听",
       scriptOnly: "仅文本", audioBy: "音频预计{d}", done: "已听完", left: "剩余 {t}", "new": "新", preview: "预览",
       about: "本集简介", more: "展开", less: "收起", setting: "场景", formality: "语体", items: "语法词汇", seeAll: "查看全部",
       bannerNone: "本集音频尚未录制。现在可以先阅读脚本，录好后即可在此播放。",
@@ -652,7 +679,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "点击查看含义和用法。", example: "例句", notes: "笔记", inEp: "本集出现",
       playFrom: "从这里播放", goLine: "跳到该句", commentaryOnly: "只在讲解中出现，场景对话里没有用到。",
       lines: "{n} 句", noMatch: "没有找到包含“{q}”的句子。", loadFail: "无法加载节目列表，请下拉刷新。", cancel: "取消", clear: "清除", recent: "最近搜索", findPh: "在本集中查找", close: "完成" },
-    zt: { lede: "透過日常對話，學習西江韓語的表達、語法和詞彙。挑一集開始聽，或搜尋想學的內容。", search: "搜尋播客", level: "{n} 級", ready: "{a} / {b} 集可聽",
+    zt: { nextEp: "下一集", skipT: "跳到下一集嗎？", skipB: "下一集：{t}。這一集的進度會保存。", skipNoAsk: "不再提示", cancel: "取消", skip: "跳過",
+      lede: "透過日常對話，學習西江韓語的表達、語法和詞彙。挑一集開始聽，或搜尋想學的內容。", search: "搜尋播客", level: "{n} 級", ready: "{a} / {b} 集可聽",
       scriptOnly: "僅文字", audioBy: "音訊預計{d}", done: "已聽完", left: "剩餘 {t}", "new": "新", preview: "預覽",
       about: "本集簡介", more: "展開", less: "收合", setting: "場景", formality: "語體", items: "語法詞彙", seeAll: "查看全部",
       bannerNone: "本集音訊尚未錄製。現在可以先閱讀腳本，錄好後就能在這裡播放。",
@@ -661,7 +689,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "點一下查看意思和用法。", example: "例句", notes: "筆記", inEp: "本集出現",
       playFrom: "從這裡播放", goLine: "跳到這句", commentaryOnly: "只在講解中出現，情境對話裡沒有用到。",
       lines: "{n} 句", noMatch: "找不到包含「{q}」的句子。", loadFail: "無法載入節目列表，請下拉重新整理。", cancel: "取消", clear: "清除", recent: "最近搜尋", findPh: "在本集中尋找", close: "完成" },
-    de: { lede: "Lerne Ausdrücke, Grammatik und Wortschatz aus dem Sogang-Koreanisch in Alltagsgesprächen. Such dir eine Folge aus oder suche gezielt nach etwas.", search: "Podcasts durchsuchen", level: "Stufe {n}", ready: "{a} / {b} bereit",
+    de: { nextEp: "Nächste Folge", skipT: "Zur nächsten Folge springen?", skipB: "Als Nächstes: {t}. Deine Stelle in dieser Folge bleibt gespeichert.", skipNoAsk: "Nicht mehr fragen", cancel: "Abbrechen", skip: "Springen",
+      lede: "Lerne Ausdrücke, Grammatik und Wortschatz aus dem Sogang-Koreanisch in Alltagsgesprächen. Such dir eine Folge aus oder suche gezielt nach etwas.", search: "Podcasts durchsuchen", level: "Stufe {n}", ready: "{a} / {b} bereit",
       scriptOnly: "Nur Skript", audioBy: "Audio ab {d}", done: "Gehört", left: "noch {t}", "new": "Neu", preview: "Vorschau",
       about: "Über diese Folge", more: "Mehr", less: "Weniger", setting: "Schauplatz", formality: "Sprachebene", items: "Lernpunkte", seeAll: "Alle ansehen",
       bannerNone: "Für diese Folge gibt es noch keine Aufnahme. Du kannst das Skript schon lesen, und sobald sie fertig ist, läuft sie hier.",
@@ -670,7 +699,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Tippe darauf, um Bedeutung und Verwendung zu sehen.", example: "Beispiel", notes: "Notizen", inEp: "In dieser Folge",
       playFrom: "Ab hier abspielen", goLine: "Zur Zeile", commentaryOnly: "Wird im Kommentar erklärt, kommt in der Szene aber nicht vor.",
       lines: "{n} Zeilen", noMatch: "Keine Zeile enthält „{q}“.", loadFail: "Die Folgenliste konnte nicht geladen werden. Zum Aktualisieren nach unten ziehen.", cancel: "Abbrechen", clear: "Löschen", recent: "Letzte Suchen", findPh: "In dieser Folge suchen", close: "Fertig" },
-    fr: { lede: "Apprenez les expressions, la grammaire et le vocabulaire du coréen de Sogang à travers des conversations du quotidien. Choisissez un épisode ou lancez une recherche.", search: "Rechercher des podcasts", level: "Niveau {n}", ready: "{a} / {b} disponibles",
+    fr: { nextEp: "Épisode suivant", skipT: "Passer à l’épisode suivant ?", skipB: "À suivre : {t}. Votre position dans cet épisode est enregistrée.", skipNoAsk: "Ne plus demander", cancel: "Annuler", skip: "Passer",
+      lede: "Apprenez les expressions, la grammaire et le vocabulaire du coréen de Sogang à travers des conversations du quotidien. Choisissez un épisode ou lancez une recherche.", search: "Rechercher des podcasts", level: "Niveau {n}", ready: "{a} / {b} disponibles",
       scriptOnly: "Texte seul", audioBy: "Audio vers le {d}", done: "Écouté", left: "encore {t}", "new": "Nouveau", preview: "Aperçu",
       about: "À propos de cet épisode", more: "Plus", less: "Moins", setting: "Cadre", formality: "Registre", items: "À apprendre", seeAll: "Tout voir",
       bannerNone: "L’audio de cet épisode n’est pas encore enregistré. Vous pouvez déjà lire le texte ; il sera lu ici dès qu’il sera prêt.",
@@ -679,7 +709,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Touchez pour voir le sens et l’emploi.", example: "Exemple", notes: "Notes", inEp: "Dans cet épisode",
       playFrom: "Lire à partir d’ici", goLine: "Aller à la ligne", commentaryOnly: "Expliqué dans le commentaire, mais pas utilisé dans la scène.",
       lines: "{n} lignes", noMatch: "Aucune ligne ne contient « {q} ».", loadFail: "Impossible de charger la liste des épisodes. Tirez pour actualiser.", cancel: "Annuler", clear: "Effacer", recent: "Recherches récentes", findPh: "Chercher dans l’épisode", close: "OK" },
-    ru: { lede: "Учите выражения, грамматику и лексику корейского по Sogang в живых диалогах. Выберите выпуск или найдите что-нибудь через поиск.", search: "Поиск по подкастам", level: "Уровень {n}", ready: "готово {a} / {b}",
+    ru: { nextEp: "Следующий выпуск", skipT: "Перейти к следующему выпуску?", skipB: "Далее: {t}. Место в этом выпуске сохранится.", skipNoAsk: "Больше не спрашивать", cancel: "Отмена", skip: "Перейти",
+      lede: "Учите выражения, грамматику и лексику корейского по Sogang в живых диалогах. Выберите выпуск или найдите что-нибудь через поиск.", search: "Поиск по подкастам", level: "Уровень {n}", ready: "готово {a} / {b}",
       scriptOnly: "Только текст", audioBy: "Аудио к {d}", done: "Прослушано", left: "осталось {t}", "new": "Новое", preview: "Превью",
       about: "Об этом выпуске", more: "Ещё", less: "Свернуть", setting: "Место действия", formality: "Стиль речи", items: "Изучаем", seeAll: "Показать все",
       bannerNone: "Аудио для этого выпуска ещё не записано. Текст можно читать уже сейчас, а когда запись будет готова, она появится здесь.",
@@ -688,7 +719,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Нажмите, чтобы увидеть значение и употребление.", example: "Пример", notes: "Заметки", inEp: "В этом выпуске",
       playFrom: "Слушать отсюда", goLine: "К строке", commentaryOnly: "Объясняется в комментарии, но в сцене не встречается.",
       lines: "Строк: {n}", noMatch: "Нет строк с «{q}».", loadFail: "Не удалось загрузить список выпусков. Потяните вниз, чтобы обновить.", cancel: "Отмена", clear: "Очистить", recent: "Недавние запросы", findPh: "Поиск в выпуске", close: "Готово" },
-    tr: { lede: "Sogang Korece ifadelerini, dilbilgisini ve kelimelerini günlük konuşmalarla öğrenin. Başlamak için bir bölüm seçin ya da bir şey arayın.", search: "Podcast ara", level: "Seviye {n}", ready: "{a} / {b} hazır",
+    tr: { nextEp: "Sonraki bölüm", skipT: "Sonraki bölüme geçilsin mi?", skipB: "Sıradaki: {t}. Bu bölümde kaldığın yer kaydedilir.", skipNoAsk: "Bir daha sorma", cancel: "Vazgeç", skip: "Geç",
+      lede: "Sogang Korece ifadelerini, dilbilgisini ve kelimelerini günlük konuşmalarla öğrenin. Başlamak için bir bölüm seçin ya da bir şey arayın.", search: "Podcast ara", level: "Seviye {n}", ready: "{a} / {b} hazır",
       scriptOnly: "Yalnızca metin", audioBy: "Ses {d} civarı", done: "Bitti", left: "{t} kaldı", "new": "Yeni", preview: "Önizleme",
       about: "Bu bölüm hakkında", more: "Devamını göster", less: "Daha az göster", setting: "Ortam", formality: "Hitap düzeyi", items: "Dilbilgisi ve kelimeler", seeAll: "Tümünü gör",
       bannerNone: "Bu bölümün sesi henüz kaydedilmedi. Metni şimdi okuyabilirsiniz; ses hazır olduğunda burada çalacak.",
@@ -697,7 +729,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Anlamını ve nasıl kullanıldığını görmek için dokunun.", example: "Örnek", notes: "Notlar", inEp: "Bu bölümde",
       playFrom: "Buradan oynat", goLine: "Satıra git", commentaryOnly: "Sahnede geçmiyor, yorum kısmında açıklanıyor.",
       lines: "{n} satır", noMatch: "“{q}” ile eşleşen satır yok.", loadFail: "Bölüm listesi yüklenemedi. Yenilemek için aşağı çekin.", cancel: "Vazgeç", clear: "Temizle", recent: "Son aramalar", findPh: "Bu bölümde ara", close: "Bitti" },
-    vi: { lede: "Học biểu hiện, ngữ pháp và từ vựng tiếng Hàn Sogang qua những cuộc trò chuyện đời thường. Chọn một tập để bắt đầu, hoặc tìm kiếm điều bạn muốn học.", search: "Tìm podcast", level: "Cấp {n}", ready: "{a} / {b} tập sẵn sàng",
+    vi: { nextEp: "Tập tiếp theo", skipT: "Chuyển sang tập tiếp theo?", skipB: "Tiếp theo: {t}. Vị trí bạn đang nghe ở tập này sẽ được lưu.", skipNoAsk: "Không hỏi lại", cancel: "Hủy", skip: "Chuyển",
+      lede: "Học biểu hiện, ngữ pháp và từ vựng tiếng Hàn Sogang qua những cuộc trò chuyện đời thường. Chọn một tập để bắt đầu, hoặc tìm kiếm điều bạn muốn học.", search: "Tìm podcast", level: "Cấp {n}", ready: "{a} / {b} tập sẵn sàng",
       scriptOnly: "Chỉ có lời thoại", audioBy: "Âm thanh khoảng {d}", done: "Đã nghe", left: "còn {t}", "new": "Mới", preview: "Nghe thử",
       about: "Về tập này", more: "Xem thêm", less: "Thu gọn", setting: "Bối cảnh", formality: "Mức độ trang trọng", items: "Ngữ pháp & từ vựng", seeAll: "Xem tất cả",
       bannerNone: "Tập này chưa được thu âm. Bạn có thể đọc lời thoại ngay bây giờ, và âm thanh sẽ phát ở đây khi sẵn sàng.",
@@ -706,7 +739,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Chạm để xem nghĩa và cách dùng.", example: "Ví dụ", notes: "Ghi chú", inEp: "Trong tập này",
       playFrom: "Phát từ đây", goLine: "Đến dòng này", commentaryOnly: "Được giải thích trong phần bình luận, không xuất hiện trong cảnh.",
       lines: "{n} dòng", noMatch: "Không có dòng nào khớp với “{q}”.", loadFail: "Không tải được danh sách tập. Kéo xuống để làm mới.", cancel: "Hủy", clear: "Xóa", recent: "Tìm kiếm gần đây", findPh: "Tìm trong tập này", close: "Xong" },
-    th: { lede: "เรียนสำนวน ไวยากรณ์ และคำศัพท์ภาษาเกาหลีของซอกังผ่านบทสนทนาในชีวิตประจำวัน เลือกตอนที่อยากฟัง หรือค้นหาสิ่งที่อยากรู้ได้เลย", search: "ค้นหาพอดแคสต์", level: "ระดับ {n}", ready: "พร้อมฟัง {a} / {b}",
+    th: { nextEp: "ตอนถัดไป", skipT: "ข้ามไปตอนถัดไปไหม", skipB: "ตอนถัดไป: {t} ตำแหน่งที่ฟังอยู่ในตอนนี้จะถูกบันทึกไว้", skipNoAsk: "ไม่ต้องถามอีก", cancel: "ยกเลิก", skip: "ข้าม",
+      lede: "เรียนสำนวน ไวยากรณ์ และคำศัพท์ภาษาเกาหลีของซอกังผ่านบทสนทนาในชีวิตประจำวัน เลือกตอนที่อยากฟัง หรือค้นหาสิ่งที่อยากรู้ได้เลย", search: "ค้นหาพอดแคสต์", level: "ระดับ {n}", ready: "พร้อมฟัง {a} / {b}",
       scriptOnly: "มีแค่บท", audioBy: "เสียงราว {d}", done: "ฟังจบแล้ว", left: "เหลือ {t}", "new": "ใหม่", preview: "ตัวอย่าง",
       about: "เกี่ยวกับตอนนี้", more: "ดูเพิ่มเติม", less: "ย่อ", setting: "ฉาก", formality: "ระดับภาษา", items: "ไวยากรณ์และคำศัพท์", seeAll: "ดูทั้งหมด",
       bannerNone: "ตอนนี้ยังไม่ได้อัดเสียง อ่านบทได้เลยตอนนี้ แล้วเสียงจะเล่นตรงนี้เมื่อพร้อม",
@@ -791,7 +825,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       if (n && n.nodeType === 1 && n.matches("mark.v") && n.dataset.k !== m.dataset.k) { m.classList.add("gr"); n.classList.add("gl"); }
     });
   }
-  function openEp(id, atLine) {
+  function openEp(id, atLine, autoplay) {
     audio.pause(); if (finding) exitFind();
     fetch("data/" + id + ".json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (d) {
       ep = d; cur = -1;
@@ -825,8 +859,9 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
         $("tot").textContent = fmt(isFinite(audio.duration) ? audio.duration : d.dur); tick(true);
       });
       $("tot").textContent = fmt(d.dur);
-      renderXp(); setMedia(); tick(true);
+      renderXp(); setMedia(); tick(true); syncNextEp();
       if (atLine != null) jumpTo(atLine, true);
+      if (autoplay) { var pr = audio.play(); if (pr && pr.catch) pr.catch(function () {}); }
     });
   }
   function bannerHtml(d) {
@@ -1074,6 +1109,38 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   function playFrom(t) { audio.currentTime = Math.max(0, t); audio.play().catch(function () {}); userScrolledAt = 0; }
   $("play").addEventListener("click", function () { if (audio.paused) audio.play().catch(function () {}); else audio.pause(); });
   $("again").addEventListener("click", function () { if (cur >= 0) playFrom(ep.lines[cur].t); });
+  // next episode (list order, episodes with audio only); asks first when you're partway through, unless told not to
+  function nextReady() {
+    if (!ep || !index) return null;
+    var k = index.findIndex(function (x) { return x.ep === ep.ep; });
+    for (var j = k + 1; k >= 0 && j < index.length; j++) if (index[j].ready) return index[j];
+    return null;
+  }
+  function syncNextEp() { var n = nextReady(); $("nextep").disabled = !n; $("nextep").setAttribute("aria-label", T("nextEp")); }
+  function goNext(n) { var wasPlaying = !audio.paused; openEp(n.ep, null, wasPlaying); }
+  var dlg = $("skipdlg"), dlgNext = null;
+  function closeDlg() {
+    dlg.classList.add("closing"); dlg.classList.remove("open");
+    setTimeout(function () { dlg.hidden = true; dlg.classList.remove("closing"); }, 200);
+  }
+  $("nextep").addEventListener("click", function () {
+    var n = nextReady(); if (!n) return;
+    var t = audio.currentTime || 0, d = audio.duration || ep.dur || 0;
+    if (store.get("skipNoAsk", false) || t < 5 || (d && t > d - 15)) { goNext(n); return; }
+    dlgNext = n;
+    $("skipt").textContent = T("skipT"); $("skipb").textContent = T("skipB", { t: epLabel(n) + " · " + (locE(n).t || n.title) });
+    $("skipnaskt").textContent = T("skipNoAsk"); $("skipnask").checked = false;
+    $("skipno").textContent = T("cancel"); $("skipyes").textContent = T("skip");
+    dlg.hidden = false; void dlg.offsetWidth; dlg.classList.add("open"); $("skipyes").focus({ preventScroll: true });
+  });
+  $("skipno").addEventListener("click", closeDlg);
+  $("skipyes").addEventListener("click", function () {
+    if ($("skipnask").checked) store.set("skipNoAsk", true);
+    closeDlg(); if (dlgNext) goNext(dlgNext);
+  });
+  dlg.addEventListener("click", function (ev) { if (ev.target === dlg) closeDlg(); });
+  dlg.addEventListener("touchmove", function (ev) { ev.preventDefault(); }, { passive: false });
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && !dlg.hidden) closeDlg(); });
   $("prev").addEventListener("click", function () {
     var k = timed.indexOf(cur); if (k < 0) return; if (audio.currentTime - ep.lines[cur].t < 1.2 && k > 0) k--; playFrom(ep.lines[timed[k]].t);
   });
