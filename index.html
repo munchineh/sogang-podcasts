@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="87ff729768f1">
+<html lang="ko" data-build="306618a97353">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -33,7 +33,7 @@
   --f-body: "Dots", "Noto Sans KR", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
   --f-latin: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans KR", sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
-  --edge: 8px; --spring: cubic-bezier(.34,1.56,.64,1); --field: color-mix(in srgb, var(--ink) 5.5%, var(--bg));
+  --edge: 8px; --spring: cubic-bezier(.34,1.56,.64,1); --spring-sheet: cubic-bezier(.22,1,.36,1); --field: color-mix(in srgb, var(--ink) 5.5%, var(--bg));
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #121318; --surface: #1b1c23; --ink: #eceef5; --muted: #9a9daf; --faint: #5f6273; --rule: #2a2c36;
@@ -125,8 +125,12 @@ body { margin-top: 0; }
 .eps .lvl:first-child { margin-top: 10px; }
 .ep { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; align-items: center; text-align: left; width: 100%;
   padding: 14px 16px 16px; background: var(--surface); border: 1px solid var(--rule); border-radius: 16px;
-  box-shadow: 0 1px 2px rgba(23,24,31,.04); transition: transform .15s; }
-.ep:active { transform: scale(.985); }
+  box-shadow: 0 1px 2px rgba(23,24,31,.04); transition: transform .5s var(--spring); }
+.ep:active { transform: scale(.975); transition: transform .1s ease-out; }
+/* press feedback: things you tap dip a little and spring back when let go */
+.ib, .chip, .play, .speed, .qx, .recent button { transition: transform .45s var(--spring), background-color .2s ease; }
+.ib:active, .chip:active, .play:active, .speed:active, .qx:active, .recent button:active { transform: scale(.9); transition: transform .08s ease-out, background-color .1s ease; }
+@media (prefers-reduced-motion: reduce) { .ep, .ib, .chip, .play, .speed, .qx, .recent button { transition: none !important; } }
 .ep .no { font: 500 11.5px/1.6 var(--f-mono); color: var(--faint); letter-spacing: .04em; font-variant-numeric: tabular-nums; }
 .ep .st { font: 500 11.5px/1.6 var(--f-mono); letter-spacing: .02em; color: var(--muted); white-space: nowrap; justify-self: end; }
 .ep .st.new { color: var(--accent); }
@@ -361,12 +365,13 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .speedmenu { position: fixed; z-index: 7; bottom: calc(var(--tp, 140px) + 10px); left: max(16px, calc(50% - 340px));
   background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; padding: 6px; display: grid; gap: 2px; min-width: 120px;
   box-shadow: 0 10px 30px rgba(10,10,20,.18); }
-.speedmenu button { height: 44px; border-radius: 10px; font: 600 15px var(--f-mono); font-variant-numeric: tabular-nums; text-align: left; padding: 0 14px;
+.speedmenu button { height: 44px; border-radius: 8px;   /* concentric with the menu: 14 − 6 padding */ font: 600 15px var(--f-mono); font-variant-numeric: tabular-nums; text-align: left; padding: 0 14px;
   display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .speedmenu button:active { background: var(--accent-soft); }
 .speedmenu button[aria-checked="true"] { background: var(--accent-soft); color: var(--accent); }
 .speedmenu button small { font: 500 11px var(--f-body); color: var(--muted); }
-.langmenu { left: max(16px, calc(50% - 340px)); min-width: 210px; }
+.langmenu { left: max(16px, calc(50% - 340px)); min-width: 210px;
+  max-height: calc(100dvh - var(--tp, 140px) - env(safe-area-inset-top, 0px) - 28px); overflow-y: auto; overscroll-behavior: contain; }
 .langmenu .lbl { font: 600 10.5px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); padding: 8px 14px 4px; }
 .langmenu button { font: 600 15px var(--f-body); }
 .langmenu .sizes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 2px 4px 4px; }
@@ -387,12 +392,12 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .sheet { position: fixed; inset: 0; z-index: 6; display: flex; align-items: flex-end; background: rgba(10,10,20,0); transition: background-color .32s ease; }
 .sheet.open { background: rgba(10,10,20,.35); }
 .sheet.closing { pointer-events: none; transition-duration: .24s; }
-.sheet .panel { transform: translateY(100%); transition: transform .42s cubic-bezier(.22,1,.36,1), opacity .24s ease, height .3s cubic-bezier(.22,1,.36,1); will-change: transform; }
+.sheet .panel { transform: translateY(100%); transition: transform .58s var(--spring-sheet), opacity .24s ease, height .34s var(--spring-sheet); will-change: transform; }
 .sheet.open .panel { transform: none; }
-.sheet.closing .panel { transition: transform .26s cubic-bezier(.5,0,.75,0), opacity .2s ease; }
+.sheet.closing .panel { transition: transform .24s cubic-bezier(.4,0,1,1), opacity .2s ease; }
 /* list ⇄ card: the dimmed backdrop stays put and the panels slide sideways */
 .sheet.swap { transition: none; background: rgba(10,10,20,.35); }
-.sheet.swap .panel { transform: translateX(var(--dx, 28px)); opacity: 0; transition: transform .34s cubic-bezier(.22,1,.36,1), opacity .22s ease, height .3s cubic-bezier(.22,1,.36,1); }
+.sheet.swap .panel { transform: translateX(var(--dx, 28px)); opacity: 0; transition: transform .42s var(--spring), opacity .2s ease, height .34s var(--spring-sheet); }
 .sheet.swap.open { background: rgba(10,10,20,.35); }
 .sheet.swap.open .panel { transform: none; opacity: 1; }
 .sheet.swap.closing { background: rgba(10,10,20,0); }
@@ -420,6 +425,23 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .xp em.none { color: var(--faint); font-weight: 500; }
 /* episode overview */
 .ov { margin: 14px 0 4px; padding: 14px 16px; border-radius: 16px; background: var(--surface); border: 1px solid var(--rule); }
+/* iOS-style continuous corners (the "squircle": the curve eases in from the straight edge instead of a quarter circle
+   meeting it, Apple's corner smoothing ≈ 60%). Safari has no corner-shape yet, so each big surface paints its border and
+   fill as two masked layers (::before = border colour, ::after = fill, 1px in) and its shadow with drop-shadow, which
+   follows the mask. Browsers without -webkit-mask-box-image keep the plain rounded corners. */
+:root { --sq16: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54'%3E%3Cpath d='M28.4 0c8.961 0 13.441 0 16.864 1.744a16 16 0 0 1 6.992 6.992c1.744 3.423 1.744 7.903 1.744 16.864L54 28.4c0 8.961 0 13.441 -1.744 16.864a16 16 0 0 1 -6.992 6.992c-3.423 1.744 -7.903 1.744 -16.864 1.744L25.6 54c-8.961 0 -13.441 0 -16.864 -1.744a16 16 0 0 1 -6.992 -6.992c-1.744 -3.423 -1.744 -7.903 -1.744 -16.864L0 25.6c0 -8.961 0 -13.441 1.744 -16.864a16 16 0 0 1 6.992 -6.992c3.423 -1.744 7.903 -1.744 16.864 -1.744Z'/%3E%3C/svg%3E") 26 / 26px stretch; --sq15: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Cpath d='M26 0c8.401 0 12.601 0 15.81 1.635a15 15 0 0 1 6.555 6.555c1.635 3.209 1.635 7.409 1.635 15.81L50 26c0 8.401 0 12.601 -1.635 15.81a15 15 0 0 1 -6.555 6.555c-3.209 1.635 -7.409 1.635 -15.81 1.635L24 50c-8.401 0 -12.601 0 -15.81 -1.635a15 15 0 0 1 -6.555 -6.555c-1.635 -3.209 -1.635 -7.409 -1.635 -15.81L0 24c0 -8.401 0 -12.601 1.635 -15.81a15 15 0 0 1 6.555 -6.555c3.209 -1.635 7.409 -1.635 15.81 -1.635Z'/%3E%3C/svg%3E") 24 / 24px stretch; --sqt22: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='74' height='38'%3E%3Cpath d='M38.8 0c12.321 0 18.482 0 23.188 2.398a22 22 0 0 1 9.614 9.614c2.398 4.706 2.398 10.867 2.398 23.188L74 38L0 38L0 35.2c0 -12.321 0 -18.482 2.398 -23.188a22 22 0 0 1 9.614 -9.614c4.706 -2.398 10.867 -2.398 23.188 -2.398Z'/%3E%3C/svg%3E") 36 36 1 36 / 36px 36px 0 36px stretch; --sqt21: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='36'%3E%3Cpath d='M36.4 0c11.761 0 17.642 0 22.134 2.289a21 21 0 0 1 9.177 9.177c2.289 4.492 2.289 10.373 2.289 22.134L70 36L0 36L0 33.6c0 -11.761 0 -17.642 2.289 -22.134a21 21 0 0 1 9.177 -9.177c4.492 -2.289 10.373 -2.289 22.134 -2.289Z'/%3E%3C/svg%3E") 34 34 1 34 / 34px 34px 0 34px stretch; --sqt20: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='66' height='34'%3E%3Cpath d='M34 0c11.201 0 16.802 0 21.08 2.18a20 20 0 0 1 8.74 8.74c2.18 4.278 2.18 9.879 2.18 21.08L66 34L0 34L0 32c0 -11.201 0 -16.802 2.18 -21.08a20 20 0 0 1 8.74 -8.74c4.278 -2.18 9.879 -2.18 21.08 -2.18Z'/%3E%3C/svg%3E") 32 32 1 32 / 32px 32px 0 32px stretch; }
+@supports (-webkit-mask-box-image: none) {
+  .ep, .ov, .transport { position: relative; isolation: isolate; background: transparent; border-color: transparent; }
+  .transport { position: fixed; }
+  .ep::before, .ov::before, .transport::before, .ep::after, .ov::after, .transport::after { content: ""; position: absolute; z-index: -1; pointer-events: none; }
+  .ep::before, .ov::before { inset: -1px; background: var(--rule); -webkit-mask-box-image: var(--sq16); }
+  .ep::after, .ov::after { inset: 0; background: var(--surface); -webkit-mask-box-image: var(--sq15); }
+  .ep { box-shadow: none; filter: drop-shadow(0 1px 1px rgba(23,24,31,.05)); }
+  .transport::before { inset: -1px -1px 0; background: var(--rule); -webkit-mask-box-image: var(--sqt22); }
+  .transport::after { inset: 0; background: var(--surface); -webkit-mask-box-image: var(--sqt21); }
+  .transport { box-shadow: none; filter: drop-shadow(0 -6px 14px rgba(10,10,20,.06)); }
+  .sheet .panel { -webkit-mask-box-image: var(--sqt20); }
+}
 .ov .h { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 28px; }
 .ov .h span { font: 600 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
 .ov .h button { font: 600 13px/1 var(--f-latin); color: var(--accent); padding: 8px 2px; }
@@ -850,6 +872,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     if (!keep) audio.pause();
     $("backnow").hidden = true; $("player").hidden = true; $("list").hidden = false;
     document.body.classList.toggle("mini", !!keep); $("transport").hidden = !keep; $("nowpl").hidden = !keep;
+    if (keep && !REDUCED.matches && $("transport").animate) $("transport").animate([{ transform: "translateY(100%)" }, { transform: "none" }], { duration: 560, easing: SPRING_SHEET || "cubic-bezier(.22,1,.36,1)" });
     if (keep) { $("nowtag").textContent = epLabel(ep).replace(" · ", " "); $("nowtxt").textContent = ep.title; }
     document.body.classList.toggle("searching", !!$("q").value.trim());
     renderList(); runSearch();
@@ -945,16 +968,16 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   $("speed").setAttribute("aria-haspopup", "menu");
   $("speed").addEventListener("click", function (ev) {
-    ev.stopPropagation(); $("langmenu").hidden = true;
-    var m = $("speedmenu"); if (!m.hidden) { m.hidden = true; return; }
-    renderSpeedMenu(); m.hidden = false;
+    ev.stopPropagation(); closeLangMenu();
+    var m = $("speedmenu"); if (menuOpen(m)) { popMenu(m, false); return; }
+    renderSpeedMenu(); popMenu(m, true, this);
   });
   $("speedmenu").addEventListener("click", function (ev) {
     var b = ev.target.closest("button"); if (!b) return;
-    var r = +b.dataset.r; audio.playbackRate = r; store.set("speed", r); $("speed").textContent = fmtSpeed(r); this.hidden = true;
+    var r = +b.dataset.r; audio.playbackRate = r; store.set("speed", r); $("speed").textContent = fmtSpeed(r); popMenu(this, false);
   });
-  document.addEventListener("click", function (ev) { if (!ev.target.closest("#speedmenu")) $("speedmenu").hidden = true; });
-  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") $("speedmenu").hidden = true; });
+  document.addEventListener("click", function (ev) { if (!ev.target.closest("#speedmenu")) popMenu($("speedmenu"), false); });
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") popMenu($("speedmenu"), false); });
   // translation (none / English / 简体 / 繁體) and text size, remembered on this device
   var LANGS = [["off", "None", "KO"], ["en", "English", "EN"], ["zh", "简体中文", "简"], ["zt", "繁體中文", "繁"],
                ["de", "Deutsch", "DE"], ["fr", "Français", "FR"], ["ru", "Русский", "RU"],
@@ -987,20 +1010,20 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   // the same menu opens from the player bar (above it) and from the home page (below the language chip)
   function openLangMenu(btn, below) {
-    $("speedmenu").hidden = true;
-    var m = $("langmenu"); if (!m.hidden) { closeLangMenu(); return; }
+    popMenu($("speedmenu"), false);
+    var m = $("langmenu"); if (menuOpen(m)) { closeLangMenu(); return; }
     renderLangMenu();
     if (below) {
       var r = btn.getBoundingClientRect();
-      m.style.top = (r.bottom + 8) + "px"; m.style.bottom = "auto"; m.style.left = "auto";
+      m.style.top = (r.bottom + 8) + "px"; m.style.bottom = "auto"; m.style.left = "auto"; m.style.maxHeight = (innerHeight - r.bottom - 24) + "px";
       m.style.right = Math.max(8, innerWidth - r.right) + "px";
     } else m.removeAttribute("style");
-    m.hidden = false; btn.setAttribute("aria-expanded", "true");
+    popMenu(m, true, btn); btn.setAttribute("aria-expanded", "true");
   }
-  function closeLangMenu() { $("langmenu").hidden = true; $("langbtn").setAttribute("aria-expanded", "false"); }
+  function closeLangMenu() { popMenu($("langmenu"), false); $("langbtn").setAttribute("aria-expanded", "false"); }
   $("enbtn").addEventListener("click", function (ev) { ev.stopPropagation(); openLangMenu(this, false); });
   $("langbtn").addEventListener("click", function (ev) { ev.stopPropagation(); openLangMenu(this, true); });
-  window.addEventListener("scroll", function () { if (!$("list").hidden && !$("langmenu").hidden) closeLangMenu(); }, { passive: true });
+  window.addEventListener("scroll", function () { if (!$("list").hidden && menuOpen($("langmenu"))) closeLangMenu(); }, { passive: true });
   $("langmenu").addEventListener("click", function (ev) {
     ev.stopPropagation();
     var b = ev.target.closest("button"); if (!b) return;
@@ -1008,8 +1031,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     if (b.dataset.sz) { SZ = +b.dataset.sz; store.set("size", SZ); renderLangMenu(); }
     applyPrefs();
   });
-  document.addEventListener("click", function (ev) { if (!ev.target.closest("#langmenu") && !$("langmenu").hidden) closeLangMenu(); });
-  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && !$("langmenu").hidden) closeLangMenu(); });
+  document.addEventListener("click", function (ev) { if (!ev.target.closest("#langmenu") && menuOpen($("langmenu"))) closeLangMenu(); });
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && menuOpen($("langmenu"))) closeLangMenu(); });
   // every label on screen in the chosen language
   function applyUi() {
     document.documentElement.dataset.ui = UL();
@@ -1038,7 +1061,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     var top = Math.max(0, document.querySelector("#player .top, .top").getBoundingClientRect().bottom), bot = document.querySelector(".transport").getBoundingClientRect().top;
     var r = el.getBoundingClientRect(), c = (r.top + r.bottom) / 2, band = (bot - top) * 0.22;
     var off = c < top + band || c > bot - band;
-    bn.hidden = !off;
+    var was = bn.hidden; bn.hidden = !off; if (was && off) popIn(bn, 12);
     if (off) { var pr = bn.getBoundingClientRect(); bn.classList.toggle("up", c < (pr.height ? (pr.top + pr.bottom) / 2 : bot)); }   // arrow points at the line
   }
   var lastY = window.scrollY, topEl = document.querySelector("#player .top"), topHold = 0;
@@ -1310,6 +1333,44 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   var SPRING_OPEN = springCurve(.78, 21, .4), SPRING_CLOSE = springCurve(.9, 22, .26);
   if (SPRING_OPEN) document.documentElement.style.setProperty("--spring", SPRING_OPEN);
+  // one motion language for the whole app: --spring (tight, ~0.4 s, a few px of overshoot) for things that appear or are
+  // let go of, --spring-sheet (a touch softer, ~0.55 s) for big panels; exits are quick ease-ins with no bounce
+  var SPRING_SHEET = springCurve(.86, 14, .58);
+  if (SPRING_SHEET) document.documentElement.style.setProperty("--spring-sheet", SPRING_SHEET);
+  var REDUCED = matchMedia("(prefers-reduced-motion: reduce)");
+  // small menus (speed, translation): grow out of the button that opened them, items settle in one after another
+  function popMenu(m, show, from) {
+    if (m._pa) { m._pa.forEach(function (a) { a.cancel(); }); m._pa = null; }
+    clearTimeout(m._pt); m._closing = false;
+    if (show) {
+      m.hidden = false;
+      if (REDUCED.matches || !m.animate) return;
+      var r = m.getBoundingClientRect(), b = from && from.getBoundingClientRect();
+      m.style.transformOrigin = b ? (b.left + b.width / 2 - r.left) + "px " + (b.top + b.height / 2 - r.top) + "px" : "50% 100%";
+      var ease = SPRING_OPEN || "cubic-bezier(.34,1.56,.64,1)";
+      m._pa = [m.animate([{ transform: "scale(.5)" }, { transform: "none" }], { duration: 420, easing: ease }),
+               m.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 110, easing: "ease-out" })];
+      Array.prototype.forEach.call(m.children, function (it, i) {
+        m._pa.push(it.animate([{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "none" }],
+                              { duration: 380, delay: 25 + i * 16, easing: ease, fill: "backwards" }));
+      });
+    } else {
+      if (m.hidden) return;
+      if (REDUCED.matches || !m.animate) { m.hidden = true; return; }
+      m._closing = true;
+      m._pa = [m.animate([{ transform: "none", opacity: 1 }, { transform: "scale(.92)", opacity: 0 }], { duration: 130, easing: "cubic-bezier(.4,0,1,1)", fill: "forwards" })];
+      m._pt = setTimeout(function () { m.hidden = true; m._closing = false; if (m._pa) m._pa.forEach(function (a) { a.cancel(); }); m._pa = null; }, 130);
+    }
+  }
+  function menuOpen(m) { return !m.hidden && !m._closing; }
+  // things that pop into view (the "back to the current line" pill, the mini player): a short spring from below
+  function popIn(el, dy) {
+    if (REDUCED.matches || !el.animate) return;
+    var ease = SPRING_OPEN || "cubic-bezier(.34,1.56,.64,1)", base = getComputedStyle(el).transform;
+    base = base === "none" ? "" : base + " ";
+    el.animate([{ transform: base + "translateY(" + (dy || 14) + "px) scale(.94)", opacity: 0 }, { transform: base || "none", opacity: 1 }],
+               { duration: 420, easing: ease });
+  }
   var fAnims = [];
   // the search icon turns into the field: the pill grows out of the icon's circle and folds back into it
   function morphFind(open) {
