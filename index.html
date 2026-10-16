@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="f8058e2e53e7">
+<html lang="ko" data-build="65ce1c909e54">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -394,6 +394,9 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   max-height: calc(100dvh - var(--tp, 140px) - env(safe-area-inset-top, 0px) - 28px); overflow-y: auto; overscroll-behavior: contain; }
 .langmenu .lbl { font: 600 10.5px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); padding: 8px 14px 4px; }
 .langmenu button { font: 600 15px var(--f-body); }
+/* each language name in its own script's system font. In the Japanese UI the body font is Hiragino, whose Cyrillic is
+   full-width (Р у с с к и й came out spaced); the lang attribute also gets 日本語 Japanese and 简体/繁體 Chinese glyph forms */
+.langmenu button[data-tr]:not([data-tr="off"]) { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Noto Sans", sans-serif; }
 .langmenu .sizes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 2px 4px 4px; }
 .langmenu .sizes button { justify-content: center; padding: 0; font-weight: 700; }
 .back-now { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--tp, 140px) + 24px); z-index: 4;
@@ -1114,7 +1117,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   function renderLangMenu() {
     $("langmenu").innerHTML = '<div class="lbl">' + T("translation") + '</div>' + LANGS.map(function (x) {
-      return '<button role="menuitemradio" aria-checked="' + (x[0] === TR) + '" data-tr="' + x[0] + '">' + (x[0] === "off" ? T("none") : x[1]) + '</button>';
+      var lang = x[0] === "off" ? UL() : x[0] === "zt" ? "zh-TW" : x[0] === "zh" ? "zh-CN" : x[0];
+      return '<button role="menuitemradio" lang="' + lang + '" aria-checked="' + (x[0] === TR) + '" data-tr="' + x[0] + '">' + (x[0] === "off" ? T("none") : x[1]) + '</button>';
     }).join("") + '<div class="lbl">' + T("textSize") + '</div><div class="sizes">' + SIZES.map(function (v, i) {
       return '<button role="menuitemradio" aria-checked="' + (i === SZ) + '" data-sz="' + i + '" style="font-size:' + (11 + i * 3) + 'px">가</button>';
     }).join("") + '</div>';
