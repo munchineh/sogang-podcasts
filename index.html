@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="d023360780ce">
+<html lang="ko" data-build="273ce42e53ad">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -132,8 +132,10 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 .ep .te { grid-column: 1 / -1; font-family: var(--f-latin); font-size: 14px; font-weight: 500; color: var(--muted); min-width: 0; }
 .ep .b { grid-column: 1 / -1; font-family: var(--f-latin); font-size: 14px; line-height: 1.5; color: var(--ink); opacity: .82; min-width: 0; margin-top: 8px; }
 .ep[data-noaudio] .t, .ep[data-noaudio] .b { opacity: .62; }
-/* the two top bars (search here, the episode header in the player) share one look: frosted, with a hairline once content scrolls under */
-.search, .top { background: color-mix(in srgb, var(--bg) 96%, transparent); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+/* the two top bars (search here, the episode header in the player) share one look: solid page colour, with a hairline once content
+   scrolls under. Solid on purpose: iOS Safari tints the status-bar strip from a pinned bar only when its background is opaque;
+   anything translucent makes it fall back to a soft blur that smears over the top of the field. */
+.search, .top { background: var(--bg);
   border-bottom: 1px solid transparent; transition: border-color .2s ease; }
 .search.stuck, .top.stuck { border-bottom-color: var(--rule); }
 .search { position: sticky; top: 0; z-index: 2; padding: calc(env(safe-area-inset-top, 0px) + 8px) 0 12px;
@@ -193,22 +195,22 @@ body.searching .qcancel { max-width: 90px; opacity: 1; padding: 8px 4px 8px 14px
 .top .wrap { position: relative; }
 .top .ttl, #back, #xpbtn { transition: opacity .2s ease .12s, transform .4s cubic-bezier(.22,1,.36,1) .08s; }
 .top.finding .ttl, .top.finding #back, .top.finding #xpbtn { transition: opacity .16s ease, transform .4s cubic-bezier(.22,1,.36,1); }
-#findbtn { transition: opacity .14s ease .24s; }
+#findbtn { transition: opacity .12s ease .19s; }
 .top.finding .ttl, .top.finding #back, .top.finding #xpbtn, .top.finding #findbtn { opacity: 0; pointer-events: none; }
 .top.finding #findbtn { transition: opacity 0s; }
 .top.finding .ttl { transform: translateX(-10px); }
 .findbar { position: absolute; inset: 0; padding: inherit; display: flex; align-items: center; gap: 0; min-width: 0;
-  visibility: hidden; pointer-events: none; transition: visibility 0s linear .34s; }
+  visibility: hidden; pointer-events: none; transition: visibility 0s linear .27s; }
 .top.finding .findbar { visibility: visible; pointer-events: auto; transition: visibility 0s; }
 .findbar .fbg { position: absolute; inset: 0; border-radius: 999px; background: var(--field); }
 .findbar .fbg { transition: box-shadow .12s ease; }
-.top.finding .fwrap:focus-within .fbg { box-shadow: 0 0 0 2px var(--accent); transition: box-shadow .25s ease .34s; }
+.top.finding .fwrap:focus-within .fbg { box-shadow: 0 0 0 2px var(--accent); transition: box-shadow .2s ease .24s; }
 #fq, #fcount { opacity: 0; transition: opacity .06s ease; }
-.top.finding #fq, .top.finding #fcount { opacity: 1; transition: opacity .2s ease .26s; }   /* once the pill is under the text */
+.top.finding #fq, .top.finding #fcount { opacity: 1; transition: opacity .16s ease .17s; }   /* once the pill is under the text */
 .findbar > .ib, .fdone { opacity: 0; transform: scale(.4); transition: opacity .1s ease, transform .2s ease; }
 .top.finding .findbar > .ib, .top.finding .fdone { opacity: 1; transform: none;
-  transition: opacity .18s ease var(--d, .1s), transform .62s var(--spring) var(--d, .1s); }
-#fprev { --d: .1s; } #fnext { --d: .15s; } .fdone { --d: .2s; transform-origin: 30% 50%; }
+  transition: opacity .14s ease var(--d, .06s), transform .4s var(--spring) var(--d, .06s); }
+#fprev { --d: .06s; } #fnext { --d: .09s; } .fdone { --d: .12s; transform-origin: 30% 50%; }
 @media (prefers-reduced-motion: reduce) { .findbar, .top.finding .findbar, .top .ttl, #findbtn, .findbar > .ib, .fdone, #fq, #fcount { transition: none !important; } }
 /* while typing a search the player bar steps aside, so the keyboard and the script share the screen */
 .transport { transition: transform .3s cubic-bezier(.22,1,.36,1); }
@@ -1295,7 +1297,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     }
     return "linear(" + pts.join(", ") + ")";
   }
-  var SPRING_OPEN = springCurve(.7, 11, .62), SPRING_CLOSE = springCurve(.86, 16, .32);
+  var SPRING_OPEN = springCurve(.78, 21, .4), SPRING_CLOSE = springCurve(.9, 22, .26);
   if (SPRING_OPEN) document.documentElement.style.setProperty("--spring", SPRING_OPEN);
   var fAnims = [];
   // the search icon turns into the field: the pill grows out of the icon's circle and folds back into it
@@ -1310,14 +1312,14 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
         icShut = { transform: "translate(" + (b.left + b.width / 2 - c.left - c.width / 2) + "px," + (b.top + b.height / 2 - c.top - c.height / 2) + "px) scale(1.22)" },
         icFull = { transform: "none" };
     if (open) {
-      var o = { duration: 620, easing: SPRING_OPEN || "cubic-bezier(.34,1.56,.64,1)" };
+      var o = { duration: 400, easing: SPRING_OPEN || "cubic-bezier(.34,1.56,.64,1)" };
       fAnims.push(bg.animate([shut, full], o), ic.animate([icShut, icFull], o),
                   bg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 110, easing: "ease-out" }));
     } else {
-      var q = { duration: 320, easing: SPRING_CLOSE || "cubic-bezier(.4,0,.2,1)", fill: "forwards" };
+      var q = { duration: 260, easing: SPRING_CLOSE || "cubic-bezier(.4,0,.2,1)", fill: "forwards" };
       fAnims.push(bg.animate([full, shut], q), ic.animate([icFull, icShut], q),
-                  ic.animate([{ opacity: 1 }, { opacity: 1, offset: .45 }, { opacity: 0, offset: .7 }, { opacity: 0 }], { duration: 320, fill: "forwards" }),
-                  bg.animate([{ opacity: 1 }, { opacity: 1, offset: .65 }, { opacity: 0 }], { duration: 320, fill: "forwards" }));
+                  ic.animate([{ opacity: 1 }, { opacity: 1, offset: .45 }, { opacity: 0, offset: .7 }, { opacity: 0 }], { duration: 260, fill: "forwards" }),
+                  bg.animate([{ opacity: 1 }, { opacity: 1, offset: .65 }, { opacity: 0 }], { duration: 260, fill: "forwards" }));
     }
   }
   function enterFind() {
