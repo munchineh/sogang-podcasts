@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="bc4038a11b38">
+<html lang="ko" data-build="55fff135cec1">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -393,10 +393,16 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 #nextep[disabled] { opacity: .3; }
 /* end-of-episode coach mark: a speech bubble over the next-episode button, tail centred underneath, gently bobbing */
 .coach { position: fixed; z-index: 5; left: 0; bottom: 0; transform: translate(-50%, 0); padding: 9px 14px; border-radius: 14px; white-space: nowrap;
-  background: var(--accent); color: #fff; font: 600 14px/1.2 var(--f-latin); box-shadow: 0 6px 20px rgba(60,40,160,.28);
+  background: var(--bubble); color: var(--ink); border: 1px solid var(--bubble-line); font: 600 14px/1.2 var(--f-latin);
+  box-shadow: 0 2px 4px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.14);
   opacity: 0; scale: .8; transform-origin: 50% 100%; transition: opacity .2s ease, scale .45s var(--spring); }
-.coach::after { content: ""; position: absolute; left: calc(50% + var(--tail, 0px)); bottom: -5px; width: 12px; height: 12px; margin-left: -6px; background: inherit;
-  border-radius: 0 0 3px 0; transform: rotate(45deg); }
+.coach::after { content: ""; position: absolute; left: calc(50% + var(--tail, 0px)); bottom: -7px; width: 12px; height: 12px; margin-left: -6px; background: inherit;
+  border: solid var(--bubble-line); border-width: 0 1px 1px 0; border-radius: 0 0 3px 0; transform: rotate(45deg); }
+.coach b { color: var(--accent); font-weight: 700; }
+/* the bubble: a neutral card one step up from the player bar (white in light mode, a lighter grey in dark) */
+:root { --bubble: #ffffff; --bubble-line: #e3e4ec; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bubble: #2b2c37; --bubble-line: #393b48; } }
+:root[data-theme="dark"] { --bubble: #2b2c37; --bubble-line: #393b48; }
 .coach.on { opacity: 1; scale: 1; animation: coachbob 1.6s ease-in-out .45s infinite; }
 @keyframes coachbob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
 @media (prefers-reduced-motion: reduce) { .coach, .coach.on { animation: none; transition: opacity .2s ease; scale: 1; } }
@@ -1160,7 +1166,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   function showCoach() {
     var n = nextReady(); if (!n || $("transport").hidden) return;
-    $("coacht").textContent = T("coach", { e: epLabel(n) });
+    var ct = T("coach", { e: "\u0001" }).split("\u0001");
+    $("coacht").innerHTML = esc(ct[0]) + "<b>" + esc(epLabel(n)) + "</b>" + esc(ct[1] || "");
     var c = $("coach"); c.hidden = false; placeCoach(); void c.offsetWidth; c.classList.add("on");
   }
   function hideCoach() { var c = $("coach"); if (c.hidden) return; c.classList.remove("on"); setTimeout(function () { if (!c.classList.contains("on")) c.hidden = true; }, 220); }
