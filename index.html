@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="273ce42e53ad">
+<html lang="ko" data-build="e98395b9e2d6">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -135,6 +135,9 @@ button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); ou
 /* the two top bars (search here, the episode header in the player) share one look: solid page colour, with a hairline once content
    scrolls under. Solid on purpose: iOS Safari tints the status-bar strip from a pinned bar only when its background is opaque;
    anything translucent makes it fall back to a soft blur that smears over the top of the field. */
+/* a solid strip fixed behind the status bar: iOS Safari only swaps its soft top-edge blur for a flat colour when an opaque
+   element is FIXED at the very top (a sticky bar doesn't count), so this keeps the strip clean in search mode and while scrolling */
+.sbar { position: fixed; top: 0; left: 0; right: 0; height: env(safe-area-inset-top, 0px); background: var(--bg); z-index: 5; pointer-events: none; }
 .search, .top { background: var(--bg);
   border-bottom: 1px solid transparent; transition: border-color .2s ease; }
 .search.stuck, .top.stuck { border-bottom-color: var(--rule); }
@@ -453,6 +456,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 </style>
 </head>
 <body>
+<div class="sbar" aria-hidden="true"></div>
 <main id="list" class="wrap">
   <div class="hdr"><div>
   <div class="mast"><svg class="logo" viewBox="0 0 512 512" aria-hidden="true">
