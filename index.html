@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="6a7fef9bc95e">
+<html lang="ko" data-build="c337b8eaa2ea">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -538,7 +538,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
         <button class="chip en" id="enbtn" aria-haspopup="menu" aria-label="Translation and text size">EN</button></div>
       <div class="mid">
         <button class="ib" id="prev" aria-label="Previous line"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M7.5 6v12"/><path d="M18 6.6v10.8a.8.8 0 0 1-1.2.7L9.6 12.7a.8.8 0 0 1 0-1.4l7.2-5.4a.8.8 0 0 1 1.2.7z"/></svg></button>
-        <button class="play" id="play" aria-label="Play"><svg id="picon" viewBox="0 0 24 24" fill="currentColor"><path d="M7.6 6.2v11.6a1.2 1.2 0 0 0 1.8 1l9.1-5.8a1.2 1.2 0 0 0 0-2l-9.1-5.8A1.2 1.2 0 0 0 9 6.2z"/></svg></button>
+        <button class="play" id="play" aria-label="Play"><svg id="picon" viewBox="0 0 24 24" fill="currentColor"><path d="M7.6 6.2v11.6a1.2 1.2 0 0 0 1.8 1l9.1-5.8a1.2 1.2 0 0 0 0-2l-9.1-5.8A1.2 1.2 0 0 0 7.6 6.2z"/></svg></button>
         <button class="ib" id="next" aria-label="Next line"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M16.5 6v12"/><path d="M6 6.6v10.8a.8.8 0 0 0 1.2.7l7.2-5.4a.8.8 0 0 0 0-1.4L7.2 5.9A.8.8 0 0 0 6 6.6z"/></svg></button>
       </div>
       <div class="side right"><button class="ib" id="again" aria-label="Replay this line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button></div>
@@ -939,7 +939,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   audio.addEventListener("playing", function () { if (!rafOn) { rafOn = true; requestAnimationFrame(raf); } });
 
   function setPlayIcon(on) {
-    $("picon").innerHTML = on ? '<rect x="6.5" y="5" width="4" height="14" rx="1.6"/><rect x="13.5" y="5" width="4" height="14" rx="1.6"/>' : '<path d="M7.6 6.2v11.6a1.2 1.2 0 0 0 1.8 1l9.1-5.8a1.2 1.2 0 0 0 0-2l-9.1-5.8A1.2 1.2 0 0 0 9 6.2z"/>';
+    $("picon").innerHTML = on ? '<rect x="6.5" y="5" width="4" height="14" rx="1.6"/><rect x="13.5" y="5" width="4" height="14" rx="1.6"/>' : '<path d="M7.6 6.2v11.6a1.2 1.2 0 0 0 1.8 1l9.1-5.8a1.2 1.2 0 0 0 0-2l-9.1-5.8A1.2 1.2 0 0 0 7.6 6.2z"/>';
     $("play").setAttribute("aria-label", on ? "Pause" : "Play");
   }
   function playFrom(t) { audio.currentTime = Math.max(0, t); audio.play().catch(function () {}); userScrolledAt = 0; }
