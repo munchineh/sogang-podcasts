@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="f855a21c3e0d">
+<html lang="ko" data-build="762b647dbf6c">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -391,6 +391,16 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .ctrls .side.right { justify-content: flex-end; }
 .chip.en { height: 36px; border-radius: 10px; min-width: 44px; display: inline-grid; place-items: center; padding-bottom: 1.5px; }   /* Noto Sans KR sits its glyphs ~1px low in the line box (big ascent); measured: EN/繁/KO now within 0.25px of centre */
 .chip.en svg { width: 19px; height: 19px; }
+/* Labels centred on their cap height (text-box trim: line box = cap height to baseline), so EN, 繁 and 1× sit in the optical
+   centre whatever font iOS picks; measured on Mancini's iPhone they were 0.5-0.8px low with the old padding nudge.
+   Browsers without text-box keep the nudge. */
+.chip.en .lb, .speed .lb { display: block; }
+.speed { display: inline-grid; place-items: center; }
+@supports (text-box: trim-both cap alphabetic) {
+  .chip.en { padding-bottom: 0; }
+  .chip.en .lb, .speed .lb { text-box: trim-both cap alphabetic; transform: translateY(-.025em); }   /* the drawn capitals sit ~.03em under the font's cap line */
+  .chip.en .lb.cjk { transform: translateY(-.06em); }   /* a hanzi's ink reaches ~.1em below the baseline: lift it to the optical centre */
+}
 .mast .lang:has(#langcode[hidden]) { padding: 0 9px; }
 .play { width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: var(--surface); display: grid; place-items: center; }
 .play svg { width: 26px; height: 26px; }
@@ -562,8 +572,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     <button class="nowpl" id="nowpl" hidden><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="nowtag" id="nowtag"></span><b id="nowtxt"></b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
     <div class="seek"><span id="cur">0:00</span><span class="rng" id="rng"><input type="range" id="pos" min="0" max="1000" value="0" aria-label="Position"><i class="thumb" aria-hidden="true"></i></span><span id="tot">0:00</span></div>
     <div class="ctrls">
-      <div class="side"><button class="speed" id="speed" aria-label="Playback speed">1×</button>
-        <button class="chip en" id="enbtn" aria-haspopup="menu" aria-label="Translation and text size">EN</button></div>
+      <div class="side"><button class="speed" id="speed" aria-label="Playback speed"><span class="lb">1×</span></button>
+        <button class="chip en" id="enbtn" aria-haspopup="menu" aria-label="Translation and text size"><span class="lb">EN</span></button></div>
       <div class="mid">
         <button class="ib" id="prev" aria-label="Previous line"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M7.5 6v12"/><path d="M18 6.6v10.8a.8.8 0 0 1-1.2.7L9.6 12.7a.8.8 0 0 1 0-1.4l7.2-5.4a.8.8 0 0 1 1.2.7z"/></svg></button>
         <button class="play" id="play" aria-label="Play"><svg id="picon" viewBox="0 0 24 24" fill="currentColor"><path d="M7.6 6.2v11.6a1.2 1.2 0 0 0 1.8 1l9.1-5.8a1.2 1.2 0 0 0 0-2l-9.1-5.8A1.2 1.2 0 0 0 7.6 6.2z"/></svg></button>
@@ -806,7 +816,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       lineEls = Array.prototype.slice.call(document.querySelectorAll(".line"));
       if (!d.ready) { renderXp(); audio.removeAttribute("src"); audio.load(); $("cur").textContent = "0:00"; $("tot").textContent = "–"; if (atLine != null) jumpTo(atLine, false); return; }
       audio.src = d.audio; audio.playbackRate = snapSpeed(store.get("speed", 1));
-      $("speed").textContent = fmtSpeed(audio.playbackRate);
+      $("speed").firstChild.textContent = fmtSpeed(audio.playbackRate);
       var target = atLine != null ? d.lines.find(function (l) { return l.i === atLine; }) : null;
       var start = target && target.t != null ? target.t : store.get("pos_" + id, 0);
       audio.addEventListener("loadedmetadata", function once() {
@@ -1101,7 +1111,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   });
   $("speedmenu").addEventListener("click", function (ev) {
     var b = ev.target.closest("button"); if (!b) return;
-    var r = +b.dataset.r; audio.playbackRate = r; store.set("speed", r); $("speed").textContent = fmtSpeed(r); popMenu(this, false);
+    var r = +b.dataset.r; audio.playbackRate = r; store.set("speed", r); $("speed").firstChild.textContent = fmtSpeed(r); popMenu(this, false);
   });
   document.addEventListener("click", function (ev) { if (!ev.target.closest("#speedmenu")) popMenu($("speedmenu"), false); });
   document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") popMenu($("speedmenu"), false); });
@@ -1116,7 +1126,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   function applyPrefs() {
     var lab = LANGS.filter(function (x) { return x[0] === TR; })[0] || LANGS[1];
     // no translation: just the globe; otherwise the language's short code
-    $("enbtn").innerHTML = TR === "off" ? GLOBE : lab[2]; $("enbtn").setAttribute("aria-pressed", TR !== "off");
+    $("enbtn").innerHTML = TR === "off" ? GLOBE : '<span class="lb' + (/[\u3400-\u9fff]/.test(lab[2]) ? " cjk" : "") + '">' + lab[2] + "</span>"; $("enbtn").setAttribute("aria-pressed", TR !== "off");
     $("langcode").textContent = lab[2]; $("langcode").hidden = TR === "off";
     applyUi();
     document.documentElement.style.setProperty("--ks", SIZES[SZ] || 1);
