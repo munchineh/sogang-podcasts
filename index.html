@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="14f8a84b3760">
+<html lang="ko" data-build="f38b4d9e45fd">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -878,8 +878,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
 
   // leaving an episode while it plays keeps the player at the bottom of the list (tap its title to go back)
-  var listY = 0, swiping = false;  // swiping: an edge swipe-back is under the finger (not a scroll)
-                                           // list scroll position, restored when coming back from an episode
+  var listY = 0, swiping = false;   // listY: list scroll, restored when coming back; swiping: an edge swipe-back is under the finger
   function showList() {
     var keep = ep && ep.ready && !audio.paused;
     if (!keep) audio.pause();
