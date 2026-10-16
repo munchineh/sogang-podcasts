@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="bb1238f478af">
+<html lang="ko" data-build="f8058e2e53e7">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -110,7 +110,8 @@ body { margin-top: 0; }
   91% { transform: scale(1.16); animation-timing-function: cubic-bezier(.6,0,.9,.5); }
   93%, 100% { transform: scale(0); } }
 @media (prefers-reduced-motion: reduce) { .logo .b1, .logo .b2 { animation: none; } }
-.mast h1 { font: 800 clamp(24px, 7vw, 32px)/1.15 "Poppins", var(--f-display); margin: 0; letter-spacing: -.025em; white-space: nowrap; }
+.mast h1 { font: 800 clamp(24px, 7vw, 32px)/1.15 "Poppins", var(--f-display); margin: 0; letter-spacing: -.025em; white-space: nowrap; min-width: 0; flex: 0 1 auto; }
+.mast .tools { flex: none; }   /* the buttons never get squeezed; a long wordmark (ポッドキャスト, Podcastler) shrinks instead, see fitMast */
 .mast .count { font: 500 12px var(--f-mono); color: var(--muted); }
 .lede { color: var(--muted); font-size: 14px; font-family: var(--f-latin); margin: 0 0 15px; padding-inline: 8px; }
 .lvpick { position: relative; display: inline-flex; align-items: center; gap: 6px; }
@@ -694,6 +695,15 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     var loc = { ko: "ko-KR", ja: "ja-JP", zh: "zh-CN", zt: "zh-TW", de: "de-DE", fr: "fr-FR", ru: "ru-RU", tr: "tr-TR", vi: "vi-VN", th: "th-TH" }[UL()] || "en-GB";
     try { return new Date(iso + "T12:00:00").toLocaleDateString(loc, { month: "short", day: "numeric" }); } catch (e) { return iso.slice(5); }
   }
+  // the wordmark keeps its size unless it would push the language and refresh buttons off the row; then it steps down to fit
+  function fitMast() {
+    var h = $("wordmark"); if (!h) return;
+    h.style.fontSize = "";
+    var size = parseFloat(getComputedStyle(h).fontSize);
+    while (h.scrollWidth > h.clientWidth + 1 && size > 18) { size -= 1; h.style.fontSize = size + "px"; }
+  }
+  window.addEventListener("resize", function () { fitMast(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitMast);
   function UL() { return TR === "off" ? "ko" : I18N[TR] ? TR : "en"; }   // no translation picked → Korean UI
   function T(k, v) {
     var s = (I18N[UL()][k] != null ? I18N[UL()][k] : I18N.en[k]) || "";
@@ -1138,6 +1148,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   function applyUi() {
     document.documentElement.dataset.ui = UL();
     $("wordmark").textContent = TR === "off" ? "팟캐스트" : { zh: "播客", zt: "播客", ru: "Подкасты", tr: "Podcastler", vi: "Podcast", th: "พอดแคสต์", ja: "ポッドキャスト" }[TR] || "Podcasts";
+    fitMast();
     $("lede").textContent = T("lede"); $("q").placeholder = T("search"); $("fq").placeholder = T("findPh"); $("fdone").textContent = T("close"); $("findbtn").setAttribute("aria-label", T("findPh")); $("qcancel").textContent = T("cancel"); $("qx").setAttribute("aria-label", T("clear")); $("lvltxt").textContent = T("level", { n: 4 });
     $("backnowt").textContent = T("backNow"); $("sheeth").textContent = T("sheetH");
     if (index.length) renderList();
