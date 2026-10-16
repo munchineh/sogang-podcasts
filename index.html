@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="552b4775972a">
+<html lang="ko" data-build="2c51399553f9">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -186,19 +186,20 @@ body.searching .qcancel { max-width: 90px; opacity: 1; padding: 8px 4px 8px 14px
 .top .ttl { flex: 1; min-width: 0; }
 /* find in this episode: the header turns into a find bar (like Safari's Find on Page) */
 #findbtn { color: var(--muted); margin-right: -4px; }
-.top.finding .ttl, .top.finding #xpbtn, .top.finding #findbtn, .top.finding #back { display: none; }
-.findbar { flex: 1; display: flex; align-items: center; gap: 0; min-width: 0; min-height: 52px; }
-/* the field opens out from where the search icon sat (right), like the pill expanding; the buttons follow */
-.top.finding .findbar { animation: findIn .46s cubic-bezier(.2,1,.3,1) both; }
-.top.finding .fwrap { animation: findPop .5s cubic-bezier(.3,1.6,.5,1) both; }
-.top.finding .findbar > .ib, .top.finding .fdone { animation: findFade .25s ease .16s both; }
-@keyframes findIn { from { clip-path: inset(0 0 0 calc(100% - 44px) round 999px); } to { clip-path: inset(-6px -6px -6px -6px round 0); } }
-@keyframes findPop { from { transform: scale(.94); } to { transform: none; } }
-@keyframes findFade { from { opacity: 0; transform: translateX(6px); } to { opacity: 1; transform: none; } }
-.top .ttl, #xpbtn, #findbtn, #back { transition: opacity .2s ease; }
-.top.closing .findbar { animation: findOut .2s cubic-bezier(.5,0,.75,0) both; }
-@keyframes findOut { from { clip-path: inset(-6px -6px -6px -6px round 0); opacity: 1; } to { clip-path: inset(0 0 0 calc(100% - 44px) round 999px); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .top.finding .findbar, .top.finding .fwrap, .top.finding .findbar > .ib, .top.finding .fdone, .top.closing .findbar { animation: none; } }
+/* The find bar lies over the title row (same height, so nothing jumps). It opens out from the search icon with
+   one smooth clip transition while the title fades; closing runs the same transition backwards. */
+.top .wrap { position: relative; }
+.top .ttl, #back, #xpbtn, #findbtn { transition: opacity .22s ease, transform .4s cubic-bezier(.22,1,.36,1); }
+.top.finding .ttl, .top.finding #back, .top.finding #xpbtn, .top.finding #findbtn { opacity: 0; pointer-events: none; }
+.top.finding .ttl { transform: translateX(-10px); }
+.findbar { position: absolute; inset: 0; padding: inherit; display: flex; align-items: center; gap: 0; min-width: 0;
+  visibility: hidden; pointer-events: none; clip-path: inset(var(--ct, 10px) var(--cr, 72px) var(--cb, 10px) var(--cl, calc(100% - 132px)) round 999px);
+  opacity: 0; transition: clip-path .34s cubic-bezier(.4,0,.2,1), opacity .2s ease .08s, visibility 0s linear .34s; }
+.top.finding .findbar { visibility: visible; pointer-events: auto; clip-path: inset(-6px -6px -6px -6px round 0);
+  opacity: 1; transition: clip-path .48s cubic-bezier(.22,1,.36,1), opacity .1s ease, visibility 0s; }
+.findbar > .ib, .fdone { opacity: 0; transform: translateX(8px); transition: opacity .16s ease, transform .3s ease; }
+.top.finding .findbar > .ib, .top.finding .fdone { opacity: 1; transform: none; transition: opacity .25s ease .18s, transform .45s cubic-bezier(.22,1,.36,1) .14s; }
+@media (prefers-reduced-motion: reduce) { .findbar, .top.finding .findbar, .top .ttl, .findbar > .ib, .fdone { transition: none !important; } }
 /* while typing a search the player bar steps aside, so the keyboard and the script share the screen */
 .transport { transition: transform .3s cubic-bezier(.22,1,.36,1); }
 body.findtype .transport { transform: translateY(110%); }
@@ -449,7 +450,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   </div></div>
   <div class="search" id="searchbar"><div class="srow"><div class="wrapin">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-    <input id="q" type="search" enterkeyhint="search" placeholder="Search podcast, grammar or vocab" autocomplete="off" aria-label="Search scripts">
+    <input id="q" type="search" enterkeyhint="search" placeholder="Search podcasts" autocomplete="off" aria-label="Search scripts">
     <button class="qx" id="qx" type="button" hidden aria-label="Clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7.5 7.5l9 9M16.5 7.5l-9 9"/></svg></button>
   </div><button class="qcancel" id="qcancel" type="button">Cancel</button></div></div>
   <div class="recent" id="recent" hidden></div>
@@ -464,7 +465,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     <div class="ttl"><small id="epno"></small><b id="eptitle"></b><i id="eptitle_en"></i></div>
     <button class="ib" id="findbtn" aria-label="Find in this episode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
     <button class="chip xpc" id="xpbtn" aria-label="Grammar and vocab in this episode"><span id="xpn"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg></button>
-    <div class="findbar" id="findbar" hidden><div class="fwrap">
+    <div class="findbar" id="findbar"><div class="fwrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
       <input id="fq" type="search" enterkeyhint="search" autocomplete="off" aria-label="Find in this episode"><span id="fcount" aria-live="polite"></span></div>
       <button class="ib" id="fprev" aria-label="Previous match"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></button>
@@ -522,7 +523,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   // UI text in the chosen translation language (None → English)
   var I18N = {
-    en: { lede: "Learn Sogang Korean expressions, grammar and vocab through everyday conversations. Pick an episode to start, or search for something.", search: "Search podcast, grammar or vocab", level: "Level {n}", ready: "{a} / {b} ready",
+    en: { lede: "Learn Sogang Korean expressions, grammar and vocab through everyday conversations. Pick an episode to start, or search for something.", search: "Search podcasts", level: "Level {n}", ready: "{a} / {b} ready",
       scriptOnly: "Script only", done: "Done", left: "{t} left", "new": "New", preview: "Preview",
       about: "About this episode", more: "Show more", less: "Show less", setting: "Setting", formality: "Formality", items: "Grammar & vocab", seeAll: "See all",
       bannerNone: "Audio for this episode isn’t recorded yet. You can read the script now, and it will play here once it’s ready.",
@@ -532,7 +533,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       playFrom: "Play from here", goLine: "Go to line", commentaryOnly: "Explained in the commentary rather than used in the scene.",
       lines: "{n} lines", noMatch: "No lines match “{q}”.", loadFail: "Couldn’t load the episode list. Pull to refresh.",
       cancel: "Cancel", clear: "Clear", recent: "Recent searches", findPh: "Find in this episode", close: "Done" },
-    ko: { lede: "서강 한국어 표현, 문법, 어휘를 생생한 대화로 익혀요. 에피소드를 골라 듣거나 궁금한 걸 검색해 보세요.", search: "팟캐스트, 문법, 어휘 검색", level: "{n}급", ready: "오디오 {a} / {b}",
+    ko: { lede: "서강 한국어 표현, 문법, 어휘를 생생한 대화로 익혀요. 에피소드를 골라 듣거나 궁금한 걸 검색해 보세요.", search: "팟캐스트 검색", level: "{n}급", ready: "오디오 {a} / {b}",
       scriptOnly: "대본만", done: "다 들음", left: "{t} 남음", "new": "새 에피소드", preview: "미리 듣기",
       about: "이번 회 소개", more: "더 보기", less: "접기", setting: "배경", formality: "말투", items: "문법 · 어휘", seeAll: "전체 보기",
       bannerNone: "이 에피소드는 아직 녹음 전이에요. 대본은 지금 읽을 수 있고, 녹음이 끝나면 여기서 바로 들을 수 있어요.",
@@ -542,7 +543,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       playFrom: "여기부터 재생", goLine: "이 줄로 가기", commentaryOnly: "장면 대화가 아니라 해설에서 다뤄요.",
       lines: "{n}줄", noMatch: "“{q}” 검색 결과가 없어요.", loadFail: "에피소드 목록을 불러오지 못했어요. 당겨서 새로고침해 주세요.",
       cancel: "취소", clear: "지우기", recent: "최근 검색", findPh: "이번 회에서 찾기", close: "완료" },
-    ja: { lede: "日常会話を通して、西江大学の韓国語の表現・文法・語彙を学びましょう。エピソードを選ぶか、知りたいことを検索してください。", search: "ポッドキャスト・文法・語彙を検索", level: "レベル{n}", ready: "{a} / {b} 配信中",
+    ja: { lede: "日常会話を通して、西江大学の韓国語の表現・文法・語彙を学びましょう。エピソードを選ぶか、知りたいことを検索してください。", search: "ポッドキャストを検索", level: "レベル{n}", ready: "{a} / {b} 配信中",
       scriptOnly: "台本のみ", done: "聴き終わり", left: "残り{t}", "new": "新着", preview: "プレビュー",
       about: "このエピソードについて", more: "もっと見る", less: "閉じる", setting: "場面", formality: "話し方", items: "文法・語彙", seeAll: "すべて見る",
       bannerNone: "このエピソードの音声はまだ収録されていません。台本は今すぐ読めます。音声ができ次第ここで再生できます。",
@@ -551,7 +552,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "タップすると意味と使い方が見られます。", example: "例文", notes: "メモ", inEp: "このエピソードでは",
       playFrom: "ここから再生", goLine: "この行へ", commentaryOnly: "場面の会話ではなく、解説の中で紹介しています。",
       lines: "{n}行", noMatch: "「{q}」を含む行はありません。", loadFail: "エピソード一覧を読み込めませんでした。下に引いて更新してください。", cancel: "キャンセル", clear: "消去", recent: "最近の検索", findPh: "このエピソード内を検索", close: "完了" },
-    zh: { lede: "通过日常对话，学习西江韩语的表达、语法和词汇。挑一集开始听，或搜索想学的内容。", search: "搜索播客、语法或词汇", level: "{n} 级", ready: "{a} / {b} 集可听",
+    zh: { lede: "通过日常对话，学习西江韩语的表达、语法和词汇。挑一集开始听，或搜索想学的内容。", search: "搜索播客", level: "{n} 级", ready: "{a} / {b} 集可听",
       scriptOnly: "仅文本", done: "已听完", left: "剩余 {t}", "new": "新", preview: "预览",
       about: "本集简介", more: "展开", less: "收起", setting: "场景", formality: "语体", items: "语法词汇", seeAll: "查看全部",
       bannerNone: "本集音频尚未录制。现在可以先阅读脚本，录好后即可在此播放。",
@@ -560,7 +561,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "点击查看含义和用法。", example: "例句", notes: "笔记", inEp: "本集出现",
       playFrom: "从这里播放", goLine: "跳到该句", commentaryOnly: "只在讲解中出现，场景对话里没有用到。",
       lines: "{n} 句", noMatch: "没有找到包含“{q}”的句子。", loadFail: "无法加载节目列表，请下拉刷新。", cancel: "取消", clear: "清除", recent: "最近搜索", findPh: "在本集中查找", close: "完成" },
-    zt: { lede: "透過日常對話，學習西江韓語的表達、語法和詞彙。挑一集開始聽，或搜尋想學的內容。", search: "搜尋播客、語法或詞彙", level: "{n} 級", ready: "{a} / {b} 集可聽",
+    zt: { lede: "透過日常對話，學習西江韓語的表達、語法和詞彙。挑一集開始聽，或搜尋想學的內容。", search: "搜尋播客", level: "{n} 級", ready: "{a} / {b} 集可聽",
       scriptOnly: "僅文字", done: "已聽完", left: "剩餘 {t}", "new": "新", preview: "預覽",
       about: "本集簡介", more: "展開", less: "收合", setting: "場景", formality: "語體", items: "語法詞彙", seeAll: "查看全部",
       bannerNone: "本集音訊尚未錄製。現在可以先閱讀腳本，錄好後就能在這裡播放。",
@@ -569,7 +570,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "點一下查看意思和用法。", example: "例句", notes: "筆記", inEp: "本集出現",
       playFrom: "從這裡播放", goLine: "跳到這句", commentaryOnly: "只在講解中出現，情境對話裡沒有用到。",
       lines: "{n} 句", noMatch: "找不到包含「{q}」的句子。", loadFail: "無法載入節目列表，請下拉重新整理。", cancel: "取消", clear: "清除", recent: "最近搜尋", findPh: "在本集中尋找", close: "完成" },
-    de: { lede: "Lerne Ausdrücke, Grammatik und Wortschatz aus dem Sogang-Koreanisch in Alltagsgesprächen. Such dir eine Folge aus oder suche gezielt nach etwas.", search: "Podcast, Grammatik oder Wortschatz suchen", level: "Stufe {n}", ready: "{a} / {b} bereit",
+    de: { lede: "Lerne Ausdrücke, Grammatik und Wortschatz aus dem Sogang-Koreanisch in Alltagsgesprächen. Such dir eine Folge aus oder suche gezielt nach etwas.", search: "Podcasts durchsuchen", level: "Stufe {n}", ready: "{a} / {b} bereit",
       scriptOnly: "Nur Skript", done: "Gehört", left: "noch {t}", "new": "Neu", preview: "Vorschau",
       about: "Über diese Folge", more: "Mehr", less: "Weniger", setting: "Schauplatz", formality: "Sprachebene", items: "Lernpunkte", seeAll: "Alle ansehen",
       bannerNone: "Für diese Folge gibt es noch keine Aufnahme. Du kannst das Skript schon lesen, und sobald sie fertig ist, läuft sie hier.",
@@ -578,7 +579,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Tippe darauf, um Bedeutung und Verwendung zu sehen.", example: "Beispiel", notes: "Notizen", inEp: "In dieser Folge",
       playFrom: "Ab hier abspielen", goLine: "Zur Zeile", commentaryOnly: "Wird im Kommentar erklärt, kommt in der Szene aber nicht vor.",
       lines: "{n} Zeilen", noMatch: "Keine Zeile enthält „{q}“.", loadFail: "Die Folgenliste konnte nicht geladen werden. Zum Aktualisieren nach unten ziehen.", cancel: "Abbrechen", clear: "Löschen", recent: "Letzte Suchen", findPh: "In dieser Folge suchen", close: "Fertig" },
-    fr: { lede: "Apprenez les expressions, la grammaire et le vocabulaire du coréen de Sogang à travers des conversations du quotidien. Choisissez un épisode ou lancez une recherche.", search: "Rechercher podcast, grammaire ou vocabulaire", level: "Niveau {n}", ready: "{a} / {b} disponibles",
+    fr: { lede: "Apprenez les expressions, la grammaire et le vocabulaire du coréen de Sogang à travers des conversations du quotidien. Choisissez un épisode ou lancez une recherche.", search: "Rechercher des podcasts", level: "Niveau {n}", ready: "{a} / {b} disponibles",
       scriptOnly: "Texte seul", done: "Écouté", left: "encore {t}", "new": "Nouveau", preview: "Aperçu",
       about: "À propos de cet épisode", more: "Plus", less: "Moins", setting: "Cadre", formality: "Registre", items: "À apprendre", seeAll: "Tout voir",
       bannerNone: "L’audio de cet épisode n’est pas encore enregistré. Vous pouvez déjà lire le texte ; il sera lu ici dès qu’il sera prêt.",
@@ -587,7 +588,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Touchez pour voir le sens et l’emploi.", example: "Exemple", notes: "Notes", inEp: "Dans cet épisode",
       playFrom: "Lire à partir d’ici", goLine: "Aller à la ligne", commentaryOnly: "Expliqué dans le commentaire, mais pas utilisé dans la scène.",
       lines: "{n} lignes", noMatch: "Aucune ligne ne contient « {q} ».", loadFail: "Impossible de charger la liste des épisodes. Tirez pour actualiser.", cancel: "Annuler", clear: "Effacer", recent: "Recherches récentes", findPh: "Chercher dans l’épisode", close: "OK" },
-    ru: { lede: "Учите выражения, грамматику и лексику корейского по Sogang в живых диалогах. Выберите выпуск или найдите что-нибудь через поиск.", search: "Поиск по подкасту, грамматике и лексике", level: "Уровень {n}", ready: "готово {a} / {b}",
+    ru: { lede: "Учите выражения, грамматику и лексику корейского по Sogang в живых диалогах. Выберите выпуск или найдите что-нибудь через поиск.", search: "Поиск по подкастам", level: "Уровень {n}", ready: "готово {a} / {b}",
       scriptOnly: "Только текст", done: "Прослушано", left: "осталось {t}", "new": "Новое", preview: "Превью",
       about: "Об этом выпуске", more: "Ещё", less: "Свернуть", setting: "Место действия", formality: "Стиль речи", items: "Изучаем", seeAll: "Показать все",
       bannerNone: "Аудио для этого выпуска ещё не записано. Текст можно читать уже сейчас, а когда запись будет готова, она появится здесь.",
@@ -596,7 +597,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Нажмите, чтобы увидеть значение и употребление.", example: "Пример", notes: "Заметки", inEp: "В этом выпуске",
       playFrom: "Слушать отсюда", goLine: "К строке", commentaryOnly: "Объясняется в комментарии, но в сцене не встречается.",
       lines: "Строк: {n}", noMatch: "Нет строк с «{q}».", loadFail: "Не удалось загрузить список выпусков. Потяните вниз, чтобы обновить.", cancel: "Отмена", clear: "Очистить", recent: "Недавние запросы", findPh: "Поиск в выпуске", close: "Готово" },
-    tr: { lede: "Sogang Korece ifadelerini, dilbilgisini ve kelimelerini günlük konuşmalarla öğrenin. Başlamak için bir bölüm seçin ya da bir şey arayın.", search: "Podcast, dilbilgisi veya kelime ara", level: "Seviye {n}", ready: "{a} / {b} hazır",
+    tr: { lede: "Sogang Korece ifadelerini, dilbilgisini ve kelimelerini günlük konuşmalarla öğrenin. Başlamak için bir bölüm seçin ya da bir şey arayın.", search: "Podcast ara", level: "Seviye {n}", ready: "{a} / {b} hazır",
       scriptOnly: "Yalnızca metin", done: "Bitti", left: "{t} kaldı", "new": "Yeni", preview: "Önizleme",
       about: "Bu bölüm hakkında", more: "Devamını göster", less: "Daha az göster", setting: "Ortam", formality: "Hitap düzeyi", items: "Dilbilgisi ve kelimeler", seeAll: "Tümünü gör",
       bannerNone: "Bu bölümün sesi henüz kaydedilmedi. Metni şimdi okuyabilirsiniz; ses hazır olduğunda burada çalacak.",
@@ -605,7 +606,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Anlamını ve nasıl kullanıldığını görmek için dokunun.", example: "Örnek", notes: "Notlar", inEp: "Bu bölümde",
       playFrom: "Buradan oynat", goLine: "Satıra git", commentaryOnly: "Sahnede geçmiyor, yorum kısmında açıklanıyor.",
       lines: "{n} satır", noMatch: "“{q}” ile eşleşen satır yok.", loadFail: "Bölüm listesi yüklenemedi. Yenilemek için aşağı çekin.", cancel: "Vazgeç", clear: "Temizle", recent: "Son aramalar", findPh: "Bu bölümde ara", close: "Bitti" },
-    vi: { lede: "Học biểu hiện, ngữ pháp và từ vựng tiếng Hàn Sogang qua những cuộc trò chuyện đời thường. Chọn một tập để bắt đầu, hoặc tìm kiếm điều bạn muốn học.", search: "Tìm podcast, ngữ pháp hoặc từ vựng", level: "Cấp {n}", ready: "{a} / {b} tập sẵn sàng",
+    vi: { lede: "Học biểu hiện, ngữ pháp và từ vựng tiếng Hàn Sogang qua những cuộc trò chuyện đời thường. Chọn một tập để bắt đầu, hoặc tìm kiếm điều bạn muốn học.", search: "Tìm podcast", level: "Cấp {n}", ready: "{a} / {b} tập sẵn sàng",
       scriptOnly: "Chỉ có lời thoại", done: "Đã nghe", left: "còn {t}", "new": "Mới", preview: "Nghe thử",
       about: "Về tập này", more: "Xem thêm", less: "Thu gọn", setting: "Bối cảnh", formality: "Mức độ trang trọng", items: "Ngữ pháp & từ vựng", seeAll: "Xem tất cả",
       bannerNone: "Tập này chưa được thu âm. Bạn có thể đọc lời thoại ngay bây giờ, và âm thanh sẽ phát ở đây khi sẵn sàng.",
@@ -614,7 +615,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Chạm để xem nghĩa và cách dùng.", example: "Ví dụ", notes: "Ghi chú", inEp: "Trong tập này",
       playFrom: "Phát từ đây", goLine: "Đến dòng này", commentaryOnly: "Được giải thích trong phần bình luận, không xuất hiện trong cảnh.",
       lines: "{n} dòng", noMatch: "Không có dòng nào khớp với “{q}”.", loadFail: "Không tải được danh sách tập. Kéo xuống để làm mới.", cancel: "Hủy", clear: "Xóa", recent: "Tìm kiếm gần đây", findPh: "Tìm trong tập này", close: "Xong" },
-    th: { lede: "เรียนสำนวน ไวยากรณ์ และคำศัพท์ภาษาเกาหลีของซอกังผ่านบทสนทนาในชีวิตประจำวัน เลือกตอนที่อยากฟัง หรือค้นหาสิ่งที่อยากรู้ได้เลย", search: "ค้นหาพอดแคสต์ ไวยากรณ์ หรือคำศัพท์", level: "ระดับ {n}", ready: "พร้อมฟัง {a} / {b}",
+    th: { lede: "เรียนสำนวน ไวยากรณ์ และคำศัพท์ภาษาเกาหลีของซอกังผ่านบทสนทนาในชีวิตประจำวัน เลือกตอนที่อยากฟัง หรือค้นหาสิ่งที่อยากรู้ได้เลย", search: "ค้นหาพอดแคสต์", level: "ระดับ {n}", ready: "พร้อมฟัง {a} / {b}",
       scriptOnly: "มีแค่บท", done: "ฟังจบแล้ว", left: "เหลือ {t}", "new": "ใหม่", preview: "ตัวอย่าง",
       about: "เกี่ยวกับตอนนี้", more: "ดูเพิ่มเติม", less: "ย่อ", setting: "ฉาก", formality: "ระดับภาษา", items: "ไวยากรณ์และคำศัพท์", seeAll: "ดูทั้งหมด",
       bannerNone: "ตอนนี้ยังไม่ได้อัดเสียง อ่านบทได้เลยตอนนี้ แล้วเสียงจะเล่นตรงนี้เมื่อพร้อม",
@@ -1274,15 +1275,24 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     drawHits();
     if (scroll !== false) { userScrolledAt = Date.now(); lineEls[h.line].scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }
   }
+  // the bar's closed shape = the search icon's circle, so it opens out of the icon and folds back into it
+  function clipToIcon() {
+    var w = topEl.querySelector(".wrap").getBoundingClientRect(), b = $("findbtn").getBoundingClientRect(), f = $("findbar").style;
+    if (!b.width) return;
+    f.setProperty("--cl", (b.left - w.left) + "px"); f.setProperty("--cr", (w.right - b.right) + "px");
+    f.setProperty("--ct", (b.top - w.top) + "px"); f.setProperty("--cb", (w.bottom - b.bottom) + "px");
+  }
   function enterFind() {
-    finding = true; topHold = Date.now(); topEl.classList.remove("closing", "away"); topEl.classList.add("finding"); $("findbar").hidden = false;
-    $("fq").focus(); if ($("fq").value.trim()) runFind();
+    clipToIcon(); void $("findbar").offsetWidth;
+    finding = true; topHold = Date.now(); topEl.classList.remove("away"); topEl.classList.add("finding");
+    try { $("fq").focus({ preventScroll: true }); } catch (e) { $("fq").focus(); }   // no page jump when the keyboard opens
+    if ($("fq").value.trim()) runFind();
   }
   function exitFind() {
     if (!finding) return;
     finding = false; topHold = Date.now(); $("fq").blur(); clearFind(); $("fcount").textContent = "";
-    var done = function () { topEl.classList.remove("finding", "closing", "away"); $("findbar").hidden = true; $("fq").value = ""; pinTop(); };
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) done(); else { topEl.classList.add("closing"); setTimeout(done, 170); }
+    topEl.classList.remove("finding", "away"); pinTop();
+    setTimeout(function () { if (!finding) $("fq").value = ""; }, 340);
   }
   // with the keyboard up, iOS slides the page under it; keep the find bar in view and the player bar out of the way
   function pinTop() {
