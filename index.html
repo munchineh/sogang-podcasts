@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="491c5aaf8722">
+<html lang="ko" data-build="14f8a84b3760">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -741,7 +741,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       ep = d; cur = -1;
       timed = d.lines.map(function (l, k) { return l.t == null ? -1 : k; }).filter(function (k) { return k >= 0; });
       if (!$("list").hidden) listY = window.scrollY;
-      $("list").hidden = true; $("player").hidden = false; window.scrollTo(0, 0);
+      $("list").hidden = true; $("player").hidden = false; window.scrollTo(0, 0); userScrolledAt = 0;
       document.body.classList.remove("mini"); $("nowpl").hidden = true; $("transport").hidden = false; $("player").querySelector(".top").classList.remove("away");
       $("epno").textContent = epLabel(d) + (d.partial ? " · " + T("preview") : "");
       $("eptitle").textContent = d.title;
@@ -878,7 +878,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
 
   // leaving an episode while it plays keeps the player at the bottom of the list (tap its title to go back)
-  var listY = 0;                                            // list scroll position, restored when coming back from an episode
+  var listY = 0, swiping = false;  // swiping: an edge swipe-back is under the finger (not a scroll)
+                                           // list scroll position, restored when coming back from an episode
   function showList() {
     var keep = ep && ep.ready && !audio.paused;
     if (!keep) audio.pause();
@@ -911,7 +912,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       dim.style.opacity = String(1 - p);
     }
     function begin() {
-      state = 2; W = window.innerWidth;
+      state = 2; swiping = true; W = window.innerWidth;
       moveTP = !(ep && ep.ready && !audio.paused);           // a playing episode keeps its player bar (it turns into the mini player)
       dim = document.createElement("div");
       dim.style.cssText = "position:fixed;inset:0;z-index:1;background:rgba(10,10,20,.12);pointer-events:none";
@@ -926,7 +927,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       if (dim) { dim.remove(); dim = null; }
     }
     function settle(commit) {
-      state = 0;
+      state = 0; swiping = false;
       var tr = commit ? "transform .3s cubic-bezier(.2,.75,.25,1)" : "transform .42s var(--spring)";
       [P, Lst].concat(moveTP ? [TP] : []).forEach(function (el) { el.style.transition = tr; });
       dim.style.transition = "opacity .3s ease";
@@ -987,7 +988,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       lineEls[i].querySelectorAll(".w").forEach(function (s) { var q = +s.dataset.w; (wordEls[q] = wordEls[q] || []).push(s); });
     }
     var el = lineEls[i]; if (!el) return;
-    if (!finding && Date.now() - userScrolledAt > 4000) {
+    if (!finding && !userScrolledAt) {                      // follows the audio until you scroll; only the "back to the current line" pill (or a tap/seek) resumes it
       autoScrolling = true; el.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
       $("backnow").hidden = true;
       setTimeout(function () { autoScrolling = false; updateBackNow(); }, 700);
@@ -1131,7 +1132,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   applyPrefs();
   // the pill and the speed menu sit just above the player bar, whatever its height (mini player, safe area)
   if (window.ResizeObserver) new ResizeObserver(function (en) { document.documentElement.style.setProperty("--tp", Math.round(en[0].target.getBoundingClientRect().height) + "px"); }).observe($("transport"));
-  ["wheel", "touchmove"].forEach(function (evn) { window.addEventListener(evn, function () { if (!autoScrolling) userScrolledAt = Date.now(); }, { passive: true }); });
+  ["wheel", "touchmove"].forEach(function (evn) { window.addEventListener(evn, function () { if (!autoScrolling && !swiping) userScrolledAt = Date.now(); }, { passive: true }); });
   $("backnow").addEventListener("click", function () { userScrolledAt = 0; setCurrent(cur, true); });
   // the pill shows whenever the current line has left the middle of the screen, pointing the way back to it
   function updateBackNow() {
