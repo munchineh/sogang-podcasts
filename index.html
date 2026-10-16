@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="5e56433d82ad">
+<html lang="ko" data-build="359c066b6dcc">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -439,7 +439,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .sheet.swap.closing { background: rgba(10,10,20,0); }
 .sheet.swap.closing .panel { transform: translateX(calc(var(--dx, 28px) * -1)); opacity: 0; transition: transform .26s ease, opacity .18s ease; }
 @media (prefers-reduced-motion: reduce) { .sheet, .sheet .panel { transition: none !important; } }
-.sheet .panel { background: var(--surface); width: 100%; max-height: 78%; overflow: auto; border-radius: 20px 20px 0 0;
+.sheet .panel { background: var(--surface); width: 100%; max-height: 78%; overflow: auto; overscroll-behavior: contain; border-radius: 20px 20px 0 0;
   padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)); }
 .sheet .panel .wrap { padding-block: 18px 6px; }
 .sheet h2 { font: 800 20px var(--f-display); letter-spacing: -.02em; margin: 0 0 4px; }
@@ -1254,6 +1254,26 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     resumeAfter = false;
   }
   $("xpbtn").addEventListener("click", function () { openXp(false); });
+  // while a sheet is open the page behind it stays put: only the sheet's own content scrolls, and only if it is long enough to.
+  // iOS ignores overflow:hidden on the page and hands a sheet's overscroll to the page, so stop those moves by hand.
+  (function () {
+    var lastY = 0;
+    function openSheet() { return document.querySelector(".sheet.open:not([hidden])"); }
+    function blocks(p, dy) {                                 // would this move scroll something other than the panel?
+      if (!p) return true;
+      var room = p.scrollHeight - p.clientHeight;
+      return room <= 1 || (dy > 0 && p.scrollTop <= 0) || (dy < 0 && p.scrollTop >= room - 1);
+    }
+    document.addEventListener("touchstart", function (e) { if (e.touches.length === 1) lastY = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener("touchmove", function (e) {
+      if (!openSheet() || e.touches.length !== 1) return;
+      var y = e.touches[0].clientY, dy = y - lastY; lastY = y;
+      if (blocks(e.target.closest && e.target.closest(".sheet .panel"), dy) && e.cancelable) e.preventDefault();
+    }, { passive: false });
+    document.addEventListener("wheel", function (e) {
+      if (openSheet() && blocks(e.target.closest && e.target.closest(".sheet .panel"), -e.deltaY)) e.preventDefault();
+    }, { passive: false });
+  })();
   $("sheet").addEventListener("click", function (ev) {
     var b = ev.target.closest(".xp");
     if (b) {
