@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="c337b8eaa2ea">
+<html lang="ko" data-build="a54826227efb">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -737,6 +737,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     fetch("data/" + id + ".json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (d) {
       ep = d; cur = -1;
       timed = d.lines.map(function (l, k) { return l.t == null ? -1 : k; }).filter(function (k) { return k >= 0; });
+      if (!$("list").hidden) listY = window.scrollY;
       $("list").hidden = true; $("player").hidden = false; window.scrollTo(0, 0);
       document.body.classList.remove("mini"); $("nowpl").hidden = true; $("transport").hidden = false; $("player").querySelector(".top").classList.remove("away");
       $("epno").textContent = epLabel(d) + (d.partial ? " · " + T("preview") : "");
@@ -875,6 +876,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
 
   // leaving an episode while it plays keeps the player at the bottom of the list (tap its title to go back)
+  var listY = 0;                                            // list scroll position, restored when coming back from an episode
   function showList() {
     var keep = ep && ep.ready && !audio.paused;
     if (!keep) audio.pause();
@@ -883,14 +885,82 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     if (keep && !REDUCED.matches && $("transport").animate) $("transport").animate([{ transform: "translateY(100%)" }, { transform: "none" }], { duration: 560, easing: SPRING_SHEET || "cubic-bezier(.22,1,.36,1)" });
     if (keep) { $("nowtag").textContent = epLabel(ep).replace(" · ", " "); $("nowtxt").textContent = ep.title; }
     document.body.classList.toggle("searching", !!$("q").value.trim());
-    renderList(); runSearch();
+    renderList(); runSearch(); window.scrollTo(0, listY);
   }
   function showPlayer() {                                   // back to the episode that's playing, without reloading it
     document.body.classList.remove("mini"); $("nowpl").hidden = true; $("transport").hidden = false;
+    if (!$("list").hidden) listY = window.scrollY;
     $("list").hidden = true; $("player").hidden = false; userScrolledAt = 0; setCurrent(cur, true);
   }
   $("back").addEventListener("click", showList);
   $("nowpl").addEventListener("click", showPlayer);
+
+  // iOS-style back: drag from the left edge of an episode; the episode follows the finger and the list slides in underneath.
+  // Past 40% of the width (or a quick flick) it goes back, otherwise it springs back into place.
+  (function () {
+    var P = $("player"), Lst = $("list"), TP = $("transport"), dim = null;
+    var sx = 0, sy = 0, dx = 0, W = 0, state = 0, lastX = 0, lastT = 0, vx = 0, moveTP = false;   // state: 0 idle, 1 maybe, 2 dragging
+    function sheetOpen() { return !!document.querySelector(".sheet:not([hidden])"); }
+    function paint() {
+      var p = Math.max(0, Math.min(1, dx / W));
+      P.style.transform = "translate3d(" + dx + "px,0,0)";
+      if (moveTP) TP.style.transform = "translate3d(" + dx + "px,0,0)";
+      Lst.style.transform = "translate3d(" + (-0.28 * W * (1 - p)) + "px,0,0)";
+      dim.style.opacity = String(1 - p);
+    }
+    function begin() {
+      state = 2; W = window.innerWidth;
+      moveTP = !(ep && ep.ready && !audio.paused);           // a playing episode keeps its player bar (it turns into the mini player)
+      dim = document.createElement("div");
+      dim.style.cssText = "position:fixed;inset:0;z-index:1;background:rgba(10,10,20,.12);pointer-events:none";
+      document.body.appendChild(dim);
+      Lst.hidden = false;
+      Lst.style.cssText = "position:fixed;left:0;right:0;top:" + (-listY) + "px;z-index:0;pointer-events:none;will-change:transform";
+      P.style.cssText = "position:relative;z-index:2;background:var(--bg);min-height:100vh;box-shadow:-10px 0 28px rgba(10,10,20,.16);will-change:transform";
+      paint();
+    }
+    function cleanup() {
+      P.style.cssText = ""; Lst.style.cssText = ""; TP.style.transform = ""; TP.style.transition = "";
+      if (dim) { dim.remove(); dim = null; }
+    }
+    function settle(commit) {
+      state = 0;
+      var tr = commit ? "transform .3s cubic-bezier(.2,.75,.25,1)" : "transform .42s var(--spring)";
+      [P, Lst].concat(moveTP ? [TP] : []).forEach(function (el) { el.style.transition = tr; });
+      dim.style.transition = "opacity .3s ease";
+      dx = commit ? W : 0; paint();
+      setTimeout(function () {
+        if (commit) { cleanup(); showList(); }               // showList hides the episode, shows the list and restores its scroll in one frame
+        else { cleanup(); Lst.hidden = true; }
+      }, commit ? 300 : 420);
+    }
+    document.addEventListener("touchstart", function (e) {
+      if (state || e.touches.length !== 1 || P.hidden || finding || sheetOpen()) return;
+      var t = e.touches[0];
+      if (t.clientX > 24) return;
+      state = 1; sx = lastX = t.clientX; sy = t.clientY; lastT = e.timeStamp; dx = 0; vx = 0;
+    }, { passive: true });
+    document.addEventListener("touchmove", function (e) {
+      if (!state) return;
+      var t = e.touches[0], mx = t.clientX - sx, my = t.clientY - sy;
+      if (state === 1) {
+        if (Math.abs(my) > 10 && Math.abs(my) > Math.abs(mx)) { state = 0; return; }   // a vertical scroll that happened to start at the edge
+        if (mx < 8) return;
+        begin();
+      }
+      e.preventDefault();
+      var dt = e.timeStamp - lastT; if (dt > 0) vx = 0.7 * ((t.clientX - lastX) / dt) + 0.3 * vx;
+      lastX = t.clientX; lastT = e.timeStamp;
+      dx = Math.max(0, mx); paint();
+    }, { passive: false });
+    function end() {
+      if (state === 1) { state = 0; return; }
+      if (state !== 2) return;
+      settle(dx > W * 0.4 || (vx > 0.35 && dx > 24));
+    }
+    document.addEventListener("touchend", end, { passive: true });
+    document.addEventListener("touchcancel", function () { if (state === 2) settle(false); else state = 0; }, { passive: true });
+  })();
 
   var timed = [];
   function lineAt(t) {
