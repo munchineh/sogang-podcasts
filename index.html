@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="c7921580ace0">
+<html lang="ko" data-build="552b4775972a">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -187,15 +187,18 @@ body.searching .qcancel { max-width: 90px; opacity: 1; padding: 8px 4px 8px 14px
 /* find in this episode: the header turns into a find bar (like Safari's Find on Page) */
 #findbtn { color: var(--muted); margin-right: -4px; }
 .top.finding .ttl, .top.finding #xpbtn, .top.finding #findbtn, .top.finding #back { display: none; }
-.findbar { flex: 1; display: flex; align-items: center; gap: 2px; min-width: 0; min-height: 52px; transform-origin: 85% 50%; }
-.top.finding .findbar { animation: findIn .5s cubic-bezier(.3,1.5,.5,1) both; }
-.top.finding .findbar > * { animation: findFade .3s ease .08s both; }
-@keyframes findIn { from { transform: scaleX(.18); opacity: 0; } 60% { opacity: 1; } to { transform: none; opacity: 1; } }
-@keyframes findFade { from { opacity: 0; } to { opacity: 1; } }
+.findbar { flex: 1; display: flex; align-items: center; gap: 0; min-width: 0; min-height: 52px; }
+/* the field opens out from where the search icon sat (right), like the pill expanding; the buttons follow */
+.top.finding .findbar { animation: findIn .46s cubic-bezier(.2,1,.3,1) both; }
+.top.finding .fwrap { animation: findPop .5s cubic-bezier(.3,1.6,.5,1) both; }
+.top.finding .findbar > .ib, .top.finding .fdone { animation: findFade .25s ease .16s both; }
+@keyframes findIn { from { clip-path: inset(0 0 0 calc(100% - 44px) round 999px); } to { clip-path: inset(-6px -6px -6px -6px round 0); } }
+@keyframes findPop { from { transform: scale(.94); } to { transform: none; } }
+@keyframes findFade { from { opacity: 0; transform: translateX(6px); } to { opacity: 1; transform: none; } }
 .top .ttl, #xpbtn, #findbtn, #back { transition: opacity .2s ease; }
-.top.closing .findbar { animation: findOut .18s ease both; }
-@keyframes findOut { to { transform: scaleX(.6); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .top.finding .findbar, .top.finding .findbar > *, .top.closing .findbar { animation: none; } }
+.top.closing .findbar { animation: findOut .2s cubic-bezier(.5,0,.75,0) both; }
+@keyframes findOut { from { clip-path: inset(-6px -6px -6px -6px round 0); opacity: 1; } to { clip-path: inset(0 0 0 calc(100% - 44px) round 999px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .top.finding .findbar, .top.finding .fwrap, .top.finding .findbar > .ib, .top.finding .fdone, .top.closing .findbar { animation: none; } }
 /* while typing a search the player bar steps aside, so the keyboard and the script share the screen */
 .transport { transition: transform .3s cubic-bezier(.22,1,.36,1); }
 body.findtype .transport { transform: translateY(110%); }
@@ -206,7 +209,8 @@ body.findtype .transport { transform: translateY(110%); }
 .findbar input:focus { outline: 2px solid var(--accent); outline-offset: 0; }
 .findbar .fwrap svg { position: absolute; left: 12px; top: 11px; width: 18px; height: 18px; color: var(--faint); pointer-events: none; }
 #fcount { position: absolute; right: 14px; top: 0; font: 500 12px/40px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; pointer-events: none; }
-.findbar .ib { width: 36px; height: 36px; color: var(--ink); }
+.findbar .ib { width: 34px; height: 36px; color: var(--ink); }
+#fprev { margin-left: 6px; }          /* field→up gap = up→down gap (12px between the drawn arrows either way) */
 .findbar .ib:disabled { color: var(--faint); }
 .fdone { font: 500 15.5px var(--f-latin); color: var(--accent); padding: 8px 2px 8px 8px; white-space: nowrap; }
 .line { position: relative; }
