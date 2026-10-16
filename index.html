@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="306618a97353">
+<html lang="ko" data-build="fa38d631cdf2">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1425,8 +1425,10 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   if (window.visualViewport) visualViewport.addEventListener("resize", kbdCheck);
   // diagnostics for the iOS top-edge blur: open the site with #dbg to show live viewport numbers
-  if (location.hash === "#dbg") {
-    var dbg = document.createElement("pre");
+  var dbg = null;
+  function startDbg() {
+    if (dbg) return;
+    dbg = document.createElement("pre");
     dbg.style.cssText = "position:fixed;left:8px;right:8px;top:40%;z-index:99;margin:0;padding:8px 10px;border-radius:10px;background:rgba(0,0,0,.78);color:#7CFC9A;font:11px/1.45 ui-monospace,monospace;pointer-events:none;white-space:pre-wrap";
     document.body.appendChild(dbg);
     var dbgTick = function () {
@@ -1438,11 +1440,15 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       dbg.textContent = "vv.offsetTop " + Math.round(vv.offsetTop || 0) + "  vv.h " + Math.round(vv.height || 0) + "  innerH " + innerHeight +
         "\nscrollY " + Math.round(scrollY) + "  kbd " + document.body.classList.contains("kbd") + "  focus " + (document.activeElement && document.activeElement.id) +
         "\n" + box(".sbar") + "\n" + box(".search") + "\n" + box("#player .top") +
-        "\nsafe-top " + getComputedStyle(document.querySelector(".sbar")).height;
+        "\nsafe-top " + getComputedStyle(document.querySelector(".sbar")).height + "  body mt " + getComputedStyle(document.body).marginTop +
+        "  standalone " + (navigator.standalone || matchMedia("(display-mode: standalone)").matches);
       requestAnimationFrame(dbgTick);
     };
     dbgTick();
   }
+  // typing #dbg into the podcast search or the episode find opens it too (handy inside the home-screen app)
+  if (location.hash === "#dbg") startDbg();
+  ["q", "fq"].forEach(function (id) { $(id).addEventListener("input", function () { if (this.value.trim() === "#dbg") startDbg(); }); });
   document.addEventListener("focusin", function () { setTimeout(kbdCheck, 60); });
   document.addEventListener("focusout", function () { setTimeout(kbdCheck, 60); });
   // like iOS's own search screens: dragging the page with something typed puts the keyboard away (the search stays open),
