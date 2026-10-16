@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="71cab9cbabb2">
+<html lang="ko" data-build="6a7fef9bc95e">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -150,8 +150,9 @@ body { margin-top: 0; }
 .top.pinned { position: fixed; top: 0; left: 0; right: 0; }
 .top.pinned > .wrap { padding-left: calc(max(var(--edge), env(safe-area-inset-left, 0px)) + 8px); padding-right: calc(max(var(--edge), env(safe-area-inset-right, 0px)) + 8px); }
 /* iOS 26 picks the top-edge style (solid colour vs blur) once, at page load, before the first touch: it hit-tests 4px below the top edge and
-   only a full-width fixed/sticky opaque box there gives a solid edge. This strip is that box, so it must be taller than 4px even when the safe area is 0 */
-.sbar { position: fixed; top: 0; left: 0; right: 0; height: max(8px, env(safe-area-inset-top, 0px)); background: var(--bg); z-index: 5; pointer-events: none; }
+   only a full-width fixed/sticky opaque box there gives a solid edge. This strip is that box, so it must be taller than 4px even when the safe area is 0.
+   z-index 1 keeps it under the search bar (2/3) and the episode bar (3) so it never clips them */
+.sbar { position: fixed; top: 0; left: 0; right: 0; height: max(8px, env(safe-area-inset-top, 0px)); background: var(--bg); z-index: 1; pointer-events: none; }
 .search, .top { background: var(--bg);
   border-bottom: 1px solid transparent; transition: border-color .2s ease; }
 .search.stuck, .top.stuck { border-bottom-color: var(--rule); }
