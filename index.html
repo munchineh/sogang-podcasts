@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="3fc21bb71a1c">
+<html lang="ko" data-build="da26b340bb16">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1420,14 +1420,25 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     if (!bar || bar.classList.contains("pinned") === on) return;
     var host = bar.parentElement;
     if (on) {
-      if (bar.getBoundingClientRect().top > 1) return;         // only when it already sits on the top edge
+      if (Math.abs(bar.getBoundingClientRect().top) > 2 && !(on && bar === topEl)) return;   // only when it already sits on the top edge
+      if (!bar.offsetHeight) return;                            // hidden (another screen is showing)
       bar._pad = host.style.paddingTop;
+      host.style.transition = "none"; void host.offsetHeight;  // settle any running padding transition before measuring
       var pad = parseFloat(getComputedStyle(host).paddingTop) || 0, h = bar.offsetHeight;
-      host.style.transition = "none"; host.style.paddingTop = (pad + h) + "px"; bar.classList.add("pinned");
+      host.style.paddingTop = (pad + h) + "px"; bar.classList.add("pinned");
     } else {
       bar.classList.remove("pinned"); host.style.paddingTop = bar._pad || ""; host.style.transition = "";
     }
   }
+  // keep trying until the bar is pinned (it only pins once it sits right on the top edge, which can take a moment on a phone)
+  setInterval(function () {
+    if (document.body.classList.contains("searching") && searchEl && !searchEl.classList.contains("pinned")) pinBar(searchEl, true);
+    if (typeof finding !== "undefined" && finding && !topEl.classList.contains("pinned")) pinBar(topEl, true);
+  }, 200);
+  if (window.visualViewport) visualViewport.addEventListener("resize", function () {
+    if (document.body.classList.contains("searching")) pinBar(searchEl, true);
+    if (finding) pinBar(topEl, true);
+  });
   var pinT;
   new MutationObserver(function () {
     clearTimeout(pinT);
