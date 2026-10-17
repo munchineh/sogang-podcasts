@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="e2b985e8344b">
+<html lang="ko" data-build="9efa783b81ab">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1030,6 +1030,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       markAdj($("script"));
       $("script").classList.toggle("live", !!d.ready);
       document.querySelector(".transport").classList.toggle("off", !d.ready);
+      if (!d.ready) { $("pos").value = 0; $("cur").textContent = "0:00"; setFill(); }   // no audio: no leftover position on the bar
       lineEls = Array.prototype.slice.call(document.querySelectorAll(".line"));
       if (!d.ready) { renderXp(); audio.removeAttribute("src"); audio.load(); $("cur").textContent = "0:00"; $("tot").textContent = "–"; if (atLine != null) jumpTo(atLine, false); return; }
       audio.src = d.audio; audio.playbackRate = snapSpeed(store.get("speed", 1));
@@ -1254,6 +1255,12 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     var p = L[timed[a]], nx = a + 1 < timed.length ? L[timed[a + 1]] : null;
     var pe = p.cs && p.cs.length ? p.cs[p.cs.length - 1] : null;      // last syllable's end (forced alignment)
     if (nx && pe != null && t > pe + 0.35 && nx.t - pe > 1.0) return timed[a + 1];
+    // two voices overlapping a little (a quick reply, a goodbye): stay on the earlier line until its words are done,
+    // so its highlight finishes instead of jumping to the next speaker mid-sentence
+    if (a > 0) {
+      var pv = L[timed[a - 1]], pvEnd = pv.e != null ? pv.e : null;
+      if (pvEnd != null && t < pvEnd - 0.05 && pvEnd - p.t < 1.5) return timed[a - 1];
+    }
     return timed[a];
   }
   function jumpTo(i, ready) {
