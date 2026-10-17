@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="df4baf517ced">
+<html lang="ko" data-build="24da1274bacb">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1193,7 +1193,12 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   function lineAt(t) {
     var L = ep.lines, lo = 0, hi = timed.length - 1, a = 0;
     while (lo <= hi) { var m = (lo + hi) >> 1; if (L[timed[m]].t <= t + 0.05) { a = m; lo = m + 1; } else hi = m - 1; }
-    return timed.length ? timed[a] : 0;
+    if (!timed.length) return 0;
+    // a line that opens with a laugh, sigh or yawn (or follows a long pause): its words start late, so move on to it
+    // 0.35 s after the previous line's last word instead of leaving the finished line lit through the gap
+    var p = L[timed[a]], nx = a + 1 < timed.length ? L[timed[a + 1]] : null;
+    if (nx && p.e != null && t > p.e + 0.35 && nx.t - p.e > 1.0) return timed[a + 1];
+    return timed[a];
   }
   function jumpTo(i, ready) {
     var k = ep.lines.findIndex(function (l) { return l.i === i; }); if (k < 0) return;
