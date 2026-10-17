@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="c66b82ad1d5e">
+<html lang="ko" data-build="0edb9b2f47dd">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -158,7 +158,7 @@ body { margin-top: 0; }
 .ep .st.done { color: var(--muted); }
 .ep .st svg { width: 11px; height: 11px; margin-right: 5px; vertical-align: -1px; }
 .ep.isdone .bar i { background: var(--faint); }
-.ep .t { grid-column: 1 / -1; font: 900 20px/1.35 var(--f-display); letter-spacing: -.025em; min-width: 0; text-wrap: balance; margin-top: 4px; }
+.ep .t { grid-column: 1 / -1; font: 700 20px/1.35 var(--f-display); letter-spacing: -.025em; min-width: 0; text-wrap: balance; margin-top: 4px; }
 .ep .te { grid-column: 1 / -1; font-family: var(--f-latin); font-size: 14px; font-weight: 500; color: var(--muted); min-width: 0; }
 .ep .b { grid-column: 1 / -1; font-family: var(--f-latin); font-size: 14px; line-height: 1.5; color: var(--ink); opacity: .82; min-width: 0; margin-top: 8px; }
 .ep[data-noaudio] .t, .ep[data-noaudio] .b { opacity: .62; }
@@ -281,7 +281,7 @@ body.findtype .transport { transform: translateY(110%); }
 .fh { position: absolute; z-index: 0; border-radius: 6px; background: color-mix(in srgb, #ffd23f 42%, transparent); pointer-events: none; }
 .fh.cur { background: #ffc21a; box-shadow: 0 1px 4px rgba(120, 80, 0, .25); }
 ::highlight(find-cur) { color: #1d1600; }
-.top .ttl b { display: block; font: 900 17px/1.3 var(--f-display); letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top .ttl b { display: block; font: 700 17px/1.3 var(--f-display); letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .top .ttl small { font: 500 11px var(--f-mono); color: var(--muted); letter-spacing: .04em; }
 .ib { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; flex: none; }
 .ib:active { background: var(--accent-soft); }
@@ -290,6 +290,8 @@ body.findtype .transport { transform: translateY(110%); }
 .chip[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
 
 .script { flex: 1; padding-block: 10px 196px; }
+.brk { display: flex; align-items: center; gap: 12px; margin: 22px 4px; color: var(--faint); font-size: 13px; font-style: italic; }
+.brk::before, .brk::after { content: ""; flex: 1; border-top: 1px dashed currentColor; opacity: .5; }
 .sec { font: 600 11px var(--f-mono); letter-spacing: .12em; color: var(--faint); text-transform: uppercase; margin: 26px 4px 8px; display: flex; gap: 10px; align-items: center; }
 .sec::after { content: ""; height: 1px; flex: 1; background: var(--rule); }
 .line { display: grid; grid-template-columns: 2.9rem 1fr; gap: 9px; padding: 12px 10px; border-radius: 14px; cursor: pointer;
@@ -447,7 +449,11 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   .chip.en .lb.cjk { transform: translateY(-.06em); }   /* a hanzi's ink reaches ~.1em below the baseline: lift it to the optical centre */
 }
 .mast .lang:has(#langcode[hidden]) { padding: 0 9px; }
-.play { width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: var(--surface); display: grid; place-items: center; }
+.play { width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: var(--surface); display: grid; place-items: center;
+  /* a little depth: lighter at the top, a soft accent glow under it, a faint inner highlight on the upper rim */
+  background-image: linear-gradient(180deg, color-mix(in srgb, #fff 14%, var(--accent)), color-mix(in srgb, #000 6%, var(--accent)));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 1px 2px rgba(10,10,20,.18), 0 6px 16px color-mix(in srgb, var(--accent) 34%, transparent); }
+@media (hover: hover) { .play:hover { filter: brightness(1.06); } }
 .play svg { width: 26px; height: 26px; }
 .speed { font: 600 13px var(--f-mono); min-width: 56px; height: 36px; border-radius: 10px; border: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
 .speedmenu { position: fixed; z-index: 7; bottom: calc(var(--tp, 140px) + 10px); left: max(16px, calc(50% - 340px));
@@ -999,6 +1005,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       var html = "", sec = null;
       d.lines.forEach(function (l, i) {
         if (l.s !== sec) { sec = l.s; html += '<div class="sec">' + esc(sec) + '</div>'; }
+        if (l.brk) html += '<div class="brk"><span>' + esc(l.brk.ko) + (TR !== "off" && l.brk[TR] ? ' · ' + esc(l.brk[TR]) : '') + '</span></div>';   // time skip
         var ko = koHtml(l);
         html += '<div class="line' + (l.t == null ? " notime" : "") + '" tabindex="0" data-i="' + i + '" data-p="' + l.p + '"' + (l.r ? ' data-r="' + l.r + '"' : "") + '><span class="who' + ((l.c || "").length > 3 ? " long" : (l.c || "").length > 2 ? " mid" : "") + '">' + esc(l.c || (l.p === "Jun" ? "준" : "수아")) +
           '</span><div class="ko">' + ko + '</div>' + '<div class="en"' + tl() + (TR === "off" ? " hidden" : "") + '>' + fmtTr(trOf(l)) + '</div></div>';
