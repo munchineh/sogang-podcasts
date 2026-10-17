@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="b7dd2b999905">
+<html lang="ko" data-build="332f588a81b2">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -475,20 +475,26 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 @media (prefers-reduced-motion: reduce) { .back-now svg { animation: none; } }
 
 /* expressions sheet */
-.sheet { position: fixed; inset: 0; z-index: 6; display: flex; align-items: flex-end; background: rgba(10,10,20,0); transition: background-color .32s ease; }
-.sheet.open { background: rgba(10,10,20,.35); }
-.sheet.closing { pointer-events: none; transition-duration: .24s; }
-.sheet .panel { transform: translateY(100%); transition: transform .58s var(--spring-sheet), opacity .24s ease, height .34s var(--spring-sheet); will-change: transform; }
-.sheet.open .panel { transform: none; }
+/* Sheets (17 Oct, smoother): the dim is a composited ::before fading its opacity (was a full-screen background-color
+   transition, repainted every frame); the panel slides on its own GPU layer (translate3d, contain) with the iOS sheet
+   curve over .44s (was .58s with a long tail); the continuous-corner mask is no longer on the moving panel. */
+.sheet { position: fixed; inset: 0; z-index: 6; display: flex; align-items: flex-end; --sheet-ease: cubic-bezier(.32,.72,0,1); }
+.sheet::before { content: ""; position: absolute; inset: 0; background: rgba(10,10,20,.35); opacity: 0; transition: opacity .3s ease; will-change: opacity; }
+.sheet.open::before { opacity: 1; }
+.sheet.closing { pointer-events: none; }
+.sheet.closing::before { transition-duration: .22s; }
+.sheet .panel { position: relative; z-index: 1; transform: translate3d(0, 100%, 0); transition: transform .44s var(--sheet-ease), opacity .24s ease, height .34s var(--spring-sheet);
+  will-change: transform; backface-visibility: hidden; contain: layout paint; }
+.sheet.open .panel { transform: translate3d(0, 0, 0); }
 .sheet.closing .panel { transition: transform .24s cubic-bezier(.4,0,1,1), opacity .2s ease; }
 /* list ⇄ card: the dimmed backdrop stays put and the panels slide sideways */
-.sheet.swap { transition: none; background: rgba(10,10,20,.35); }
-.sheet.swap .panel { transform: translateX(var(--dx, 28px)); opacity: 0; transition: transform .42s var(--spring), opacity .2s ease, height .34s var(--spring-sheet); }
-.sheet.swap.open { background: rgba(10,10,20,.35); }
-.sheet.swap.open .panel { transform: none; opacity: 1; }
-.sheet.swap.closing { background: rgba(10,10,20,0); }
-.sheet.swap.closing .panel { transform: translateX(calc(var(--dx, 28px) * -1)); opacity: 0; transition: transform .26s ease, opacity .18s ease; }
-@media (prefers-reduced-motion: reduce) { .sheet, .sheet .panel { transition: none !important; } }
+.sheet.swap::before { transition: none; opacity: 1; }
+.sheet.swap .panel { transform: translate3d(var(--dx, 28px), 0, 0); opacity: 0; transition: transform .42s var(--spring), opacity .2s ease, height .34s var(--spring-sheet); }
+.sheet.swap.open::before { opacity: 1; }
+.sheet.swap.open .panel { transform: translate3d(0, 0, 0); opacity: 1; }
+.sheet.swap.closing::before { opacity: 0; transition: opacity .22s ease; }
+.sheet.swap.closing .panel { transform: translate3d(calc(var(--dx, 28px) * -1), 0, 0); opacity: 0; transition: transform .26s ease, opacity .18s ease; }
+@media (prefers-reduced-motion: reduce) { .sheet, .sheet::before, .sheet .panel { transition: none !important; } }
 .sheet .panel { background: var(--surface); width: 100%; max-height: 78%; overflow: auto; overscroll-behavior: contain; border-radius: 20px 20px 0 0;
   padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)); }
 .sheet .panel .wrap { padding-block: 18px 6px; }
@@ -526,7 +532,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   .transport::before { inset: -1px -1px 0; background: var(--rule); -webkit-mask-box-image: var(--sqt22); }
   .transport::after { inset: 0; background: var(--surface); -webkit-mask-box-image: var(--sqt21); }
   .transport { box-shadow: none; filter: drop-shadow(0 -6px 14px rgba(10,10,20,.06)); }
-  .sheet .panel { -webkit-mask-box-image: var(--sqt20); }
+  /* (sheets keep plain rounded corners: a mask on a sliding layer made iOS re-rasterise it every frame) */
 }
 .ov .h { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 28px; }
 .ov .h span { font: 600 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
