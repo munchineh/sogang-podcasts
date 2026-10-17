@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="209a0ff65943">
+<html lang="ko" data-build="cd15b692d881">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -630,6 +630,22 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     transform: translate3d(calc(100% + 32px), 0, 0); box-shadow: 0 12px 48px rgba(10,10,20,.22); }
   .sheet.open .panel, .sheet.swap.open .panel { transform: translate3d(0, 0, 0); }
 }
+/* ---------- Wide screens (17 Oct): from 1600px a third panel on the right holds the episode's grammar & vocab list, and a
+   word's card opens there in place of the list (back returns to the list). No scrim and audio keeps playing. */
+@media (min-width: 1600px) {
+  :root { --rail: 420px; }
+  #player { margin-right: var(--rail); }
+  .transport { right: var(--rail); }
+  .back-now { left: calc(var(--side) + (100% - var(--side) - var(--rail)) / 2); }
+  .speedmenu, .langmenu { left: max(calc(var(--side) + 16px), calc(var(--side) + (100% - var(--side) - var(--rail) - 664px) / 2)); }
+  #xpbtn { display: none; }
+  .sheet { left: auto; right: 0; width: var(--rail); align-items: stretch; justify-content: stretch; z-index: 3; }
+  .sheet::before { display: none; }
+  .sheet .panel { width: 100%; max-width: none; margin: 0; border-radius: 0; box-shadow: none; border-left: 1px solid var(--rule);
+    transform: translate3d(24px, 0, 0); opacity: 0; transition: transform .36s var(--sheet-ease), opacity .2s ease, height .34s var(--spring-sheet); }
+  .sheet.open .panel, .sheet.swap.open .panel { transform: translate3d(0, 0, 0); opacity: 1; }
+  .sheet .panel [data-close] { display: none; }
+}
 </style>
 </head>
 <body>
@@ -706,7 +722,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  var DESK = matchMedia("(min-width: 1024px)");      // two-panel desktop layout (CSS does the layout; JS only adjusts behaviour)
+  var DESK = matchMedia("(min-width: 1024px)");
+  var WIDE = matchMedia("(min-width: 1600px)");      // three panels: the grammar & vocab list stays docked on the right      // two-panel desktop layout (CSS does the layout; JS only adjusts behaviour)
   var store = {
     get: function (k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
     set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -938,6 +955,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       if (!$("list").hidden) listY = window.scrollY;
       $("list").hidden = true; $("player").hidden = false; window.scrollTo(0, 0); userScrolledAt = 0;
       store.set("lastEp", id); if (DESK.matches) renderList();      // desktop: mark it in the always-visible list
+      if (WIDE.matches) { $("dsheet").hidden = true; $("dsheet").classList.remove("open", "closing", "swap"); setTimeout(function () { openXp(false); }, 0); }
       document.body.classList.remove("mini"); $("nowpl").hidden = true; $("transport").hidden = false; $("player").querySelector(".top").classList.remove("away");
       $("epno").textContent = epLabel(d) + (d.partial ? " · " + T("preview") : "");
       $("eptitle").textContent = d.title;
@@ -1477,6 +1495,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     $("sheet").querySelector(".panel").scrollTop = keepScroll ? xpScroll : 0;
   }
   function closeXp() {
+    if (WIDE.matches && !$("player").hidden) return;           // docked: the list stays
     sheetHide($("sheet"));
     if (resumeAfter) audio.play().catch(function () {});
     resumeAfter = false;
@@ -1486,7 +1505,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   // iOS ignores overflow:hidden on the page and hands a sheet's overscroll to the page, so stop those moves by hand.
   (function () {
     var lastY = 0;
-    function openSheet() { return document.querySelector(".sheet.open:not([hidden])"); }
+    function openSheet() { return WIDE.matches ? null : document.querySelector(".sheet.open:not([hidden])"); }
     function blocks(p, dy) {                                 // would this move scroll something other than the panel?
       if (!p) return true;
       var room = p.scrollHeight - p.clientHeight;
@@ -1520,6 +1539,9 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     return out + esc(l.ko.slice(p));
   }
   function openDetail(k, dx, fromH) {
+    if (WIDE.matches && dx == null && !$("sheet").hidden) {  // docked list showing: slide the card in over it
+      xpScroll = $("sheet").querySelector(".panel").scrollTop; fromH = panelH($("sheet")); sheetHide($("sheet"), 28); dx = 28;
+    }
     xpFlow = dx != null;                                    // dx is only passed when coming from the list
     var it = ep.items[k]; if (!it) return;
     var kinds = { grammar: "Grammar", speaking: "Expression", vocab: "Vocab" };
@@ -1546,10 +1568,13 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
         return '<button class="use" data-i="' + i + '"><span class="k">' + hlKo(l, k) + '</span><span class="e"' + tl() + '>' + fmtTr(trOf(l)) + '</span>' +
           '<span class="go">' + (ep.ready && l.t != null ? "▶ " + T("playFrom") + " · " + fmt(l.t) : T("goLine")) + '</span></button>';
       }).join("") + '</div>' : '<p class="mean" style="color:var(--muted);font-size:14px">' + T("commentaryOnly") + '</p>');
-    resumeAfter = resumeAfter || !audio.paused; audio.pause();
+    if (!WIDE.matches) { resumeAfter = resumeAfter || !audio.paused; audio.pause(); }     // wide screens keep playing
     sheetShow($("dsheet"), dx, fromH); $("dsheet").querySelector(".panel").scrollTop = 0;
   }
   function closeDetail(resume) {
+    if (WIDE.matches && !$("player").hidden) {               // docked: back to the list
+      var h = panelH($("dsheet")); sheetHide($("dsheet"), -28); openXp(true, -28, h); resumeAfter = false; return;
+    }
     sheetHide($("dsheet"));
     if (resume && resumeAfter) audio.play().catch(function () {});
     resumeAfter = false;
@@ -1558,20 +1583,21 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     if (ev.target.closest("[data-all]")) { var h = panelH($("dsheet")); sheetHide($("dsheet"), -28); openXp(true, -28, h); return; }
     var u = ev.target.closest(".use");
     if (u) {
-      var l = ep.lines[+u.dataset.i]; closeDetail(false);
+      var l = ep.lines[+u.dataset.i]; if (!WIDE.matches) closeDetail(false);
       if (ep.ready && l.t != null) playFrom(l.t); else jumpTo(l.i, false);
       return;
     }
     if (ev.target === $("dsheet") || ev.target.closest("[data-close]")) closeDetail(true);
   });
   document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && !$("dsheet").hidden) closeDetail(true); });
-  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && $("dsheet").hidden && !$("sheet").hidden) closeXp(); });
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && $("dsheet").hidden && !$("sheet").hidden && !WIDE.matches) closeXp(); });
   // Space play/pause, ←/→ previous/next line, R replay line, ? shortcuts (not while typing, or with a card or dialog open)
   document.addEventListener("keydown", function (ev) {
     if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
     var t = ev.target, typing = t.closest && t.closest("input, textarea, select, [contenteditable]");
     if (ev.key === "Escape" && !kbd.hidden) { closeKb(); return; }
-    if (typing || !kbd.hidden || !$("dsheet").hidden || !$("sheet").hidden || !$("skipdlg").hidden) return;
+    var cardOpen = !WIDE.matches && (!$("dsheet").hidden || !$("sheet").hidden);
+    if (typing || !kbd.hidden || cardOpen || !$("skipdlg").hidden) return;
     if (ev.key === "?") { ev.preventDefault(); openKb(); return; }
     if ($("player").hidden || !ep || !ep.ready) return;
     if (ev.key === " ") {
@@ -1968,6 +1994,11 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     if (e) openEp(e.ep);
   }
   DESK.addEventListener("change", deskDefault);
+  WIDE.addEventListener("change", function () {
+    if ($("player").hidden || !ep) return;
+    if (WIDE.matches) { if ($("dsheet").hidden) openXp(false); }
+    else { ["sheet", "dsheet"].forEach(function (id) { var el = $(id); el.hidden = true; el.classList.remove("open", "closing", "swap"); }); syncXpOn(); }
+  });
   fetch("data/index.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (d) { index = d; renderList(); deskDefault(); })
     .catch(function () { $("eps").innerHTML = '<p class="lede">' + T("loadFail") + '</p>'; });
 })();
