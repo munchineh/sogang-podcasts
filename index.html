@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="7c01ab3975fb">
+<html lang="ko" data-build="5a6f0f1c04c6">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -297,6 +297,8 @@ body.findtype .transport { transform: translateY(110%); }
 
 .script { flex: 1; padding-block: 10px 196px; }
 .brk { display: flex; align-items: center; gap: 12px; margin: 22px 4px; color: var(--faint); font-size: 13px; font-style: italic; }
+.brk > span { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 70%; line-height: 1.35; }
+.brk .bt { font-size: 12px; opacity: .85; }
 .brk::before, .brk::after { content: ""; flex: 1; border-top: 1px dashed currentColor; opacity: .5; }
 .sec { font: 600 11px var(--f-mono); letter-spacing: .12em; color: var(--faint); text-transform: uppercase; margin: 26px 4px 8px; display: flex; gap: 10px; align-items: center; }
 .sec::after { content: ""; height: 1px; flex: 1; background: var(--rule); }
@@ -791,6 +793,13 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   // translation text: Korean kept as Korean is set apart, *romanised terms* in italics
   // translation text gets its own language tag, so it wraps by that language's rules (no break inside "you're" or after an opening quote)
   var TLANG = { en: "en", zh: "zh-Hans", zt: "zh-Hant", de: "de", fr: "fr", ru: "ru", tr: "tr", vi: "vi", th: "th", ja: "ja" };
+  function brkInner(b) {        // time-skip divider: Korean, and the chosen language on its own line under it
+    return '<span><span class="bk">' + esc(b.ko) + '</span>' + (TR !== "off" && b[TR] ? '<span class="bt"' + tl() + '>' + esc(b[TR]) + '</span>' : '') + '</span>';
+  }
+  function refreshBrk() {
+    if (!ep) return;
+    document.querySelectorAll(".brk[data-i]").forEach(function (el) { var l = ep.lines[+el.dataset.i]; if (l && l.brk) el.innerHTML = brkInner(l.brk); });
+  }
   function tl() { return ' lang="' + (TLANG[TR] || "en") + '"'; }
   function fmtTr(t) {
     if (UL() === "ko") return esc(t || "").replace(/\*([^*]+)\*/g, '<i class="rk">$1</i>');   // Korean copy: nothing to set apart
@@ -1021,7 +1030,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       var html = "", sec = null;
       d.lines.forEach(function (l, i) {
         if (l.s !== sec) { sec = l.s; html += '<div class="sec">' + esc(sec) + '</div>'; }
-        if (l.brk) html += '<div class="brk"><span>' + esc(l.brk.ko) + (TR !== "off" && l.brk[TR] ? ' · ' + esc(l.brk[TR]) : '') + '</span></div>';   // time skip
+        if (l.brk) html += '<div class="brk" data-i="' + i + '">' + brkInner(l.brk) + '</div>';   // time skip
         var ko = koHtml(l);
         html += '<div class="line' + (l.t == null ? " notime" : "") + '" tabindex="0" data-i="' + i + '" data-p="' + l.p + '"' + (l.r ? ' data-r="' + l.r + '"' : "") + '><span class="who' + ((l.c || "").length > 3 ? " long" : (l.c || "").length > 2 ? " mid" : "") + '">' + esc(l.c || (l.p === "Jun" ? "준" : "수아")) +
           '</span><div class="ko">' + ko + '</div>' + '<div class="en"' + tl() + (TR === "off" ? " hidden" : "") + '>' + fmtTr(trOf(l)) + '</div></div>';
@@ -1490,7 +1499,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   $("langmenu").addEventListener("click", function (ev) {
     ev.stopPropagation();
     var b = ev.target.closest("button"); if (!b) return;
-    if (b.dataset.tr) { TR = b.dataset.tr; store.set("tr", TR); closeLangMenu(); }
+    if (b.dataset.tr) { TR = b.dataset.tr; store.set("tr", TR); closeLangMenu(); refreshBrk(); }
     if (b.dataset.sz) { SZ = +b.dataset.sz; store.set("size", SZ); renderLangMenu(); }
     applyPrefs();
   });
@@ -1651,12 +1660,12 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       '<button class="ib" data-close="1" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
       '<span class="dt-kind">' + esc(it.tag || kinds[it.kind] || "Expression") + '</span><h2>' + esc(it.item) + '</h2>' +
       '<p class="mean"' + tl() + '>' + esc(cz(it, "meaning") || cz(it, "gloss")) + '</p>' +
-      (it.example ? '<h3>' + T("example") + '</h3><div class="ex"><div class="k">' + esc(it.example) + '</div><div class="e"' + tl() + '>' + esc(cz(it, "translation")) + '</div></div>' : "") +
+      (it.example ? '<h3>' + T("example") + '</h3><div class="ex"><div class="k">' + esc(it.example) + '</div>' + (TR === "off" ? "" : '<div class="e"' + tl() + '>' + esc(cz(it, "translation")) + '</div>') + '</div>' : "") +
       (notes.length ? '<h3>' + T("notes") + '</h3><ul' + tl() + '>' + notes.map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + '</ul>' : "") +
       '<h3>' + T("inEp") + (uses.length ? " · " + uses.length + "×" : "") + '</h3>' +
       (uses.length ? '<div class="uses">' + uses.map(function (i) {
         var l = ep.lines[i];
-        return '<button class="use" data-i="' + i + '"><span class="k">' + hlKo(l, k) + '</span><span class="e"' + tl() + '>' + fmtTr(trOf(l)) + '</span>' +
+        return '<button class="use" data-i="' + i + '"><span class="k">' + hlKo(l, k) + '</span>' + (TR === "off" ? "" : '<span class="e"' + tl() + '>' + fmtTr(trOf(l)) + '</span>') +
           '<span class="go">' + (ep.ready && l.t != null ? "▶ " + T("playFrom") + " · " + fmt(l.t) : T("goLine")) + '</span></button>';
       }).join("") + '</div>' : '<p class="mean" style="color:var(--muted);font-size:14px">' + T("commentaryOnly") + '</p>');
     if (!WIDE.matches) { resumeAfter = resumeAfter || !audio.paused; audio.pause(); }     // wide screens keep playing
