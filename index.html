@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="14034e5f8097">
+<html lang="ko" data-build="86f045ec9ca4">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -390,7 +390,8 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px;
   background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25), 0 0 0 .5px rgba(0,0,0,.08); pointer-events: none;
   transition: transform .5s cubic-bezier(.34,1.9,.5,1), box-shadow .3s ease; }
 .rng.held .thumb { transform: scale(1.4); transition: transform .42s cubic-bezier(.3,2.2,.45,1), box-shadow .25s ease;
-  box-shadow: 0 1px 4px rgba(0,0,0,.28), 0 0 0 5px color-mix(in srgb, var(--accent) 22%, transparent); }
+  /* held: a thin soft accent ring plus the same faint accent glow as the dark-mode play button, so both read as one family */
+  box-shadow: 0 1px 4px rgba(0,0,0,.28), 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent), 0 2px 14px color-mix(in srgb, var(--accent) 22%, transparent); }
 @media (prefers-reduced-motion: reduce) { .rng .thumb { transition: none; } }
 input[type=range]::-moz-range-track { height: 4px; border-radius: 2px; background: var(--track); }
 input[type=range]::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--accent); }
@@ -518,8 +519,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .sh-top .ib { margin-right: -8px; }
 .sheet p.h { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
 .xpsec { display: flex; justify-content: space-between; align-items: baseline; margin: 18px 2px 6px; }
-.xpsec h3 { font: 800 15px var(--f-display); margin: 0; letter-spacing: -.01em; }
-.xpsec span { font: 500 11.5px var(--f-mono); color: var(--faint); }
+.xpsec h3 { font: 700 15px var(--f-display); margin: 0; letter-spacing: -.01em; color: var(--muted); }   /* section label, quieter than the items */
+.xpsec span { font: 500 11.5px var(--f-mono); color: var(--muted); }
 .xp { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 12px 2px; border-top: 1px solid var(--rule); text-align: left; width: 100%; }
 .xp .tag { justify-self: start; font: 600 10.5px/1 var(--f-mono); letter-spacing: .02em; color: var(--muted); background: color-mix(in srgb, var(--ink) 7%, transparent);
   padding: 4px 7px; border-radius: 6px; }
