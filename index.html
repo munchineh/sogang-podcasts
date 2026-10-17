@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="5f553cce17a1">
+<html lang="ko" data-build="c66b82ad1d5e">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -647,6 +647,10 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   #nextep svg, #again svg { width: 19px; height: 19px; }
   #nextep:hover:not([disabled]), #again:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); }
   .ctrls .side.right { gap: 4px; }
+  /* three columns so play stays dead centre whatever the label lengths; when the bar is narrow the right-hand labels drop */
+  .ctrls { display: grid; grid-template-columns: 1fr auto 1fr; }
+  .transport { container-type: inline-size; }
+  @container (max-width: 760px) { #nextep .tx, #again .tx { display: none; } #nextep, #again { width: 40px; padding: 0; } }
   .transport::before, .transport::after { display: none; }
   .back-now { bottom: calc(var(--tp, 140px) + 40px); }
   .speedmenu { bottom: calc(var(--tp, 140px) + 26px); }
