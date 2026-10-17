@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="8323c25b93d5">
+<html lang="ko" data-build="35de5ef22731">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1183,7 +1183,10 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       dim.style.cssText = "position:fixed;inset:0;z-index:1;background:rgba(10,10,20,.12);pointer-events:none";
       document.body.appendChild(dim);
       Lst.hidden = false;
-      Lst.style.cssText = "position:fixed;left:0;right:0;top:" + (-listY) + "px;z-index:0;pointer-events:none;will-change:transform";
+      // pin the list exactly where it sits in the page: body keeps its default 8px side margins, so left:0/right:0 made the
+      // cards 16px wider during the swipe and they snapped narrower when it finished
+      var bb = document.body.getBoundingClientRect();
+      Lst.style.cssText = "position:fixed;left:" + bb.left + "px;right:" + (document.documentElement.clientWidth - bb.right) + "px;top:" + (-listY) + "px;z-index:0;pointer-events:none;will-change:transform";
       P.style.cssText = "position:relative;z-index:2;background:var(--bg);min-height:100vh;box-shadow:-10px 0 28px rgba(10,10,20,.16);will-change:transform";
       paint();
     }
