@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="24da1274bacb">
+<html lang="ko" data-build="9da2afd0ff19">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -76,6 +76,10 @@
 [hidden] { display: none !important; }
 html, body { height: 100%; }
 :root { --dim: color-mix(in srgb, var(--ink) 32%, transparent); }
+/* floating surfaces (desktop player bar): soft two-layer lift; dark needs real black to show against --bg */
+:root { --float-shadow: 0 1px 2px rgba(23,24,31,.05), 0 8px 28px rgba(23,24,31,.09); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --float-shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 32px rgba(0,0,0,.42); } }
+:root[data-theme="dark"] { --float-shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 32px rgba(0,0,0,.42); }
 html[data-tr="ja"] { --f-latin: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Noto Sans KR", sans-serif;
   --f-body: "Dots", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Noto Sans KR", -apple-system, sans-serif; }
 body { background: var(--bg); color: var(--ink); font: 16px/1.6 var(--f-body); -webkit-text-size-adjust: 100%;
@@ -608,11 +612,14 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   #list .search.pinned, #list .search { position: sticky; left: auto; right: auto; padding-inline: 0; }
   #list .ep .b { display: none; }
   #list .ep { padding-block: 14px; }
-  #list .ep.cur { box-shadow: 0 0 0 2px var(--accent); }
+  /* current episode: a soft accent tint and a hairline accent stroke (same 1px weight as the other cards), EP number in accent */
+  #list .ep.cur, #list .ep.cur:hover { background: color-mix(in srgb, var(--accent) 9%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 45%, var(--rule)); }
+  #list .ep.cur .no { color: var(--accent); }
   #list .ep:hover, #list .ep:hover::after { background-color: color-mix(in srgb, var(--ink) 3%, var(--surface)); }
   @supports (-webkit-mask-box-image: none) {
-    #list .ep.cur { box-shadow: none; }
-    #list .ep.cur::before { inset: -2px; background: var(--accent); }   /* the squircle border layer, thicker and in accent */
+    #list .ep.cur { background: transparent; border-color: transparent; }
+    #list .ep.cur::before { background: color-mix(in srgb, var(--accent) 45%, var(--rule)); }
+    #list .ep.cur::after, #list .ep.cur:hover::after { background-color: color-mix(in srgb, var(--accent) 9%, var(--surface)); }
     #list .ep:hover { background-color: transparent; }
   }
   #player { margin-left: var(--side); }
@@ -622,8 +629,9 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     background: var(--bg); border-top: 1px solid var(--rule); }
   /* the player bar floats inside the script column: rounded all round, lifted off the bottom, never over the list */
   .transport { left: calc(var(--side) + 24px); right: 24px; bottom: 16px; max-width: 840px; margin-inline: auto;
-    border-radius: 22px; border-bottom: 1px solid var(--rule); background: var(--surface); padding-bottom: 0;
-    box-shadow: 0 2px 6px rgba(10,10,20,.05), 0 12px 36px rgba(10,10,20,.14); }
+    border-radius: 22px; border: 1px solid var(--rule); background: var(--surface); padding-bottom: 0;
+    /* full 1px stroke like the cards (the squircle block had made three sides transparent) + a soft lift */
+    box-shadow: var(--float-shadow); filter: none; }
   .transport::before, .transport::after { display: none; }
   .back-now { bottom: calc(var(--tp, 140px) + 40px); }
   .speedmenu { bottom: calc(var(--tp, 140px) + 26px); }
@@ -1197,7 +1205,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     // a line that opens with a laugh, sigh or yawn (or follows a long pause): its words start late, so move on to it
     // 0.35 s after the previous line's last word instead of leaving the finished line lit through the gap
     var p = L[timed[a]], nx = a + 1 < timed.length ? L[timed[a + 1]] : null;
-    if (nx && p.e != null && t > p.e + 0.35 && nx.t - p.e > 1.0) return timed[a + 1];
+    var pe = p.cs && p.cs.length ? p.cs[p.cs.length - 1] : null;      // last syllable's end (forced alignment)
+    if (nx && pe != null && t > pe + 0.35 && nx.t - pe > 1.0) return timed[a + 1];
     return timed[a];
   }
   function jumpTo(i, ready) {
