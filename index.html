@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="5a6f0f1c04c6">
+<html lang="ko" data-build="fb7346c4260d">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -792,7 +792,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   function trOf(l) { return (TR !== "off" && TR !== "en" && l[TR]) || (TR === "zt" && l.zh) || l.en || ""; }
   // translation text: Korean kept as Korean is set apart, *romanised terms* in italics
   // translation text gets its own language tag, so it wraps by that language's rules (no break inside "you're" or after an opening quote)
-  var TLANG = { en: "en", zh: "zh-Hans", zt: "zh-Hant", de: "de", fr: "fr", ru: "ru", tr: "tr", vi: "vi", th: "th", ja: "ja" };
+  var TLANG = { en: "en", zh: "zh-Hans", zt: "zh-Hant", de: "de", fr: "fr", ru: "ru", tr: "tr", vi: "vi", th: "th", ja: "ja", cs: "cs" };
   function brkInner(b) {        // time-skip divider: Korean, and the chosen language on its own line under it
     return '<span><span class="bk">' + esc(b.ko) + '</span>' + (TR !== "off" && b[TR] ? '<span class="bt"' + tl() + '>' + esc(b[TR]) + '</span>' : '') + '</span>';
   }
@@ -808,6 +808,18 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   // UI text in the chosen translation language (None → English)
   var I18N = {
+    cs: { tipFind: "Hledat v této epizodě", tipXp: "Gramatika a slovíčka", tipPrev: "Předchozí řádek", tipNext: "Další řádek", tipPlay: "Přehrát / Pozastavit", tipAgain: "Přehrát řádek znovu", tipSpeed: "Rychlost přehrávání", speedLbl: "Rychlost", tipTr: "Překlad a velikost textu", tipLang: "Jazyk", tipRefresh: "Obnovit", kbTitle: "Klávesové zkratky", kbClose: "Zavřít kartu nebo nabídku", kbHelp: "Zobrazit tento seznam", kbLines: "Předchozí / další řádek",
+      coach: "Další: {e}", nextEp: "Další epizoda", skipT: "Přeskočit na další epizodu?", skipB: "Další: {t}. Váš postup v této epizodě je uložený.", skipNoAsk: "Už se neptat", cancel: "Zrušit", skip: "Přeskočit",
+      lede: "Učte se výrazy, gramatiku a slovíčka ze Sogang Korean v každodenních rozhovorech. Vyberte si epizodu, nebo něco vyhledejte.", search: "Hledat v podcastech", level: "Úroveň {n}", ready: "Hotovo {a} z {b}",
+      scriptOnly: "Jen text", audioBy: "Zvuk do {d}", done: "Dokončeno", left: "zbývá {t}", "new": "Nové", preview: "Ukázka",
+      about: "O této epizodě", more: "Zobrazit víc", less: "Zobrazit méně", setting: "Prostředí", formality: "Míra zdvořilosti", items: "Gramatika a slovíčka", seeAll: "Zobrazit vše",
+      bannerNone: "Zvuk k této epizodě ještě není nahraný. Text si můžete přečíst už teď a zvuk se tu přehraje, jakmile bude hotový.",
+      bannerPartial: "Ukázka: zatím je nahraná jen první část. Šedé řádky ještě zvuk nemají.",
+      backNow: "Zpět na aktuální řádek", translation: "Překlad", textSize: "Velikost textu", "default": "Výchozí", none: "Žádný",
+      sheetH: "Klepněte a uvidíte význam a použití.", example: "Příklad", notes: "Poznámky", inEp: "V této epizodě",
+      playFrom: "Přehrát odsud", goLine: "Přejít na řádek", commentaryOnly: "Vysvětleno v komentáři, ve scéně se nepoužívá.",
+      lines: "{n} řádků", noMatch: "Žádný řádek neobsahuje „{q}“.", loadFail: "Seznam epizod se nepodařilo načíst. Stáhněte dolů pro obnovení.",
+      cancel: "Zrušit", clear: "Vymazat", recent: "Nedávná hledání", findPh: "Hledat v této epizodě", close: "Hotovo" },
     en: { tipFind: "Find in this episode", tipXp: "Grammar & Vocab", tipPrev: "Previous line", tipNext: "Next line", tipPlay: "Play / Pause", tipAgain: "Replay line", tipSpeed: "Playback speed", speedLbl: "Speed", tipTr: "Translation & Text size", tipLang: "Language", tipRefresh: "Refresh", kbTitle: "Keyboard shortcuts", kbClose: "Close a card or menu", kbHelp: "Show this list", kbLines: "Previous / Next line",
       coach: "Up next: {e}", nextEp: "Next episode", skipT: "Skip to the next episode?", skipB: "Up next: {t}. Your progress on this episode is saved.", skipNoAsk: "Don’t ask again", cancel: "Cancel", skip: "Skip",
       lede: "Learn Sogang Korean expressions, grammar and vocab through everyday conversations. Pick an episode to start, or search for something.", search: "Search podcasts", level: "Level {n}", ready: "{a} / {b} ready",
@@ -934,7 +946,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   };
   // projected audio date (index.json "eta", from build_player.py) as a short local date: 21 Oct, 10월 21일, 10月21日…
   function etaDate(iso) {
-    var loc = { ko: "ko-KR", ja: "ja-JP", zh: "zh-CN", zt: "zh-TW", de: "de-DE", fr: "fr-FR", ru: "ru-RU", tr: "tr-TR", vi: "vi-VN", th: "th-TH" }[UL()] || "en-GB";
+    var loc = { ko: "ko-KR", ja: "ja-JP", zh: "zh-CN", zt: "zh-TW", de: "de-DE", fr: "fr-FR", ru: "ru-RU", tr: "tr-TR", vi: "vi-VN", th: "th-TH", cs: "cs-CZ" }[UL()] || "en-GB";
     try { return new Date(iso + "T12:00:00").toLocaleDateString(loc, { month: "short", day: "numeric" }); } catch (e) { return iso.slice(5); }
   }
   // the wordmark keeps its size unless it would push the language and refresh buttons off the row; then it steps down to fit
@@ -1454,7 +1466,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
                ["de", "Deutsch", "DE"], ["fr", "Français", "FR"], ["ru", "Русский", "RU"],
                ["tr", "Türkçe", "TR"],
                ["vi", "Tiếng Việt", "VI"],
-               ["th", "ไทย", "TH"], ["ja", "日本語", "JA"]];
+               ["th", "ไทย", "TH"], ["ja", "日本語", "JA"], ["cs", "Čeština", "CS"]];
   var SIZES = [0.88, 1, 1.13, 1.27];
   var GLOBE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.8 5.7 3.8 9s-1.2 6.3-3.8 9c-2.6-2.7-3.8-5.7-3.8-9S9.4 5.7 12 3z"/></svg>';
   function applyPrefs() {
@@ -1508,7 +1520,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   // every label on screen in the chosen language
   function applyUi() {
     document.documentElement.dataset.ui = UL(); if (typeof setTips === "function") setTips();
-    $("wordmark").textContent = TR === "off" ? "팟캐스트" : { zh: "播客", zt: "播客", ru: "Подкасты", tr: "Podcastler", vi: "Podcast", th: "พอดแคสต์", ja: "ポッドキャスト" }[TR] || "Podcasts";
+    $("wordmark").textContent = TR === "off" ? "팟캐스트" : { zh: "播客", zt: "播客", ru: "Подкасты", tr: "Podcastler", vi: "Podcast", th: "พอดแคสต์", ja: "ポッドキャスト" , cs: "Podcasty" }[TR] || "Podcasts";
     fitMast();
     $("lede").textContent = T("lede"); $("q").placeholder = T("search"); $("fq").placeholder = T("findPh"); $("fdone").textContent = T("close"); $("findbtn").setAttribute("aria-label", T("findPh")); $("qcancel").textContent = T("cancel"); $("qx").setAttribute("aria-label", T("clear")); $("lvltxt").textContent = T("level", { n: 4 });
     $("backnowt").textContent = T("backNow"); $("sheeth").textContent = T("sheetH");
