@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="332f588a81b2">
+<html lang="ko" data-build="3cf95d96ae54">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -495,6 +495,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .sheet.swap.closing::before { opacity: 0; transition: opacity .22s ease; }
 .sheet.swap.closing .panel { transform: translate3d(calc(var(--dx, 28px) * -1), 0, 0); opacity: 0; transition: transform .26s ease, opacity .18s ease; }
 @media (prefers-reduced-motion: reduce) { .sheet, .sheet::before, .sheet .panel { transition: none !important; } }
+
 .sheet .panel { background: var(--surface); width: 100%; max-height: 78%; overflow: auto; overscroll-behavior: contain; border-radius: 20px 20px 0 0;
   padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)); }
 .sheet .panel .wrap { padding-block: 18px 6px; }
@@ -574,6 +575,38 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 
 .dt .use .go { font: 500 11px var(--f-mono); color: var(--accent); }
 @media (prefers-reduced-motion: reduce) { .line { transition: none; } }
+/* ---------- Desktop (17 Oct): two panels from 1024px. Phones and narrow windows are unchanged.
+   Left: the episode list (its own scroll), always visible, current episode marked. Right: the episode (the window scrolls it).
+   Grammar/vocab cards float in from the right, rounded on all corners, over a scrim that blocks the page and pauses audio. */
+@media (min-width: 1024px) {
+  :root { --side: 340px; }
+  #list, #list[hidden] { display: block !important; position: fixed; top: 0; bottom: 0; left: 0; width: var(--side); max-width: none; margin: 0;
+    overflow-y: auto; overscroll-behavior: contain; padding: 28px 14px 32px; border-right: 1px solid var(--rule); background: var(--bg); z-index: 4; }
+  body.searching #list { padding-top: 0; }
+  #list .search.pinned, #list .search { position: sticky; left: auto; right: auto; padding-inline: 0; }
+  #list .ep .b { display: none; }
+  #list .ep { padding-block: 14px; }
+  #list .ep.cur { box-shadow: 0 0 0 2px var(--accent); }
+  #list .ep:hover, #list .ep:hover::after { background-color: color-mix(in srgb, var(--ink) 3%, var(--surface)); }
+  @supports (-webkit-mask-box-image: none) {
+    #list .ep.cur { box-shadow: none; }
+    #list .ep.cur::before { inset: -2px; background: var(--accent); }   /* the squircle border layer, thicker and in accent */
+    #list .ep:hover { background-color: transparent; }
+  }
+  #player { margin-left: var(--side); }
+  .top.pinned { position: sticky; left: auto; right: auto; }
+  #back { display: none; }
+  .transport { left: var(--side); }
+  .sbar { left: var(--side); }
+  .back-now { left: calc(50% + var(--side) / 2); }
+  .speedmenu, .langmenu { left: max(calc(var(--side) + 16px), calc(var(--side) + (100% - var(--side) - 664px) / 2)); }
+  .line { cursor: pointer; }
+  .line:hover { background: color-mix(in srgb, var(--accent) 5%, transparent); border-radius: 12px; }
+  .sheet { align-items: stretch; justify-content: flex-end; }
+  .sheet .panel { width: 440px; max-width: calc(100% - 32px); max-height: none; margin: 16px; border-radius: 22px; padding-bottom: 18px;
+    transform: translate3d(calc(100% + 32px), 0, 0); box-shadow: 0 12px 48px rgba(10,10,20,.22); }
+  .sheet.open .panel, .sheet.swap.open .panel { transform: translate3d(0, 0, 0); }
+}
 </style>
 </head>
 <body>
@@ -645,6 +678,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
+  var DESK = matchMedia("(min-width: 1024px)");      // two-panel desktop layout (CSS does the layout; JS only adjusts behaviour)
   var store = {
     get: function (k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
     set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -834,7 +868,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       var lc = locE(e);
       var pct = e.ready && e.dur ? Math.min(100, (done ? 100 : pos / e.dur * 100)) : 0;
       var aria = cls === "done" ? ' aria-label="' + T("done") + ", " + fmt(e.dur || 0) + '"' : cls === "new" ? ' aria-label="' + T("new") + ", " + fmt(e.dur || 0) + '"' : "";
-      return '<button class="ep' + (cls === "done" ? " isdone" : "") + '" data-ep="' + e.ep + '"' + (e.ready ? "" : ' data-noaudio="1"') + '>' +
+      return '<button class="ep' + (cls === "done" ? " isdone" : "") + (ep && ep.ep === e.ep && !$("player").hidden ? " cur" : "") + '" data-ep="' + e.ep + '"' + (e.ready ? "" : ' data-noaudio="1"') + '>' +
         '<span class="no">EP ' + String(e.n).padStart(2, "0") + '</span><span class="st ' + cls + '"' + aria + '>' + st + '</span>' +
         '<span class="t">' + esc(e.title) + '</span>' + (lc.t ? '<span class="te">' + fmtTr(lc.t) + '</span>' : '') +
         (lc.b ? '<span class="b">' + fmtTr(lc.b) + '</span>' : '') +
@@ -864,6 +898,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       timed = d.lines.map(function (l, k) { return l.t == null ? -1 : k; }).filter(function (k) { return k >= 0; });
       if (!$("list").hidden) listY = window.scrollY;
       $("list").hidden = true; $("player").hidden = false; window.scrollTo(0, 0); userScrolledAt = 0;
+      store.set("lastEp", id); if (DESK.matches) renderList();      // desktop: mark it in the always-visible list
       document.body.classList.remove("mini"); $("nowpl").hidden = true; $("transport").hidden = false; $("player").querySelector(".top").classList.remove("away");
       $("epno").textContent = epLabel(d) + (d.partial ? " · " + T("preview") : "");
       $("eptitle").textContent = d.title;
@@ -1469,6 +1504,15 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     if (ev.target === $("dsheet") || ev.target.closest("[data-close]")) closeDetail(true);
   });
   document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && !$("dsheet").hidden) closeDetail(true); });
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && $("dsheet").hidden && !$("sheet").hidden) closeXp(); });
+  // Space plays/pauses (not while typing, on a focused button or line, or with a card or dialog open)
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key !== " " || ev.repeat || ev.metaKey || ev.ctrlKey || ev.altKey) return;
+    var t = ev.target;
+    if (t.closest && t.closest("input, textarea, select, button, [contenteditable], .line")) return;
+    if (!$("dsheet").hidden || !$("sheet").hidden || !$("skipdlg").hidden || $("player").hidden || !ep || !ep.ready) return;
+    ev.preventDefault(); $("play").click();
+  });
 
   // ---------- episode overview ----------
   function ovHtml(d) {
@@ -1698,6 +1742,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   // strip and whichever top bar is in use back down by the same amount, so iOS keeps seeing a solid bar under the clock
   var sbarEl = document.querySelector(".sbar"), searchEl = document.querySelector(".search");
   function pinBar(bar, on) {
+    if (DESK.matches && on) return;                          // desktop: plain sticky bars, no iOS workaround
     if (!bar || bar.classList.contains("pinned") === on) return;
     var host = bar.parentElement;
     if (on) {
@@ -1847,7 +1892,13 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     fetch("index.html?t=" + Date.now(), { cache: "reload" }).catch(function () {}).then(function () { location.reload(); });
   });
   setTimeout(checkUpdate, 1500);
-  fetch("data/index.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (d) { index = d; renderList(); })
+  function deskDefault() {
+    if (!DESK.matches || !$("player").hidden || !index) return;
+    var last = store.get("lastEp", ""), e = index.filter(function (x) { return x.ep === last; })[0] || index.filter(function (x) { return x.ready; })[0] || index[0];
+    if (e) openEp(e.ep);
+  }
+  DESK.addEventListener("change", deskDefault);
+  fetch("data/index.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (d) { index = d; renderList(); deskDefault(); })
     .catch(function () { $("eps").innerHTML = '<p class="lede">' + T("loadFail") + '</p>'; });
 })();
 </script>
