@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="2c7d4e7bdc02">
+<html lang="ko" data-build="7bec10d170de">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1634,7 +1634,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       var bits = part.split(/\s+[·・]\s+/);
       if (bits.length > 1 && bits.every(function (b) { return /=|＝/.test(b); })) notes = notes.concat(bits); else notes.push(part);
     });
-    notes = notes.map(function (x) { return x.trim(); }).filter(Boolean);
+    // bullets read as list items: no closing full stop (it also wrapped onto a line of its own on phones)
+    notes = notes.map(function (x) { return x.trim().replace(/([^.\s])[.。]$/, "$1"); }).filter(Boolean);
     var uses = [];
     ep.lines.forEach(function (l, i) { if ((l.hl || []).some(function (h) { return h[2] === k; })) uses.push(i); });
     $("detail").className = "wrap dt" + (it.kind === "vocab" ? " v" : "");
