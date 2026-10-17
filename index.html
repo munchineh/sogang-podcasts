@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="4d5960219a7d">
+<html lang="ko" data-build="0ecfa618231a">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -148,8 +148,12 @@ body { margin-top: 0; }
 @media (prefers-reduced-motion: reduce) { .ep, .ib, .chip, .play, .speed, .qx, .recent button { transition: none !important; } }
 .ep .no { font: 500 11.5px/1.6 var(--f-mono); color: var(--faint); letter-spacing: .04em; font-variant-numeric: tabular-nums; }
 .ep .st { font: 500 11.5px/1.6 var(--f-mono); letter-spacing: .02em; color: var(--muted); white-space: nowrap; justify-self: end; }
-.ep .st.new { color: var(--accent); }
-.ep .st.done { color: var(--jun); }
+/* card status: new = green ▶ + length, part-listened = purple "time left", finished = grey ↻ + length */
+.ep .st.new { color: var(--jun); }
+.ep .st.mid { color: var(--accent); }
+.ep .st.done { color: var(--muted); }
+.ep .st svg { width: 11px; height: 11px; margin-right: 5px; vertical-align: -1px; }
+.ep.isdone .bar i { background: var(--faint); }
 .ep .t { grid-column: 1 / -1; font: 900 20px/1.35 var(--f-display); letter-spacing: -.025em; min-width: 0; text-wrap: balance; margin-top: 4px; }
 .ep .te { grid-column: 1 / -1; font-family: var(--f-latin); font-size: 14px; font-weight: 500; color: var(--muted); min-width: 0; }
 .ep .b { grid-column: 1 / -1; font-family: var(--f-latin); font-size: 14px; line-height: 1.5; color: var(--ink); opacity: .82; min-width: 0; margin-top: 8px; }
@@ -801,6 +805,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   var audio = $("audio"), index = [], ep = null, cur = -1, lineEls = [], userScrolledAt = 0, autoScrolling = false, finding = false;
 
   // ---------- list ----------
+  var ICO_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.6 6.2v11.6a1.2 1.2 0 0 0 1.8 1l9.1-5.8a1.2 1.2 0 0 0 0-2l-9.1-5.8A1.2 1.2 0 0 0 7.6 6.2z"/></svg>';
+  var ICO_AGAIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>';
   function renderList() {
     // one level at a time; the switch above the list picks it (remembered), Level 4 by default
     var lvs = []; index.forEach(function (e) { if (lvs.indexOf(e.level) < 0) lvs.push(e.level); });
@@ -815,14 +821,15 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     $("eps").innerHTML = head + inLv.map(function (e) {
       var pos = store.get("pos_" + e.ep, 0), done = store.get("done_" + e.ep, false), st, cls = "";
       if (!e.ready) st = T("scriptOnly") + (e.eta ? " · " + T("audioBy", { d: etaDate(e.eta) }) : "");
-      else if (done) { st = T("done"); cls = "done"; }
-      else if (pos > 5) st = T("left", { t: fmt((e.dur || 0) - pos) });
-      else { st = T("new"); cls = "new"; }
+      else if (done) { st = ICO_AGAIN + fmt(e.dur || 0); cls = "done"; }
+      else if (pos > 5) { st = T("left", { t: fmt((e.dur || 0) - pos) }); cls = "mid"; }
+      else { st = ICO_PLAY + fmt(e.dur || 0); cls = "new"; }
       if (e.ready && e.partial) st += " · " + T("preview");
       var lc = locE(e);
       var pct = e.ready && e.dur ? Math.min(100, (done ? 100 : pos / e.dur * 100)) : 0;
-      return '<button class="ep" data-ep="' + e.ep + '"' + (e.ready ? "" : ' data-noaudio="1"') + '>' +
-        '<span class="no">EP ' + String(e.n).padStart(2, "0") + '</span><span class="st ' + cls + '">' + st + '</span>' +
+      var aria = cls === "done" ? ' aria-label="' + T("done") + ", " + fmt(e.dur || 0) + '"' : cls === "new" ? ' aria-label="' + T("new") + ", " + fmt(e.dur || 0) + '"' : "";
+      return '<button class="ep' + (cls === "done" ? " isdone" : "") + '" data-ep="' + e.ep + '"' + (e.ready ? "" : ' data-noaudio="1"') + '>' +
+        '<span class="no">EP ' + String(e.n).padStart(2, "0") + '</span><span class="st ' + cls + '"' + aria + '>' + st + '</span>' +
         '<span class="t">' + esc(e.title) + '</span>' + (lc.t ? '<span class="te">' + fmtTr(lc.t) + '</span>' : '') +
         (lc.b ? '<span class="b">' + fmtTr(lc.b) + '</span>' : '') +
         (pct ? '<span class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></span>' : "") + '</button>';
