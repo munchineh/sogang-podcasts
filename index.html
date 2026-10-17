@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="9da2afd0ff19">
+<html lang="ko" data-build="c7325a1b1a84">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -625,10 +625,14 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   #player { margin-left: var(--side); }
   .top.pinned { position: sticky; left: auto; right: auto; }
   #back { display: none; }
-  .sidefoot { display: flex; justify-content: flex-start; position: sticky; bottom: -32px; margin: 14px -14px -32px; padding: 10px 12px 14px;
-    background: var(--bg); border-top: 1px solid var(--rule); }
+  /* keyboard shortcuts: a small, quiet round button pinned to the bottom-right corner (the ? key opens the same sheet) */
+  .sidefoot { display: block; position: fixed; right: 16px; bottom: 16px; z-index: 5; margin: 0; padding: 0; }
+  .sidefoot .ib { width: 34px; height: 34px; border-radius: 50%; color: var(--muted); background: var(--surface); border: 1px solid var(--rule);
+    opacity: .7; transition: opacity .15s ease, transform .45s var(--spring); }
+  .sidefoot .ib:hover, .sidefoot .ib:focus-visible { opacity: 1; color: var(--ink); }
+  .sidefoot .ib svg { width: 17px; height: 17px; }
   /* the player bar floats inside the script column: rounded all round, lifted off the bottom, never over the list */
-  .transport { left: calc(var(--side) + 24px); right: 24px; bottom: 16px; max-width: 840px; margin-inline: auto;
+  .transport { left: calc(var(--side) + 64px); right: 64px; bottom: 16px; max-width: 840px; margin-inline: auto;
     border-radius: 22px; border: 1px solid var(--rule); background: var(--surface); padding-bottom: 0;
     /* full 1px stroke like the cards (the squircle block had made three sides transparent) + a soft lift */
     box-shadow: var(--float-shadow); filter: none; }
@@ -651,7 +655,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 @media (min-width: 1600px) {
   :root { --rail: 420px; }
   #player { margin-right: var(--rail); }
-  .transport { right: calc(var(--rail) + 24px); }
+  .transport { right: calc(var(--rail) + 64px); }
+  .sidefoot { right: calc(var(--rail) + 16px); }
   .back-now { left: calc(var(--side) + (100% - var(--side) - var(--rail)) / 2); }
   .speedmenu, .langmenu { left: max(calc(var(--side) + 16px), calc(var(--side) + (100% - var(--side) - var(--rail) - 664px) / 2)); }
   #xpbtn { display: none; }
@@ -1267,7 +1272,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   function setTips() {
     [["findbtn", "tipFind"], ["xpbtn", "tipXp"], ["prev", "tipPrev", "←", 1], ["next", "tipNext", "→", 1], ["play", "tipPlay", "Space", 1],
      ["again", "tipAgain", "R", 1, 1], ["nextep", "nextEp", "", 1], ["speed", "tipSpeed", "", 1], ["enbtn", "tipTr", "", 1], ["langbtn", "tipLang"],
-     ["refresh", "tipRefresh", "", 0, 1], ["kbbtn", "kbTitle", "?", 1, -1]].forEach(function (t) {
+     ["refresh", "tipRefresh", "", 0, 1], ["kbbtn", "kbTitle", "?", 1, 1]].forEach(function (t) {
       var el = $(t[0]); if (!el) return;
       el.dataset.tip = T(t[1]) + (t[2] ? " (" + t[2] + ")" : "");
       if (t[3]) el.setAttribute("data-tip-up", ""); if (t[4] === 1) el.setAttribute("data-tip-end", ""); if (t[4] === -1) el.setAttribute("data-tip-start", "");
