@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="a360361528fb">
+<html lang="ko" data-build="14034e5f8097">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -450,16 +450,12 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 }
 .mast .lang:has(#langcode[hidden]) { padding: 0 9px; }
 .play { width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: var(--surface); display: grid; place-items: center;
-  /* depth without a shadow: lighter at the top, thin highlight on the top rim, thin shade on the bottom rim */
-  background-image: linear-gradient(180deg, color-mix(in srgb, #fff 14%, var(--accent)), color-mix(in srgb, #000 6%, var(--accent)));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.25), inset 0 -1px 0 rgba(0,0,0,.12); }
-/* dark: the light lavender washes out a linear gradient, so a sheen from the top centre that falls off to a darker lower edge */
+  /* flat accent fill; light: a small soft neutral shadow, dark: a faint accent glow (kept low so it doesn't pull the eye) */
+  box-shadow: 0 1px 2px rgba(23,24,31,.12), 0 2px 6px rgba(23,24,31,.08); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .play {
-  background-image: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, #fff 26%, var(--accent)) 0%, var(--accent) 55%, color-mix(in srgb, #000 16%, var(--accent)) 100%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.3), inset 0 -1px 0 rgba(0,0,0,.18); } }
+  box-shadow: 0 2px 14px color-mix(in srgb, var(--accent) 22%, transparent); } }
 :root[data-theme="dark"] .play {
-  background-image: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, #fff 26%, var(--accent)) 0%, var(--accent) 55%, color-mix(in srgb, #000 16%, var(--accent)) 100%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.3), inset 0 -1px 0 rgba(0,0,0,.18); }
+  box-shadow: 0 2px 14px color-mix(in srgb, var(--accent) 22%, transparent); }
 @media (hover: hover) { .play:hover { filter: brightness(1.06); } }
 .play svg { width: 26px; height: 26px; }
 .speed { font: 600 13px var(--f-mono); min-width: 56px; height: 36px; border-radius: 10px; border: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
