@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="cd15b692d881">
+<html lang="ko" data-build="b77c301a1f14">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -602,7 +602,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 @media (min-width: 1024px) {
   :root { --side: 340px; }
   #list, #list[hidden] { display: block !important; position: fixed; top: 0; bottom: 0; left: 0; width: var(--side); max-width: none; margin: 0;
-    overflow-y: auto; overscroll-behavior: contain; padding: 28px 14px 32px; border-right: 1px solid var(--rule); background: var(--bg); z-index: 4; }
+    overflow-y: auto; overscroll-behavior: contain; padding: 28px 14px 32px; border-right: 1px solid var(--rule); background: var(--bg); z-index: 4;
+    box-sizing: border-box; }
   body.searching #list { padding-top: 0; }
   #list .search.pinned, #list .search { position: sticky; left: auto; right: auto; padding-inline: 0; }
   #list .ep .b { display: none; }
@@ -619,7 +620,14 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   #back { display: none; }
   .sidefoot { display: flex; justify-content: flex-start; position: sticky; bottom: -32px; margin: 14px -14px -32px; padding: 10px 12px 14px;
     background: var(--bg); border-top: 1px solid var(--rule); }
-  .transport { left: var(--side); }
+  /* the player bar floats inside the script column: rounded all round, lifted off the bottom, never over the list */
+  .transport { left: calc(var(--side) + 24px); right: 24px; bottom: 16px; max-width: 840px; margin-inline: auto;
+    border-radius: 22px; border-bottom: 1px solid var(--rule); background: var(--surface); padding-bottom: 0;
+    box-shadow: 0 2px 6px rgba(10,10,20,.05), 0 12px 36px rgba(10,10,20,.14); }
+  .transport::before, .transport::after { display: none; }
+  .back-now { bottom: calc(var(--tp, 140px) + 40px); }
+  .speedmenu { bottom: calc(var(--tp, 140px) + 26px); }
+  #script { padding-bottom: calc(var(--tp, 140px) + 48px); }
   .sbar { left: var(--side); }
   .back-now { left: calc(50% + var(--side) / 2); }
   .speedmenu, .langmenu { left: max(calc(var(--side) + 16px), calc(var(--side) + (100% - var(--side) - 664px) / 2)); }
@@ -635,7 +643,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 @media (min-width: 1600px) {
   :root { --rail: 420px; }
   #player { margin-right: var(--rail); }
-  .transport { right: var(--rail); }
+  .transport { right: calc(var(--rail) + 24px); }
   .back-now { left: calc(var(--side) + (100% - var(--side) - var(--rail)) / 2); }
   .speedmenu, .langmenu { left: max(calc(var(--side) + 16px), calc(var(--side) + (100% - var(--side) - var(--rail) - 664px) / 2)); }
   #xpbtn { display: none; }
