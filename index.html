@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="86f045ec9ca4">
+<html lang="ko" data-build="dd7ca0ef53f0">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -658,7 +658,9 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   #nextep:hover:not([disabled]), #again:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); }
   .ctrls .side.right { gap: 4px; }
   /* three columns so play stays dead centre whatever the label lengths; when the bar is narrow the right-hand labels drop */
-  .ctrls { display: grid; grid-template-columns: 1fr auto 1fr; }
+  .ctrls { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+  .transport.fitr #nextep .tx, .transport.fitr #again .tx, .transport.fitl .speed .tx { display: none; }
+  .transport.fitr #nextep, .transport.fitr #again { width: 40px; padding: 0; }
   .transport { container-type: inline-size; }
   @container (max-width: 760px) { #nextep .tx, #again .tx { display: none; } #nextep, #again { width: 40px; padding: 0; } }
   .transport::before, .transport::after { display: none; }
@@ -791,11 +793,11 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   // UI text in the chosen translation language (None → English)
   var I18N = {
-    en: { tipFind: "Find in this episode", tipXp: "Grammar & vocab", tipPrev: "Previous line", tipNext: "Next line", tipPlay: "Play / pause", tipAgain: "Replay line", tipSpeed: "Playback speed", speedLbl: "Speed", tipTr: "Translation & text size", tipLang: "Language", tipRefresh: "Refresh", kbTitle: "Keyboard shortcuts", kbClose: "Close a card or menu", kbHelp: "Show this list", kbLines: "Previous / next line",
+    en: { tipFind: "Find in this episode", tipXp: "Grammar & Vocab", tipPrev: "Previous line", tipNext: "Next line", tipPlay: "Play / Pause", tipAgain: "Replay line", tipSpeed: "Playback speed", speedLbl: "Speed", tipTr: "Translation & Text size", tipLang: "Language", tipRefresh: "Refresh", kbTitle: "Keyboard shortcuts", kbClose: "Close a card or menu", kbHelp: "Show this list", kbLines: "Previous / Next line",
       coach: "Up next: {e}", nextEp: "Next episode", skipT: "Skip to the next episode?", skipB: "Up next: {t}. Your progress on this episode is saved.", skipNoAsk: "Don’t ask again", cancel: "Cancel", skip: "Skip",
       lede: "Learn Sogang Korean expressions, grammar and vocab through everyday conversations. Pick an episode to start, or search for something.", search: "Search podcasts", level: "Level {n}", ready: "{a} / {b} ready",
       scriptOnly: "Script only", audioBy: "Audio by {d}", done: "Done", left: "{t} left", "new": "New", preview: "Preview",
-      about: "About this episode", more: "Show more", less: "Show less", setting: "Setting", formality: "Formality", items: "Grammar & vocab", seeAll: "See all",
+      about: "About this episode", more: "Show more", less: "Show less", setting: "Setting", formality: "Formality", items: "Grammar & Vocab", seeAll: "See all",
       bannerNone: "Audio for this episode isn’t recorded yet. You can read the script now, and it will play here once it’s ready.",
       bannerPartial: "Preview: Only the first part is recorded so far. Greyed lines don’t have audio yet.",
       backNow: "Back to the current line", translation: "Translation", textSize: "Text size", "default": "Default", none: "None",
@@ -803,7 +805,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       playFrom: "Play from here", goLine: "Go to line", commentaryOnly: "Explained in the commentary rather than used in the scene.",
       lines: "{n} lines", noMatch: "No lines match “{q}”.", loadFail: "Couldn’t load the episode list. Pull to refresh.",
       cancel: "Cancel", clear: "Clear", recent: "Recent searches", findPh: "Find in this episode", close: "Done" },
-    ko: { tipFind: "이번 회에서 찾기", tipXp: "문법·어휘", tipPrev: "이전 줄", tipNext: "다음 줄", tipPlay: "재생/일시정지", tipAgain: "이 줄 다시 듣기", tipSpeed: "재생 속도", tipTr: "번역·글자 크기", tipLang: "언어", tipRefresh: "새로고침", kbTitle: "키보드 단축키", kbClose: "카드·메뉴 닫기", kbHelp: "이 목록 보기", kbLines: "이전/다음 줄",
+    ko: { tipFind: "이번 회에서 찾기", tipXp: "문법·어휘", tipPrev: "이전 줄", tipNext: "다음 줄", tipPlay: "재생/일시정지", tipAgain: "이 줄 다시 듣기", tipSpeed: "재생 속도", speedLbl: "속도", tipTr: "번역·글자 크기", tipLang: "언어", tipRefresh: "새로고침", kbTitle: "키보드 단축키", kbClose: "카드·메뉴 닫기", kbHelp: "이 목록 보기", kbLines: "이전/다음 줄",
       coach: "다음 회: {e}", nextEp: "다음 회", skipT: "다음 회로 넘어갈까요?", skipB: "다음 회: {t}. 이번 회 진도는 저장돼요.", skipNoAsk: "다시 묻지 않기", cancel: "취소", skip: "넘어가기",
       lede: "서강 한국어 표현, 문법, 어휘를 생생한 대화로 익혀요. 에피소드를 골라 듣거나 궁금한 걸 검색해 보세요.", search: "팟캐스트 검색", level: "{n}급", ready: "오디오 {a} / {b}",
       scriptOnly: "대본만", audioBy: "오디오 {d} 예정", done: "다 들음", left: "{t} 남음", "new": "새 에피소드", preview: "미리 듣기",
@@ -815,7 +817,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       playFrom: "여기부터 재생", goLine: "이 줄로 가기", commentaryOnly: "장면 대화가 아니라 해설에서 다뤄요.",
       lines: "{n}줄", noMatch: "“{q}” 검색 결과가 없어요.", loadFail: "에피소드 목록을 불러오지 못했어요. 당겨서 새로고침해 주세요.",
       cancel: "취소", clear: "지우기", recent: "최근 검색", findPh: "이번 회에서 찾기", close: "완료" },
-    ja: { tipFind: "このエピソード内を検索", tipXp: "文法・語彙", tipPrev: "前の行", tipNext: "次の行", tipPlay: "再生/一時停止", tipAgain: "この行をもう一度", tipSpeed: "再生速度", tipTr: "翻訳・文字サイズ", tipLang: "言語", tipRefresh: "更新", kbTitle: "キーボードショートカット", kbClose: "カード・メニューを閉じる", kbHelp: "この一覧を表示", kbLines: "前/次の行",
+    ja: { tipFind: "このエピソード内を検索", tipXp: "文法・語彙", tipPrev: "前の行", tipNext: "次の行", tipPlay: "再生/一時停止", tipAgain: "この行をもう一度", tipSpeed: "再生速度", speedLbl: "速度", tipTr: "翻訳・文字サイズ", tipLang: "言語", tipRefresh: "更新", kbTitle: "キーボードショートカット", kbClose: "カード・メニューを閉じる", kbHelp: "この一覧を表示", kbLines: "前/次の行",
       coach: "次は {e}", nextEp: "次のエピソード", skipT: "次のエピソードに進みますか？", skipB: "次は「{t}」。このエピソードの進捗は保存されます。", skipNoAsk: "今後は確認しない", cancel: "キャンセル", skip: "進む",
       lede: "日常会話を通して、西江大学の韓国語の表現・文法・語彙を学びましょう。エピソードを選ぶか、知りたいことを検索してください。", search: "ポッドキャストを検索", level: "レベル{n}", ready: "{a} / {b} 配信中",
       scriptOnly: "台本のみ", audioBy: "音声は{d}頃", done: "聴き終わり", left: "残り{t}", "new": "新着", preview: "プレビュー",
@@ -826,7 +828,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "タップすると意味と使い方が見られます。", example: "例文", notes: "メモ", inEp: "このエピソードでは",
       playFrom: "ここから再生", goLine: "この行へ", commentaryOnly: "場面の会話ではなく、解説の中で紹介しています。",
       lines: "{n}行", noMatch: "「{q}」を含む行はありません。", loadFail: "エピソード一覧を読み込めませんでした。下に引いて更新してください。", cancel: "キャンセル", clear: "消去", recent: "最近の検索", findPh: "このエピソード内を検索", close: "完了" },
-    zh: { tipFind: "在本集中查找", tipXp: "语法与词汇", tipPrev: "上一句", tipNext: "下一句", tipPlay: "播放/暂停", tipAgain: "重听这句", tipSpeed: "播放速度", tipTr: "翻译与字号", tipLang: "语言", tipRefresh: "刷新", kbTitle: "键盘快捷键", kbClose: "关闭卡片或菜单", kbHelp: "显示此列表", kbLines: "上一句/下一句",
+    zh: { tipFind: "在本集中查找", tipXp: "语法与词汇", tipPrev: "上一句", tipNext: "下一句", tipPlay: "播放/暂停", tipAgain: "重听这句", tipSpeed: "播放速度", speedLbl: "速度", tipTr: "翻译与字号", tipLang: "语言", tipRefresh: "刷新", kbTitle: "键盘快捷键", kbClose: "关闭卡片或菜单", kbHelp: "显示此列表", kbLines: "上一句/下一句",
       coach: "下一集：{e}", nextEp: "下一集", skipT: "跳到下一集吗？", skipB: "下一集：{t}。本集的进度会保存。", skipNoAsk: "不再提示", cancel: "取消", skip: "跳过",
       lede: "通过日常对话，学习西江韩语的表达、语法和词汇。挑一集开始听，或搜索想学的内容。", search: "搜索播客", level: "{n} 级", ready: "{a} / {b} 集可听",
       scriptOnly: "仅文本", audioBy: "音频预计{d}", done: "已听完", left: "剩余 {t}", "new": "新", preview: "预览",
@@ -837,7 +839,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "点击查看含义和用法。", example: "例句", notes: "笔记", inEp: "本集出现",
       playFrom: "从这里播放", goLine: "跳到该句", commentaryOnly: "只在讲解中出现，场景对话里没有用到。",
       lines: "{n} 句", noMatch: "没有找到包含“{q}”的句子。", loadFail: "无法加载节目列表，请下拉刷新。", cancel: "取消", clear: "清除", recent: "最近搜索", findPh: "在本集中查找", close: "完成" },
-    zt: { tipFind: "在本集中搜尋", tipXp: "文法與詞彙", tipPrev: "上一句", tipNext: "下一句", tipPlay: "播放/暫停", tipAgain: "重聽這句", tipSpeed: "播放速度", tipTr: "翻譯與字級", tipLang: "語言", tipRefresh: "重新整理", kbTitle: "鍵盤快捷鍵", kbClose: "關閉卡片或選單", kbHelp: "顯示此列表", kbLines: "上一句/下一句",
+    zt: { tipFind: "在本集中搜尋", tipXp: "文法與詞彙", tipPrev: "上一句", tipNext: "下一句", tipPlay: "播放/暫停", tipAgain: "重聽這句", tipSpeed: "播放速度", speedLbl: "速度", tipTr: "翻譯與字級", tipLang: "語言", tipRefresh: "重新整理", kbTitle: "鍵盤快捷鍵", kbClose: "關閉卡片或選單", kbHelp: "顯示此列表", kbLines: "上一句/下一句",
       coach: "下一集：{e}", nextEp: "下一集", skipT: "跳到下一集嗎？", skipB: "下一集：{t}。本集的進度會保存。", skipNoAsk: "不再提示", cancel: "取消", skip: "跳過",
       lede: "透過日常對話，學習西江韓語的表達、語法和詞彙。挑一集開始聽，或搜尋想學的內容。", search: "搜尋播客", level: "{n} 級", ready: "{a} / {b} 集可聽",
       scriptOnly: "僅文字", audioBy: "音訊預計{d}", done: "已聽完", left: "剩餘 {t}", "new": "新", preview: "預覽",
@@ -848,7 +850,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "點一下查看意思和用法。", example: "例句", notes: "筆記", inEp: "本集出現",
       playFrom: "從這裡播放", goLine: "跳到這句", commentaryOnly: "只在講解中出現，情境對話裡沒有用到。",
       lines: "{n} 句", noMatch: "找不到包含「{q}」的句子。", loadFail: "無法載入節目列表，請下拉重新整理。", cancel: "取消", clear: "清除", recent: "最近搜尋", findPh: "在本集中尋找", close: "完成" },
-    de: { tipFind: "In dieser Folge suchen", tipXp: "Grammatik & Wortschatz", tipPrev: "Vorherige Zeile", tipNext: "Nächste Zeile", tipPlay: "Wiedergabe / Pause", tipAgain: "Zeile wiederholen", tipSpeed: "Wiedergabetempo", tipTr: "Übersetzung & Textgröße", tipLang: "Sprache", tipRefresh: "Aktualisieren", kbTitle: "Tastenkürzel", kbClose: "Karte oder Menü schließen", kbHelp: "Diese Liste anzeigen", kbLines: "Vorherige / nächste Zeile",
+    de: { tipFind: "In dieser Folge suchen", tipXp: "Grammatik & Wortschatz", tipPrev: "Vorherige Zeile", tipNext: "Nächste Zeile", tipPlay: "Wiedergabe / Pause", tipAgain: "Zeile wiederholen", tipSpeed: "Wiedergabetempo", speedLbl: "Tempo", tipTr: "Übersetzung & Textgröße", tipLang: "Sprache", tipRefresh: "Aktualisieren", kbTitle: "Tastenkürzel", kbClose: "Karte oder Menü schließen", kbHelp: "Diese Liste anzeigen", kbLines: "Vorherige / nächste Zeile",
       coach: "Als Nächstes: {e}", nextEp: "Nächste Folge", skipT: "Zur nächsten Folge springen?", skipB: "Als Nächstes: {t}. Dein Fortschritt in dieser Folge wird gespeichert.", skipNoAsk: "Nicht mehr fragen", cancel: "Abbrechen", skip: "Springen",
       lede: "Lerne Ausdrücke, Grammatik und Wortschatz aus dem Sogang-Koreanisch in Alltagsgesprächen. Such dir eine Folge aus oder suche gezielt nach etwas.", search: "Podcasts durchsuchen", level: "Stufe {n}", ready: "{a} / {b} bereit",
       scriptOnly: "Nur Skript", audioBy: "Audio ab {d}", done: "Gehört", left: "noch {t}", "new": "Neu", preview: "Vorschau",
@@ -859,7 +861,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Tippe darauf, um Bedeutung und Verwendung zu sehen.", example: "Beispiel", notes: "Notizen", inEp: "In dieser Folge",
       playFrom: "Ab hier abspielen", goLine: "Zur Zeile", commentaryOnly: "Wird im Kommentar erklärt, kommt in der Szene aber nicht vor.",
       lines: "{n} Zeilen", noMatch: "Keine Zeile enthält „{q}“.", loadFail: "Die Folgenliste konnte nicht geladen werden. Zum Aktualisieren nach unten ziehen.", cancel: "Abbrechen", clear: "Löschen", recent: "Letzte Suchen", findPh: "In dieser Folge suchen", close: "Fertig" },
-    fr: { tipFind: "Rechercher dans l’épisode", tipXp: "Grammaire et vocabulaire", tipPrev: "Ligne précédente", tipNext: "Ligne suivante", tipPlay: "Lecture / pause", tipAgain: "Réécouter la ligne", tipSpeed: "Vitesse de lecture", tipTr: "Traduction et taille du texte", tipLang: "Langue", tipRefresh: "Actualiser", kbTitle: "Raccourcis clavier", kbClose: "Fermer une carte ou un menu", kbHelp: "Afficher cette liste", kbLines: "Ligne précédente / suivante",
+    fr: { tipFind: "Rechercher dans l’épisode", tipXp: "Grammaire et vocabulaire", tipPrev: "Ligne précédente", tipNext: "Ligne suivante", tipPlay: "Lecture / pause", tipAgain: "Réécouter la ligne", tipSpeed: "Vitesse de lecture", speedLbl: "Vitesse", tipTr: "Traduction et taille du texte", tipLang: "Langue", tipRefresh: "Actualiser", kbTitle: "Raccourcis clavier", kbClose: "Fermer une carte ou un menu", kbHelp: "Afficher cette liste", kbLines: "Ligne précédente / suivante",
       coach: "À suivre : {e}", nextEp: "Épisode suivant", skipT: "Passer à l’épisode suivant ?", skipB: "À suivre : {t}. Votre progression dans cet épisode est enregistrée.", skipNoAsk: "Ne plus demander", cancel: "Annuler", skip: "Passer",
       lede: "Apprenez les expressions, la grammaire et le vocabulaire du coréen de Sogang à travers des conversations du quotidien. Choisissez un épisode ou lancez une recherche.", search: "Rechercher des podcasts", level: "Niveau {n}", ready: "{a} / {b} disponibles",
       scriptOnly: "Texte seul", audioBy: "Audio vers le {d}", done: "Écouté", left: "encore {t}", "new": "Nouveau", preview: "Aperçu",
@@ -870,7 +872,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Touchez pour voir le sens et l’emploi.", example: "Exemple", notes: "Notes", inEp: "Dans cet épisode",
       playFrom: "Lire à partir d’ici", goLine: "Aller à la ligne", commentaryOnly: "Expliqué dans le commentaire, mais pas utilisé dans la scène.",
       lines: "{n} lignes", noMatch: "Aucune ligne ne contient « {q} ».", loadFail: "Impossible de charger la liste des épisodes. Tirez pour actualiser.", cancel: "Annuler", clear: "Effacer", recent: "Recherches récentes", findPh: "Chercher dans l’épisode", close: "OK" },
-    ru: { tipFind: "Найти в выпуске", tipXp: "Грамматика и лексика", tipPrev: "Предыдущая строка", tipNext: "Следующая строка", tipPlay: "Воспроизведение / пауза", tipAgain: "Повторить строку", tipSpeed: "Скорость", tipTr: "Перевод и размер текста", tipLang: "Язык", tipRefresh: "Обновить", kbTitle: "Сочетания клавиш", kbClose: "Закрыть карточку или меню", kbHelp: "Показать этот список", kbLines: "Предыдущая / следующая строка",
+    ru: { tipFind: "Найти в выпуске", tipXp: "Грамматика и лексика", tipPrev: "Предыдущая строка", tipNext: "Следующая строка", tipPlay: "Воспроизведение / пауза", tipAgain: "Повторить строку", tipSpeed: "Скорость", speedLbl: "Скорость", tipTr: "Перевод и размер текста", tipLang: "Язык", tipRefresh: "Обновить", kbTitle: "Сочетания клавиш", kbClose: "Закрыть карточку или меню", kbHelp: "Показать этот список", kbLines: "Предыдущая / следующая строка",
       coach: "Далее: {e}", nextEp: "Следующий выпуск", skipT: "Перейти к следующему выпуску?", skipB: "Далее: {t}. Прогресс в этом выпуске сохранится.", skipNoAsk: "Больше не спрашивать", cancel: "Отмена", skip: "Перейти",
       lede: "Учите выражения, грамматику и лексику корейского по Sogang в живых диалогах. Выберите выпуск или найдите что-нибудь через поиск.", search: "Поиск по подкастам", level: "Уровень {n}", ready: "готово {a} / {b}",
       scriptOnly: "Только текст", audioBy: "Аудио к {d}", done: "Прослушано", left: "осталось {t}", "new": "Новое", preview: "Превью",
@@ -881,7 +883,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Нажмите, чтобы увидеть значение и употребление.", example: "Пример", notes: "Заметки", inEp: "В этом выпуске",
       playFrom: "Слушать отсюда", goLine: "К строке", commentaryOnly: "Объясняется в комментарии, но в сцене не встречается.",
       lines: "Строк: {n}", noMatch: "Нет строк с «{q}».", loadFail: "Не удалось загрузить список выпусков. Потяните вниз, чтобы обновить.", cancel: "Отмена", clear: "Очистить", recent: "Недавние запросы", findPh: "Поиск в выпуске", close: "Готово" },
-    tr: { tipFind: "Bu bölümde ara", tipXp: "Dil bilgisi ve kelimeler", tipPrev: "Önceki satır", tipNext: "Sonraki satır", tipPlay: "Oynat / duraklat", tipAgain: "Satırı tekrar dinle", tipSpeed: "Oynatma hızı", tipTr: "Çeviri ve yazı boyutu", tipLang: "Dil", tipRefresh: "Yenile", kbTitle: "Klavye kısayolları", kbClose: "Kartı veya menüyü kapat", kbHelp: "Bu listeyi göster", kbLines: "Önceki / sonraki satır",
+    tr: { tipFind: "Bu bölümde ara", tipXp: "Dil bilgisi ve kelimeler", tipPrev: "Önceki satır", tipNext: "Sonraki satır", tipPlay: "Oynat / duraklat", tipAgain: "Satırı tekrar dinle", tipSpeed: "Oynatma hızı", speedLbl: "Hız", tipTr: "Çeviri ve yazı boyutu", tipLang: "Dil", tipRefresh: "Yenile", kbTitle: "Klavye kısayolları", kbClose: "Kartı veya menüyü kapat", kbHelp: "Bu listeyi göster", kbLines: "Önceki / sonraki satır",
       coach: "Sıradaki: {e}", nextEp: "Sonraki bölüm", skipT: "Sonraki bölüme geçilsin mi?", skipB: "Sıradaki: {t}. Bu bölümdeki ilerlemen kaydedilir.", skipNoAsk: "Bir daha sorma", cancel: "Vazgeç", skip: "Geç",
       lede: "Sogang Korece ifadelerini, dilbilgisini ve kelimelerini günlük konuşmalarla öğrenin. Başlamak için bir bölüm seçin ya da bir şey arayın.", search: "Podcast ara", level: "Seviye {n}", ready: "{a} / {b} hazır",
       scriptOnly: "Yalnızca metin", audioBy: "Ses {d} civarı", done: "Bitti", left: "{t} kaldı", "new": "Yeni", preview: "Önizleme",
@@ -892,7 +894,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Anlamını ve nasıl kullanıldığını görmek için dokunun.", example: "Örnek", notes: "Notlar", inEp: "Bu bölümde",
       playFrom: "Buradan oynat", goLine: "Satıra git", commentaryOnly: "Sahnede geçmiyor, yorum kısmında açıklanıyor.",
       lines: "{n} satır", noMatch: "“{q}” ile eşleşen satır yok.", loadFail: "Bölüm listesi yüklenemedi. Yenilemek için aşağı çekin.", cancel: "Vazgeç", clear: "Temizle", recent: "Son aramalar", findPh: "Bu bölümde ara", close: "Bitti" },
-    vi: { tipFind: "Tìm trong tập này", tipXp: "Ngữ pháp & từ vựng", tipPrev: "Dòng trước", tipNext: "Dòng sau", tipPlay: "Phát / tạm dừng", tipAgain: "Nghe lại dòng này", tipSpeed: "Tốc độ phát", tipTr: "Bản dịch & cỡ chữ", tipLang: "Ngôn ngữ", tipRefresh: "Làm mới", kbTitle: "Phím tắt", kbClose: "Đóng thẻ hoặc menu", kbHelp: "Hiện danh sách này", kbLines: "Dòng trước / sau",
+    vi: { tipFind: "Tìm trong tập này", tipXp: "Ngữ pháp & từ vựng", tipPrev: "Dòng trước", tipNext: "Dòng sau", tipPlay: "Phát / tạm dừng", tipAgain: "Nghe lại dòng này", tipSpeed: "Tốc độ phát", speedLbl: "Tốc độ", tipTr: "Bản dịch & cỡ chữ", tipLang: "Ngôn ngữ", tipRefresh: "Làm mới", kbTitle: "Phím tắt", kbClose: "Đóng thẻ hoặc menu", kbHelp: "Hiện danh sách này", kbLines: "Dòng trước / sau",
       coach: "Tiếp theo: {e}", nextEp: "Tập tiếp theo", skipT: "Chuyển sang tập tiếp theo?", skipB: "Tiếp theo: {t}. Tiến độ của bạn ở tập này sẽ được lưu.", skipNoAsk: "Không hỏi lại", cancel: "Hủy", skip: "Chuyển",
       lede: "Học biểu hiện, ngữ pháp và từ vựng tiếng Hàn Sogang qua những cuộc trò chuyện đời thường. Chọn một tập để bắt đầu, hoặc tìm kiếm điều bạn muốn học.", search: "Tìm podcast", level: "Cấp {n}", ready: "{a} / {b} tập sẵn sàng",
       scriptOnly: "Chỉ có lời thoại", audioBy: "Âm thanh khoảng {d}", done: "Đã nghe", left: "còn {t}", "new": "Mới", preview: "Nghe thử",
@@ -903,7 +905,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       sheetH: "Chạm để xem nghĩa và cách dùng.", example: "Ví dụ", notes: "Ghi chú", inEp: "Trong tập này",
       playFrom: "Phát từ đây", goLine: "Đến dòng này", commentaryOnly: "Được giải thích trong phần bình luận, không xuất hiện trong cảnh.",
       lines: "{n} dòng", noMatch: "Không có dòng nào khớp với “{q}”.", loadFail: "Không tải được danh sách tập. Kéo xuống để làm mới.", cancel: "Hủy", clear: "Xóa", recent: "Tìm kiếm gần đây", findPh: "Tìm trong tập này", close: "Xong" },
-    th: { tipFind: "ค้นหาในตอนนี้", tipXp: "ไวยากรณ์และคำศัพท์", tipPrev: "บรรทัดก่อนหน้า", tipNext: "บรรทัดถัดไป", tipPlay: "เล่น / หยุดชั่วคราว", tipAgain: "ฟังบรรทัดนี้อีกครั้ง", tipSpeed: "ความเร็วในการเล่น", tipTr: "คำแปลและขนาดตัวอักษร", tipLang: "ภาษา", tipRefresh: "รีเฟรช", kbTitle: "แป้นพิมพ์ลัด", kbClose: "ปิดการ์ดหรือเมนู", kbHelp: "แสดงรายการนี้", kbLines: "บรรทัดก่อน / ถัดไป",
+    th: { tipFind: "ค้นหาในตอนนี้", tipXp: "ไวยากรณ์และคำศัพท์", tipPrev: "บรรทัดก่อนหน้า", tipNext: "บรรทัดถัดไป", tipPlay: "เล่น / หยุดชั่วคราว", tipAgain: "ฟังบรรทัดนี้อีกครั้ง", tipSpeed: "ความเร็วในการเล่น", speedLbl: "ความเร็ว", tipTr: "คำแปลและขนาดตัวอักษร", tipLang: "ภาษา", tipRefresh: "รีเฟรช", kbTitle: "แป้นพิมพ์ลัด", kbClose: "ปิดการ์ดหรือเมนู", kbHelp: "แสดงรายการนี้", kbLines: "บรรทัดก่อน / ถัดไป",
       coach: "ตอนถัดไป: {e}", nextEp: "ตอนถัดไป", skipT: "ข้ามไปตอนถัดไปไหม", skipB: "ตอนถัดไป: {t} ความคืบหน้าในตอนนี้จะถูกบันทึกไว้", skipNoAsk: "ไม่ต้องถามอีก", cancel: "ยกเลิก", skip: "ข้าม",
       lede: "เรียนสำนวน ไวยากรณ์ และคำศัพท์ภาษาเกาหลีของซอกังผ่านบทสนทนาในชีวิตประจำวัน เลือกตอนที่อยากฟัง หรือค้นหาสิ่งที่อยากรู้ได้เลย", search: "ค้นหาพอดแคสต์", level: "ระดับ {n}", ready: "พร้อมฟัง {a} / {b}",
       scriptOnly: "มีแค่บท", audioBy: "เสียงราว {d}", done: "ฟังจบแล้ว", left: "เหลือ {t}", "new": "ใหม่", preview: "ตัวอย่าง",
@@ -1295,8 +1297,20 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     return null;
   }
   // tooltips: localised label + its key, on the icon buttons (CSS shows them on mouse hover only)
+  // player bar labels: show them only when they fit their column, so play stays centred in every language
+  function fitLabels() {
+    var tp = $("transport"); if (!tp) return;
+    tp.classList.remove("fitl", "fitr");
+    [["fitr", ".ctrls .side.right"], ["fitl", ".ctrls .side:not(.right)"]].forEach(function (x) {
+      var sd = tp.querySelector(x[1]); if (!sd || !sd.offsetWidth) return;
+      var need = 0, cs = getComputedStyle(sd), gap = parseFloat(cs.columnGap) || 0;
+      [].forEach.call(sd.children, function (c, i) { need += c.getBoundingClientRect().width + (i ? gap : 0); });
+      if (need > sd.clientWidth + 0.5) tp.classList.add(x[0]);
+    });
+  }
   function setTips() {
     document.querySelectorAll(".tx[data-t]").forEach(function (el) { el.textContent = T(el.dataset.t); });
+    fitLabels();
     [["findbtn", "tipFind"], ["xpbtn", "tipXp"], ["prev", "tipPrev", "←", 1], ["next", "tipNext", "→", 1], ["play", "tipPlay", "Space", 1],
      ["again", "tipAgain", "R", 1, 1], ["nextep", "nextEp", "", 1], ["speed", "tipSpeed", "", 1], ["enbtn", "tipTr", "", 1], ["langbtn", "tipLang"],
      ["refresh", "tipRefresh", "", 0, 1], ["kbbtn", "kbTitle", "?", 1, 1]].forEach(function (t) {
@@ -1479,6 +1493,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   applyPrefs();
   // the pill and the speed menu sit just above the player bar, whatever its height (mini player, safe area)
+  if (window.ResizeObserver) new ResizeObserver(function () { fitLabels(); }).observe($("transport"));
   if (window.ResizeObserver) new ResizeObserver(function (en) { document.documentElement.style.setProperty("--tp", Math.round(en[0].target.getBoundingClientRect().height) + "px"); }).observe($("transport"));
   ["wheel", "touchmove"].forEach(function (evn) { window.addEventListener(evn, function () { if (!autoScrolling && !swiping) userScrolledAt = Date.now(); }, { passive: true }); });
   $("backnow").addEventListener("click", function () { userScrolledAt = 0; setCurrent(cur, true); });
