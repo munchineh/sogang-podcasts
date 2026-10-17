@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="35de5ef22731">
+<html lang="ko" data-build="feb5a5bdc80b">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1183,10 +1183,11 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       dim.style.cssText = "position:fixed;inset:0;z-index:1;background:rgba(10,10,20,.12);pointer-events:none";
       document.body.appendChild(dim);
       Lst.hidden = false;
-      // pin the list exactly where it sits in the page: body keeps its default 8px side margins, so left:0/right:0 made the
-      // cards 16px wider during the swipe and they snapped narrower when it finished
-      var bb = document.body.getBoundingClientRect();
-      Lst.style.cssText = "position:fixed;left:" + bb.left + "px;right:" + (document.documentElement.clientWidth - bb.right) + "px;top:" + (-listY) + "px;z-index:0;pointer-events:none;will-change:transform";
+      // pin the list exactly where it sits in the page (body keeps its default 8px side margins and the list is a centred,
+      // max-width column): left:0/right:0 made the cards 16px wider during the swipe and they snapped narrower when it ended
+      var bb = document.body.getBoundingClientRect(), cs = getComputedStyle(Lst), pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+      var cw = Math.min(parseFloat(cs.maxWidth) || 1e9, bb.width - pad), lx = bb.left + (bb.width - cw - pad) / 2;
+      Lst.style.cssText = "position:fixed;margin:0;left:" + lx + "px;width:" + cw + "px;top:" + (-listY) + "px;z-index:0;pointer-events:none;will-change:transform";
       P.style.cssText = "position:relative;z-index:2;background:var(--bg);min-height:100vh;box-shadow:-10px 0 28px rgba(10,10,20,.16);will-change:transform";
       paint();
     }
