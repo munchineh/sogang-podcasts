@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="3c60ca7ce4e7">
+<html lang="ko" data-build="ae5b3d40844c">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -388,7 +388,10 @@ body.findtype .transport { transform: translateY(110%); }
 .transport .wrap { padding-block: 18px 14px; padding-inline: max(14px, env(safe-area-inset-left, 0px)); display: grid; gap: 17px; }
 .seek { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; font: 500 11.5px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
 .nowpl { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; font: 600 13.5px var(--f-body); color: var(--ink); margin-bottom: -6px; }
-.nowpl b { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; }
+.nowpl b { flex: 0 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; }
+/* the title in the chosen translation language follows the Korean one (none when no translation is picked); it gives way first */
+.nowpl .nowsub { flex: 1 1 0; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: 500 13px var(--f-latin); color: var(--muted); }
+.nowpl .nowsub:empty { display: none; }
 .nowpl .nowtag { flex: none; font: 600 11px/1 var(--f-mono); letter-spacing: .02em; color: var(--accent); background: var(--accent-soft); padding: 6px 7px 4px; border-radius: 6px; }   /* the mono caps ride high: 1px more on top centres them */
 .nowpl svg { width: 16px; height: 16px; color: var(--muted); flex: none; }
 .nowpl .eq { display: inline-flex; gap: 2px; align-items: flex-end; height: 12px; flex: none; }
@@ -830,7 +833,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 </section>
   <div class="speedmenu" id="speedmenu" role="menu" aria-label="Playback speed" hidden></div>
   <footer class="transport" id="transport" hidden><div class="wrap">
-    <button class="nowpl" id="nowpl" hidden><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="nowtag" id="nowtag"></span><b id="nowtxt"></b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+    <button class="nowpl" id="nowpl" hidden><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="nowtag" id="nowtag"></span><b id="nowtxt"></b><span class="nowsub" id="nowsub"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
     <div class="seek"><span id="cur">0:00</span><span class="rng" id="rng"><input type="range" id="pos" min="0" max="1000" value="0" aria-label="Position"><i class="thumb" aria-hidden="true"></i></span><span id="tot">0:00</span></div>
     <div class="ctrls">
       <div class="side"><button class="speed" id="speed" aria-label="Playback speed"><span class="lb">1×</span><span class="tx" data-t="speedLbl"></span></button>
@@ -1124,7 +1127,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       document.body.classList.remove("mini"); $("nowpl").hidden = true; $("transport").hidden = false; $("player").querySelector(".top").classList.remove("away");
       $("epno").textContent = epLabel(d) + (d.partial ? " · " + T("preview") : "");
       $("eptitle").textContent = d.title;
-      $("nowtag").textContent = epLabel(d).replace(" · ", " "); $("nowtxt").textContent = d.title;   // the player bar's now-playing row (always on desktop)
+      $("nowtag").textContent = epLabel(d).replace(" · ", " "); $("nowtxt").textContent = d.title; $("nowsub").innerHTML = subTitle(d);   // the player bar's now-playing row (always on desktop)
       $("eptitle_en").innerHTML = subTitle(d);
       var html = "", sec = null;
       d.lines.forEach(function (l, i) {
@@ -1270,7 +1273,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     $("backnow").hidden = true; $("player").hidden = true; $("list").hidden = false;
     document.body.classList.toggle("mini", !!keep); $("transport").hidden = !keep; $("nowpl").hidden = !keep;
     if (keep && !REDUCED.matches && $("transport").animate) $("transport").animate([{ transform: "translateY(100%)" }, { transform: "none" }], { duration: 560, easing: SPRING_SHEET || "cubic-bezier(.22,1,.36,1)" });
-    if (keep) { $("nowtag").textContent = epLabel(ep).replace(" · ", " "); $("nowtxt").textContent = ep.title; }
+    if (keep) { $("nowtag").textContent = epLabel(ep).replace(" · ", " "); $("nowtxt").textContent = ep.title; $("nowsub").innerHTML = subTitle(ep); }
     document.body.classList.toggle("searching", !!$("q").value.trim());
     renderList(); runSearch(); window.scrollTo(0, listY);
   }
@@ -1631,7 +1634,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     if ($("q").value.trim()) runSearch();
     if (!ep) return;
     $("epno").textContent = epLabel(ep) + (ep.partial ? " · " + T("preview") : "");
-    $("eptitle_en").innerHTML = subTitle(ep);
+    $("eptitle_en").innerHTML = subTitle(ep); $("nowsub").innerHTML = subTitle(ep);
     var ov = $("ov"); if (ov) ov.outerHTML = ovHtml(ep);
     var bn = $("banner"); if (bn) bn.outerHTML = bannerHtml(ep);
     renderXp();
