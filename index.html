@@ -1503,6 +1503,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     setTimeout(function () { dlg.hidden = true; dlg.classList.remove("closing"); }, 200);
   }
   $("nextep").addEventListener("click", function () {
+    if (cdTimer) { var cn = cdNext; hideCoach(); openEp(cn.ep, null, true); return; }   // countdown running: skip now, keep playing
     hideCoach(); var n = nextReady(); if (!n) return;
     var t = audio.currentTime || 0, d = audio.duration || ep.dur || 0;
     if (store.get("skipNoAsk", false) || t < 5 || (d && t > d - 15)) { goNext(n); return; }
@@ -1556,7 +1557,9 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     for (var j = k + 1; k >= 0 && j < index.length; j++) if (index[j].ready && !index[j].partial) return index[j];
     return null;
   }
-  $("coachgo").addEventListener("click", function () { var a = cdNext, n = a || nextReady(); hideCoach(); if (!n) return; if (a) openEp(n.ep, null, true); else goNext(n); });
+  // during the countdown the whole bubble is a cancel button (the skip button below it goes straight to the next episode);
+  // otherwise tapping the bubble opens the next episode
+  $("coachgo").addEventListener("click", function () { if (cdTimer) { hideCoach(); return; } var n = nextReady(); hideCoach(); if (n) goNext(n); });
   $("coachx").addEventListener("click", function (ev) { ev.stopPropagation(); hideCoach(); });
   // the bubble sits over the end of the progress row: a tap anywhere else puts the plain "up next" bubble away (a countdown keeps going)
   document.addEventListener("pointerdown", function (ev) {
