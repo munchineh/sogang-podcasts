@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="3283740cce56">
+<html lang="ko" data-build="42593209fa18">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -567,6 +567,10 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .xpf .dd[disabled] { opacity: .4; }
 .xpf .clr { margin-left: auto; height: 32px; padding: 0 4px; font: 600 13px var(--f-body); color: var(--accent); }
 .xpf .clr[hidden] { display: none; }
+.xpf .clr svg { display: none; width: 16px; height: 16px; }
+/* not enough room for the word (long languages, narrow screens): the clear button becomes a round × */
+.xpf.tight .clr { width: 32px; padding: 0; border-radius: 50%; background: var(--accent-soft); display: grid; place-items: center; }
+.xpf.tight .clr span { display: none; } .xpf.tight .clr svg { display: block; }
 .xpf .pop { position: absolute; top: 38px; z-index: 4; min-width: 150px; max-height: 280px; overflow-y: auto; padding: 6px; display: grid; gap: 2px;
   background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; box-shadow: 0 10px 30px rgba(10,10,20,.18); }
 .xpf .pop button { height: 40px; border-radius: 8px; padding: 0 12px; display: flex; justify-content: space-between; align-items: center; gap: 16px;
@@ -876,7 +880,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       coach: "Další: {e}", nextEp: "Další epizoda", skipT: "Přeskočit na další epizodu?", skipB: "Další: {t}. Váš postup v této epizodě je uložený.", skipNoAsk: "Už se neptat", cancel: "Zrušit", skip: "Přeskočit",
       lede: "Každodenní korejské rozhovory podle osnov Sogang. Vyberte si epizodu, nebo něco vyhledejte.", search: "Hledat v podcastech", level: "Úroveň {n}", ready: "Hotovo {a} z {b}",
       scriptOnly: "Jen text", audioBy: "Zvuk do {d}", done: "Dokončeno", left: "zbývá {t}", "new": "Nové", preview: "Ukázka",
-      about: "O této epizodě", more: "Zobrazit víc", less: "Zobrazit méně", setting: "Prostředí", formality: "Míra zdvořilosti", topics: "Témata", xpTitle: "Gramatika, výrazy a slovíčka v této epizodě", fType: "Typ", fBook: "Učebnice", fUnit: "Lekce", fAll: "Vše", tyG: "Gramatika", tyV: "Slovíčka", tyE: "Výrazy", tyX: "Navíc", unitN: "Lekce {n}", fClear: "Zrušit vše", fNone: "Těmto filtrům nic neodpovídá.", secG: "Gramatika a výrazy", secV: "Slovíčka", inComm: "Výklad", bookFirst: "Nejdřív vyberte učebnici", items: "Gramatika a slovíčka", seeAll: "Zobrazit vše",
+      about: "O této epizodě", more: "Zobrazit víc", less: "Zobrazit méně", setting: "Prostředí", formality: "Míra zdvořilosti", topics: "Témata", xpTitle: "Gramatika, výrazy a slovíčka v této epizodě", fType: "Typ", fBook: "Učebnice", fUnit: "Lekce", fAll: "Vše", tyG: "Gramatika", tyV: "Slovíčka", tyE: "Výrazy", tyX: "Navíc", unitN: "Lekce {n}", fClear: "Zrušit", fNone: "Těmto filtrům nic neodpovídá.", secG: "Gramatika a výrazy", secV: "Slovíčka", inComm: "Výklad", bookFirst: "Nejdřív vyberte učebnici", items: "Gramatika a slovíčka", seeAll: "Zobrazit vše",
       bannerNone: "Zvuk k této epizodě ještě není nahraný. Text si můžete přečíst už teď a zvuk se tu přehraje, jakmile bude hotový.",
       bannerPartial: "Ukázka: zatím je nahraná jen první část. Šedé řádky ještě zvuk nemají.",
       backNow: "Zpět na aktuální řádek", translation: "Překlad", textSize: "Velikost textu", "default": "Výchozí", none: "Žádný",
@@ -888,7 +892,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       coach: "Up next: {e}", nextEp: "Next episode", skipT: "Skip to the next episode?", skipB: "Up next: {t}. Your progress on this episode is saved.", skipNoAsk: "Don’t ask again", cancel: "Cancel", skip: "Skip",
       lede: "Everyday Korean conversations based on the Sogang syllabus. Pick an episode or search for something.", search: "Search podcasts", level: "Level {n}", ready: "{a} / {b} ready",
       scriptOnly: "Script only", audioBy: "Audio by {d}", done: "Done", left: "{t} left", "new": "New", preview: "Preview",
-      about: "About this episode", more: "Show more", less: "Show less", setting: "Setting", formality: "Formality", topics: "Topics", xpTitle: "Grammar, expressions & vocab in this episode", fType: "Type", fBook: "Book", fUnit: "Unit", fAll: "All", tyG: "Grammar", tyV: "Vocab", tyE: "Expressions", tyX: "Extra", unitN: "Unit {n}", fClear: "Clear all", fNone: "Nothing matches these filters.", secG: "Grammar & expressions", secV: "Vocab", inComm: "Commentary", bookFirst: "Pick a book first", items: "Grammar & Vocab", seeAll: "See all",
+      about: "About this episode", more: "Show more", less: "Show less", setting: "Setting", formality: "Formality", topics: "Topics", xpTitle: "Grammar, expressions & vocab in this episode", fType: "Type", fBook: "Book", fUnit: "Unit", fAll: "All", tyG: "Grammar", tyV: "Vocab", tyE: "Expressions", tyX: "Extra", unitN: "Unit {n}", fClear: "Clear", fNone: "Nothing matches these filters.", secG: "Grammar & expressions", secV: "Vocab", inComm: "Commentary", bookFirst: "Pick a book first", items: "Grammar & Vocab", seeAll: "See all",
       bannerNone: "Audio for this episode isn’t recorded yet. You can read the script now, and it will play here once it’s ready.",
       bannerPartial: "Preview: Only the first part is recorded so far. Greyed lines don’t have audio yet.",
       backNow: "Back to the current line", translation: "Translation", textSize: "Text size", "default": "Default", none: "None",
@@ -912,7 +916,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       coach: "次は {e}", nextEp: "次のエピソード", skipT: "次のエピソードに進みますか？", skipB: "次は「{t}」。このエピソードの進捗は保存されます。", skipNoAsk: "今後は確認しない", cancel: "キャンセル", skip: "進む",
       lede: "西江大学のカリキュラムに基づいた日常の韓国語会話。エピソードを選ぶか、検索してください。", search: "ポッドキャストを検索", level: "レベル{n}", ready: "{a} / {b} 配信中",
       scriptOnly: "台本のみ", audioBy: "音声は{d}頃", done: "聴き終わり", left: "残り{t}", "new": "新着", preview: "プレビュー",
-      about: "このエピソードについて", more: "もっと見る", less: "閉じる", setting: "場面", formality: "話し方", topics: "テーマ", xpTitle: "この回の文法・表現・語彙", fType: "種類", fBook: "教科書", fUnit: "課", fAll: "すべて", tyG: "文法", tyV: "語彙", tyE: "表現", tyX: "追加", unitN: "第{n}課", fClear: "すべてクリア", fNone: "条件に合う項目がありません。", secG: "文法・表現", secV: "語彙", inComm: "解説", bookFirst: "先に教科書を選んでください", items: "文法・語彙", seeAll: "すべて見る",
+      about: "このエピソードについて", more: "もっと見る", less: "閉じる", setting: "場面", formality: "話し方", topics: "テーマ", xpTitle: "この回の文法・表現・語彙", fType: "種類", fBook: "教科書", fUnit: "課", fAll: "すべて", tyG: "文法", tyV: "語彙", tyE: "表現", tyX: "追加", unitN: "第{n}課", fClear: "クリア", fNone: "条件に合う項目がありません。", secG: "文法・表現", secV: "語彙", inComm: "解説", bookFirst: "先に教科書を選んでください", items: "文法・語彙", seeAll: "すべて見る",
       bannerNone: "このエピソードの音声はまだ収録されていません。台本は今すぐ読めます。音声ができ次第ここで再生できます。",
       bannerPartial: "プレビュー：今は最初の部分だけ収録済みです。グレーの行にはまだ音声がありません。",
       backNow: "再生中の行に戻る", translation: "翻訳", textSize: "文字サイズ", "default": "標準", none: "なし",
@@ -923,7 +927,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       coach: "下一集：{e}", nextEp: "下一集", skipT: "跳到下一集吗？", skipB: "下一集：{t}。本集的进度会保存。", skipNoAsk: "不再提示", cancel: "取消", skip: "跳过",
       lede: "基于西江课程的日常韩语对话。挑一集来听，或搜索内容。", search: "搜索播客", level: "{n} 级", ready: "{a} / {b} 集可听",
       scriptOnly: "仅文本", audioBy: "音频预计{d}", done: "已听完", left: "剩余 {t}", "new": "新", preview: "预览",
-      about: "本集简介", more: "展开", less: "收起", setting: "场景", formality: "语体", topics: "主题", xpTitle: "本集语法 · 表达 · 词汇", fType: "类型", fBook: "教材", fUnit: "单元", fAll: "全部", tyG: "语法", tyV: "词汇", tyE: "表达", tyX: "补充", unitN: "第{n}课", fClear: "全部清除", fNone: "没有符合条件的项目。", secG: "语法 · 表达", secV: "词汇", inComm: "讲解", bookFirst: "请先选择教材", items: "语法词汇", seeAll: "查看全部",
+      about: "本集简介", more: "展开", less: "收起", setting: "场景", formality: "语体", topics: "主题", xpTitle: "本集语法 · 表达 · 词汇", fType: "类型", fBook: "教材", fUnit: "单元", fAll: "全部", tyG: "语法", tyV: "词汇", tyE: "表达", tyX: "补充", unitN: "第{n}课", fClear: "清除", fNone: "没有符合条件的项目。", secG: "语法 · 表达", secV: "词汇", inComm: "讲解", bookFirst: "请先选择教材", items: "语法词汇", seeAll: "查看全部",
       bannerNone: "本集音频尚未录制。现在可以先阅读脚本，录好后即可在此播放。",
       bannerPartial: "预览：目前只录了第一部分，灰色的句子还没有音频。",
       backNow: "回到当前句", translation: "翻译", textSize: "字号", "default": "默认", none: "无",
@@ -934,7 +938,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       coach: "下一集：{e}", nextEp: "下一集", skipT: "跳到下一集嗎？", skipB: "下一集：{t}。本集的進度會保存。", skipNoAsk: "不再提示", cancel: "取消", skip: "跳過",
       lede: "以西江課程為基礎的日常韓語對話。挑一集來聽，或搜尋內容。", search: "搜尋播客", level: "{n} 級", ready: "{a} / {b} 集可聽",
       scriptOnly: "僅文字", audioBy: "音訊預計{d}", done: "已聽完", left: "剩餘 {t}", "new": "新", preview: "預覽",
-      about: "本集簡介", more: "展開", less: "收合", setting: "場景", formality: "語體", topics: "主題", xpTitle: "本集語法 · 表達 · 詞彙", fType: "類型", fBook: "教材", fUnit: "單元", fAll: "全部", tyG: "語法", tyV: "詞彙", tyE: "表達", tyX: "補充", unitN: "第{n}課", fClear: "全部清除", fNone: "沒有符合條件的項目。", secG: "語法 · 表達", secV: "詞彙", inComm: "講解", bookFirst: "請先選擇教材", items: "語法詞彙", seeAll: "查看全部",
+      about: "本集簡介", more: "展開", less: "收合", setting: "場景", formality: "語體", topics: "主題", xpTitle: "本集語法 · 表達 · 詞彙", fType: "類型", fBook: "教材", fUnit: "單元", fAll: "全部", tyG: "語法", tyV: "詞彙", tyE: "表達", tyX: "補充", unitN: "第{n}課", fClear: "清除", fNone: "沒有符合條件的項目。", secG: "語法 · 表達", secV: "詞彙", inComm: "講解", bookFirst: "請先選擇教材", items: "語法詞彙", seeAll: "查看全部",
       bannerNone: "本集音訊尚未錄製。現在可以先閱讀腳本，錄好後就能在這裡播放。",
       bannerPartial: "預覽：目前只錄了第一部分，灰色的句子還沒有音訊。",
       backNow: "回到目前這句", translation: "翻譯", textSize: "字級", "default": "預設", none: "無",
@@ -945,7 +949,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       coach: "Als Nächstes: {e}", nextEp: "Nächste Folge", skipT: "Zur nächsten Folge springen?", skipB: "Als Nächstes: {t}. Dein Fortschritt in dieser Folge wird gespeichert.", skipNoAsk: "Nicht mehr fragen", cancel: "Abbrechen", skip: "Springen",
       lede: "Koreanische Alltagsgespräche nach dem Sogang-Lehrplan. Wähle eine Folge oder suche etwas.", search: "Podcasts durchsuchen", level: "Stufe {n}", ready: "{a} / {b} bereit",
       scriptOnly: "Nur Skript", audioBy: "Audio ab {d}", done: "Gehört", left: "noch {t}", "new": "Neu", preview: "Vorschau",
-      about: "Über diese Folge", more: "Mehr", less: "Weniger", setting: "Schauplatz", formality: "Sprachebene", topics: "Themen", xpTitle: "Grammatik, Ausdrücke & Wortschatz dieser Folge", fType: "Art", fBook: "Buch", fUnit: "Lektion", fAll: "Alle", tyG: "Grammatik", tyV: "Wortschatz", tyE: "Ausdrücke", tyX: "Extra", unitN: "Lektion {n}", fClear: "Alle zurücksetzen", fNone: "Keine Treffer für diese Filter.", secG: "Grammatik & Ausdrücke", secV: "Wortschatz", inComm: "Kommentar", bookFirst: "Erst ein Buch wählen", items: "Lernpunkte", seeAll: "Alle ansehen",
+      about: "Über diese Folge", more: "Mehr", less: "Weniger", setting: "Schauplatz", formality: "Sprachebene", topics: "Themen", xpTitle: "Grammatik, Ausdrücke & Wortschatz dieser Folge", fType: "Art", fBook: "Buch", fUnit: "Lektion", fAll: "Alle", tyG: "Grammatik", tyV: "Wortschatz", tyE: "Ausdrücke", tyX: "Extra", unitN: "Lektion {n}", fClear: "Zurücksetzen", fNone: "Keine Treffer für diese Filter.", secG: "Grammatik & Ausdrücke", secV: "Wortschatz", inComm: "Kommentar", bookFirst: "Erst ein Buch wählen", items: "Lernpunkte", seeAll: "Alle ansehen",
       bannerNone: "Für diese Folge gibt es noch keine Aufnahme. Du kannst das Skript schon lesen, und sobald sie fertig ist, läuft sie hier.",
       bannerPartial: "Vorschau: Bisher ist nur der erste Teil aufgenommen. Ausgegraute Zeilen haben noch kein Audio.",
       backNow: "Zurück zur aktuellen Zeile", translation: "Übersetzung", textSize: "Textgröße", "default": "Standard", none: "Keine",
@@ -956,7 +960,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       coach: "À suivre : {e}", nextEp: "Épisode suivant", skipT: "Passer à l’épisode suivant ?", skipB: "À suivre : {t}. Votre progression dans cet épisode est enregistrée.", skipNoAsk: "Ne plus demander", cancel: "Annuler", skip: "Passer",
       lede: "Des conversations coréennes du quotidien basées sur le programme de Sogang. Choisissez un épisode ou lancez une recherche.", search: "Rechercher des podcasts", level: "Niveau {n}", ready: "{a} / {b} disponibles",
       scriptOnly: "Texte seul", audioBy: "Audio vers le {d}", done: "Écouté", left: "encore {t}", "new": "Nouveau", preview: "Aperçu",
-      about: "À propos de cet épisode", more: "Plus", less: "Moins", setting: "Cadre", formality: "Registre", topics: "Thèmes", xpTitle: "Grammaire, expressions et vocabulaire de l’épisode", fType: "Type", fBook: "Manuel", fUnit: "Leçon", fAll: "Tout", tyG: "Grammaire", tyV: "Vocabulaire", tyE: "Expressions", tyX: "Extra", unitN: "Leçon {n}", fClear: "Tout effacer", fNone: "Aucun élément ne correspond à ces filtres.", secG: "Grammaire et expressions", secV: "Vocabulaire", inComm: "Commentaire", bookFirst: "Choisissez d’abord un manuel", items: "À apprendre", seeAll: "Tout voir",
+      about: "À propos de cet épisode", more: "Plus", less: "Moins", setting: "Cadre", formality: "Registre", topics: "Thèmes", xpTitle: "Grammaire, expressions et vocabulaire de l’épisode", fType: "Type", fBook: "Manuel", fUnit: "Leçon", fAll: "Tout", tyG: "Grammaire", tyV: "Vocabulaire", tyE: "Expressions", tyX: "Extra", unitN: "Leçon {n}", fClear: "Effacer", fNone: "Aucun élément ne correspond à ces filtres.", secG: "Grammaire et expressions", secV: "Vocabulaire", inComm: "Commentaire", bookFirst: "Choisissez d’abord un manuel", items: "À apprendre", seeAll: "Tout voir",
       bannerNone: "L’audio de cet épisode n’est pas encore enregistré. Vous pouvez déjà lire le texte ; il sera lu ici dès qu’il sera prêt.",
       bannerPartial: "Aperçu : seule la première partie est enregistrée pour l’instant. Les lignes grisées n’ont pas encore d’audio.",
       backNow: "Revenir à la ligne en cours", translation: "Traduction", textSize: "Taille du texte", "default": "Normale", none: "Aucune",
@@ -967,7 +971,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       coach: "Далее: {e}", nextEp: "Следующий выпуск", skipT: "Перейти к следующему выпуску?", skipB: "Далее: {t}. Прогресс в этом выпуске сохранится.", skipNoAsk: "Больше не спрашивать", cancel: "Отмена", skip: "Перейти",
       lede: "Повседневные диалоги на корейском по программе Sogang. Выберите выпуск или воспользуйтесь поиском.", search: "Поиск по подкастам", level: "Уровень {n}", ready: "готово {a} / {b}",
       scriptOnly: "Только текст", audioBy: "Аудио к {d}", done: "Прослушано", left: "осталось {t}", "new": "Новое", preview: "Превью",
-      about: "Об этом выпуске", more: "Ещё", less: "Свернуть", setting: "Место действия", formality: "Стиль речи", topics: "Темы", xpTitle: "Грамматика, выражения и лексика выпуска", fType: "Тип", fBook: "Учебник", fUnit: "Урок", fAll: "Все", tyG: "Грамматика", tyV: "Лексика", tyE: "Выражения", tyX: "Дополнительно", unitN: "Урок {n}", fClear: "Сбросить всё", fNone: "Ничего не найдено по этим фильтрам.", secG: "Грамматика и выражения", secV: "Лексика", inComm: "Разбор", bookFirst: "Сначала выберите учебник", items: "Изучаем", seeAll: "Показать все",
+      about: "Об этом выпуске", more: "Ещё", less: "Свернуть", setting: "Место действия", formality: "Стиль речи", topics: "Темы", xpTitle: "Грамматика, выражения и лексика выпуска", fType: "Тип", fBook: "Учебник", fUnit: "Урок", fAll: "Все", tyG: "Грамматика", tyV: "Лексика", tyE: "Выражения", tyX: "Дополнительно", unitN: "Урок {n}", fClear: "Сбросить", fNone: "Ничего не найдено по этим фильтрам.", secG: "Грамматика и выражения", secV: "Лексика", inComm: "Разбор", bookFirst: "Сначала выберите учебник", items: "Изучаем", seeAll: "Показать все",
       bannerNone: "Аудио для этого выпуска ещё не записано. Текст можно читать уже сейчас, а когда запись будет готова, она появится здесь.",
       bannerPartial: "Превью: пока записана только первая часть. У серых строк ещё нет аудио.",
       backNow: "К текущей строке", translation: "Перевод", textSize: "Размер текста", "default": "Обычная", none: "Нет",
@@ -978,7 +982,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       coach: "Sıradaki: {e}", nextEp: "Sonraki bölüm", skipT: "Sonraki bölüme geçilsin mi?", skipB: "Sıradaki: {t}. Bu bölümdeki ilerlemen kaydedilir.", skipNoAsk: "Bir daha sorma", cancel: "Vazgeç", skip: "Geç",
       lede: "Sogang müfredatına dayalı günlük Korece konuşmalar. Bir bölüm seçin ya da arama yapın.", search: "Podcast ara", level: "Seviye {n}", ready: "{a} / {b} hazır",
       scriptOnly: "Yalnızca metin", audioBy: "Ses {d} civarı", done: "Bitti", left: "{t} kaldı", "new": "Yeni", preview: "Önizleme",
-      about: "Bu bölüm hakkında", more: "Devamını göster", less: "Daha az göster", setting: "Ortam", formality: "Hitap düzeyi", topics: "Konular", xpTitle: "Bu bölümün dilbilgisi, ifadeleri ve kelimeleri", fType: "Tür", fBook: "Kitap", fUnit: "Ünite", fAll: "Tümü", tyG: "Dilbilgisi", tyV: "Kelimeler", tyE: "İfadeler", tyX: "Ek", unitN: "Ünite {n}", fClear: "Tümünü temizle", fNone: "Bu filtrelere uyan öğe yok.", secG: "Dilbilgisi ve ifadeler", secV: "Kelimeler", inComm: "Yorum", bookFirst: "Önce bir kitap seçin", items: "Dilbilgisi ve kelimeler", seeAll: "Tümünü gör",
+      about: "Bu bölüm hakkında", more: "Devamını göster", less: "Daha az göster", setting: "Ortam", formality: "Hitap düzeyi", topics: "Konular", xpTitle: "Bu bölümün dilbilgisi, ifadeleri ve kelimeleri", fType: "Tür", fBook: "Kitap", fUnit: "Ünite", fAll: "Tümü", tyG: "Dilbilgisi", tyV: "Kelimeler", tyE: "İfadeler", tyX: "Ek", unitN: "Ünite {n}", fClear: "Temizle", fNone: "Bu filtrelere uyan öğe yok.", secG: "Dilbilgisi ve ifadeler", secV: "Kelimeler", inComm: "Yorum", bookFirst: "Önce bir kitap seçin", items: "Dilbilgisi ve kelimeler", seeAll: "Tümünü gör",
       bannerNone: "Bu bölümün sesi henüz kaydedilmedi. Metni şimdi okuyabilirsiniz; ses hazır olduğunda burada çalacak.",
       bannerPartial: "Önizleme: Şimdilik yalnızca ilk kısım kaydedildi. Gri satırların henüz sesi yok.",
       backNow: "Geçerli satıra dön", translation: "Çeviri", textSize: "Yazı boyutu", "default": "Varsayılan", none: "Yok",
@@ -989,7 +993,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       coach: "Tiếp theo: {e}", nextEp: "Tập tiếp theo", skipT: "Chuyển sang tập tiếp theo?", skipB: "Tiếp theo: {t}. Tiến độ của bạn ở tập này sẽ được lưu.", skipNoAsk: "Không hỏi lại", cancel: "Hủy", skip: "Chuyển",
       lede: "Hội thoại tiếng Hàn đời thường theo giáo trình Sogang. Chọn một tập hoặc tìm kiếm.", search: "Tìm podcast", level: "Cấp {n}", ready: "{a} / {b} tập sẵn sàng",
       scriptOnly: "Chỉ có lời thoại", audioBy: "Âm thanh khoảng {d}", done: "Đã nghe", left: "còn {t}", "new": "Mới", preview: "Nghe thử",
-      about: "Về tập này", more: "Xem thêm", less: "Thu gọn", setting: "Bối cảnh", formality: "Mức độ trang trọng", topics: "Chủ đề", xpTitle: "Ngữ pháp, cách nói & từ vựng trong tập này", fType: "Loại", fBook: "Giáo trình", fUnit: "Bài", fAll: "Tất cả", tyG: "Ngữ pháp", tyV: "Từ vựng", tyE: "Cách nói", tyX: "Bổ sung", unitN: "Bài {n}", fClear: "Xóa tất cả", fNone: "Không có mục nào khớp bộ lọc.", secG: "Ngữ pháp & cách nói", secV: "Từ vựng", inComm: "Giải thích", bookFirst: "Hãy chọn giáo trình trước", items: "Ngữ pháp & từ vựng", seeAll: "Xem tất cả",
+      about: "Về tập này", more: "Xem thêm", less: "Thu gọn", setting: "Bối cảnh", formality: "Mức độ trang trọng", topics: "Chủ đề", xpTitle: "Ngữ pháp, cách nói & từ vựng trong tập này", fType: "Loại", fBook: "Giáo trình", fUnit: "Bài", fAll: "Tất cả", tyG: "Ngữ pháp", tyV: "Từ vựng", tyE: "Cách nói", tyX: "Bổ sung", unitN: "Bài {n}", fClear: "Xóa lọc", fNone: "Không có mục nào khớp bộ lọc.", secG: "Ngữ pháp & cách nói", secV: "Từ vựng", inComm: "Giải thích", bookFirst: "Hãy chọn giáo trình trước", items: "Ngữ pháp & từ vựng", seeAll: "Xem tất cả",
       bannerNone: "Tập này chưa được thu âm. Bạn có thể đọc lời thoại ngay bây giờ, và âm thanh sẽ phát ở đây khi sẵn sàng.",
       bannerPartial: "Nghe thử: Hiện mới thu âm phần đầu. Các dòng màu xám chưa có âm thanh.",
       backNow: "Về dòng đang phát", translation: "Bản dịch", textSize: "Cỡ chữ", "default": "Mặc định", none: "Không",
@@ -1000,7 +1004,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       coach: "ตอนถัดไป: {e}", nextEp: "ตอนถัดไป", skipT: "ข้ามไปตอนถัดไปไหม", skipB: "ตอนถัดไป: {t} ความคืบหน้าในตอนนี้จะถูกบันทึกไว้", skipNoAsk: "ไม่ต้องถามอีก", cancel: "ยกเลิก", skip: "ข้าม",
       lede: "บทสนทนาภาษาเกาหลีในชีวิตประจำวันตามหลักสูตรซอกัง เลือกตอนที่อยากฟัง หรือค้นหาได้เลย", search: "ค้นหาพอดแคสต์", level: "ระดับ {n}", ready: "พร้อมฟัง {a} / {b}",
       scriptOnly: "มีแค่บท", audioBy: "เสียงราว {d}", done: "ฟังจบแล้ว", left: "เหลือ {t}", "new": "ใหม่", preview: "ตัวอย่าง",
-      about: "เกี่ยวกับตอนนี้", more: "ดูเพิ่มเติม", less: "ย่อ", setting: "ฉาก", formality: "ระดับภาษา", topics: "หัวข้อ", xpTitle: "ไวยากรณ์ สำนวน และคำศัพท์ในตอนนี้", fType: "ประเภท", fBook: "หนังสือ", fUnit: "บท", fAll: "ทั้งหมด", tyG: "ไวยากรณ์", tyV: "คำศัพท์", tyE: "สำนวน", tyX: "เพิ่มเติม", unitN: "บทที่ {n}", fClear: "ล้างทั้งหมด", fNone: "ไม่มีรายการที่ตรงกับตัวกรองนี้", secG: "ไวยากรณ์และสำนวน", secV: "คำศัพท์", inComm: "อธิบาย", bookFirst: "เลือกหนังสือก่อน", items: "ไวยากรณ์และคำศัพท์", seeAll: "ดูทั้งหมด",
+      about: "เกี่ยวกับตอนนี้", more: "ดูเพิ่มเติม", less: "ย่อ", setting: "ฉาก", formality: "ระดับภาษา", topics: "หัวข้อ", xpTitle: "ไวยากรณ์ สำนวน และคำศัพท์ในตอนนี้", fType: "ประเภท", fBook: "หนังสือ", fUnit: "บท", fAll: "ทั้งหมด", tyG: "ไวยากรณ์", tyV: "คำศัพท์", tyE: "สำนวน", tyX: "เพิ่มเติม", unitN: "บทที่ {n}", fClear: "ล้าง", fNone: "ไม่มีรายการที่ตรงกับตัวกรองนี้", secG: "ไวยากรณ์และสำนวน", secV: "คำศัพท์", inComm: "อธิบาย", bookFirst: "เลือกหนังสือก่อน", items: "ไวยากรณ์และคำศัพท์", seeAll: "ดูทั้งหมด",
       bannerNone: "ตอนนี้ยังไม่ได้อัดเสียง อ่านบทได้เลยตอนนี้ แล้วเสียงจะเล่นตรงนี้เมื่อพร้อม",
       bannerPartial: "ตัวอย่าง: ตอนนี้อัดเสียงไว้แค่ช่วงแรก บรรทัดสีเทายังไม่มีเสียง",
       backNow: "กลับไปบรรทัดปัจจุบัน", translation: "คำแปล", textSize: "ขนาดตัวอักษร", "default": "ค่าเริ่มต้น", none: "ไม่มี",
@@ -1518,7 +1522,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   $("speed").addEventListener("click", function (ev) {
     ev.stopPropagation(); closeLangMenu();
     var m = $("speedmenu"); if (menuOpen(m)) { popMenu(m, false); return; }
-    renderSpeedMenu(); popMenu(m, true, this);
+    renderSpeedMenu(); anchorAbove(m, this); popMenu(m, true, this);
   });
   $("speedmenu").addEventListener("click", function (ev) {
     var b = ev.target.closest("button"); if (!b) return;
@@ -1566,9 +1570,17 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       var r = btn.getBoundingClientRect();
       m.style.top = (r.bottom + 8) + "px"; m.style.bottom = "auto"; m.style.left = "auto"; m.style.maxHeight = (innerHeight - r.bottom - 24) + "px";
       m.style.right = Math.max(8, innerWidth - r.right) + "px";
-    } else m.removeAttribute("style");
+    } else anchorAbove(m, btn);
     m.scrollTop = 0;
     popMenu(m, true, btn); btn.setAttribute("aria-expanded", "true");
+  }
+  // player bar menus open right above their own button (not above the whole bar), left-aligned with it, kept on screen
+  function anchorAbove(m, btn) {
+    var r = btn.getBoundingClientRect();
+    m.removeAttribute("style");
+    m.style.bottom = (innerHeight - r.top + 8) + "px";
+    m.style.left = Math.max(8, Math.min(r.left, innerWidth - m.offsetWidth - 8)) + "px"; m.style.right = "auto";
+    m.style.maxHeight = Math.max(160, r.top - 24 - (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--sat")) || 0)) + "px";
   }
   function closeLangMenu() { popMenu($("langmenu"), false); $("langbtn").setAttribute("aria-expanded", "false"); }
   $("enbtn").addEventListener("click", function (ev) { ev.stopPropagation(); openLangMenu(this, false); });
@@ -1664,12 +1676,14 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       var cur = OPT[d].filter(function (o) { return o[0] === XF[d]; })[0];
       h += '<button class="dd' + (XF[d] ? " on" : "") + '" data-dd="' + d + '" aria-haspopup="menu" aria-expanded="' + (XOPEN === d) + '">' + (cur ? cur[1] : XLBL[d]) + CHEV + '</button>';
     });
-    h += '<button class="clr" data-clr="1"' + (XF.ty || XF.bk || XF.un ? "" : " hidden") + '>' + T("fClear") + '</button>';
+    h += '<button class="clr" data-clr="1"' + (XF.ty || XF.bk || XF.un ? "" : " hidden") + ' aria-label="' + T("fClear") + '" title="' + T("fClear") + '"><span>' + T("fClear") + '</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></button>';
     if (XOPEN) h += '<div class="pop" role="menu" data-for="' + XOPEN + '">' + [["", T("fAll")]].concat(OPT[XOPEN]).map(function (o) {
       var c = count(XOPEN, o[0]);
       return '<button role="menuitemradio" data-f="' + XOPEN + '" data-v="' + o[0] + '" aria-checked="' + (XF[XOPEN] === o[0]) + '"' + (c || XF[XOPEN] === o[0] ? "" : " disabled") + '>' + o[1] + '<small>' + c + '</small></button>';
     }).join("") + '</div>';
     $("xpf").innerHTML = h;
+    $("xpf").classList.remove("tight");
+    if ($("xpf").scrollWidth > $("xpf").clientWidth + 1) $("xpf").classList.add("tight");
     if (XOPEN) { var bt = $("xpf").querySelector('[data-dd="' + XOPEN + '"]'), pp = $("xpf").querySelector(".pop"); if (bt && pp) pp.style.left = bt.offsetLeft + "px"; }
     if (onlyF) return;
     var g = [], v = [];
