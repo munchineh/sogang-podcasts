@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="cf8ff541a133">
+<html lang="ko" data-build="99cdb55e3d33">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1962,7 +1962,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     var open = store.get("ovOpen", false);
     return '<section class="ov' + (open ? " open" : "") + '" id="ov"><div class="h"><span>' + T("about") + '</span>' +
       '<button data-ov="t">' + (open ? T("less") : T("more")) + '</button></div><p>' + fmtTr(o.overview) + '</p><dl>' +
-      (o.topics && o.topics.length ? '<dt>' + T("topics") + '</dt><dd>' + o.topics.map(fmtTr).join(" · ") + '</dd>' : "") +
+      (o.topics && o.topics.length ? '<dt>' + T("topics") + '</dt><dd>' + o.topics.map(function (t) { t = String(t); return fmtTr(t.charAt(0).toLocaleUpperCase(TLANG[UL()] || "en") + t.slice(1)); }).join(" · ") + '</dd>' : "") +
       (o.setting ? '<dt>' + T("setting") + '</dt><dd>' + fmtTr(o.setting) + '</dd>' : "") +
       (o.register ? '<dt>' + T("formality") + '</dt><dd>' + fmtTr(o.register) + '</dd>' : "") +
       '</dl><div class="ovx"><span>' + T("items") + '</span><b>' + d.items.length + '</b><button data-ov="x">' + T("seeAll") +
