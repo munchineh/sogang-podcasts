@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="0975cfab0b4a">
+<html lang="ko" data-build="cee70de43268">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -586,7 +586,9 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .xp { display: grid; grid-template-columns: 1fr auto; gap: 5px 12px; padding: 14px 2px; border-top: 1px solid var(--rule); text-align: left; width: 100%; }
 .xp .tag { justify-self: start; font: 600 10.5px/1 var(--f-mono); letter-spacing: .02em; color: var(--muted); background: color-mix(in srgb, var(--ink) 7%, transparent);
   padding: 4px 7px; border-radius: 6px; }
-.xp .tag.v { background: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent); }
+/* grammar tags outlined, vocab tags filled (18 Oct: the filled grey balanced the plain vocab words; the highlighted grammar
+   items read better with a light outline) */
+.xp .tag:not(.v) { background: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent); }
 .xp b { font-weight: 700; font-size: 16.5px; line-height: 1.45; justify-self: start; }
 .xp.g b { background: var(--hl); border-radius: 5px; padding: 0 5px; }
 
