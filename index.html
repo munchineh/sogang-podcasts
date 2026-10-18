@@ -1518,7 +1518,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   // when an episode finishes, a bubble over the next-episode button suggests moving on; any other action dismisses it
   function placeCoach() {
     var r = $("nextep").getBoundingClientRect(), c = $("coach"), z = zf();
-    c.style.left = (r.left + r.width / 2) / z + "px"; c.style.bottom = (window.innerHeight - $("transport").getBoundingClientRect().top + 10) / z + "px";   // above the whole bar, clear of the end-of-episode button
+    c.style.left = (r.left + r.width / 2) / z + "px"; c.style.bottom = (window.innerHeight - r.top + 10) / z + "px";
     var w = c.offsetWidth * z, x = r.left + r.width / 2;                 // keep the bubble on screen; the tail stays over the button
     var shift = Math.min(0, window.innerWidth - 12 - (x + w / 2)); c.style.marginLeft = shift / z + "px";
     c.style.setProperty("--tail", -shift / z + "px");
@@ -1558,6 +1558,10 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   $("coachgo").addEventListener("click", function () { var a = cdNext, n = a || nextReady(); hideCoach(); if (!n) return; if (a) openEp(n.ep, null, true); else goNext(n); });
   $("coachx").addEventListener("click", function (ev) { ev.stopPropagation(); hideCoach(); });
+  // the bubble sits over the end of the progress row: a tap anywhere else puts the plain "up next" bubble away (a countdown keeps going)
+  document.addEventListener("pointerdown", function (ev) {
+    var c = $("coach"); if (c.hidden || cdTimer || c.contains(ev.target)) return; hideCoach();
+  }, true);
   audio.addEventListener("ended", function () {
     var m = endMode();
     if (m === "loop") { audio.currentTime = 0; var pr = audio.play(); if (pr && pr.catch) pr.catch(function () {}); return; }
