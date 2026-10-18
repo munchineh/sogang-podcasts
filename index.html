@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="185d35fbdcbe">
+<html lang="ko" data-build="7e582583b3d1">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -85,7 +85,9 @@ html[data-tr="ja"] { --f-latin: -apple-system, BlinkMacSystemFont, "Hiragino San
 body { background: var(--bg); color: var(--ink); font: 16px/1.6 var(--f-body); -webkit-text-size-adjust: 100%;
   word-break: keep-all; overflow-wrap: anywhere;  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; /* Mac browsers drew text heavier than iPhone */ }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 10px; }
+/* keyboard focus ring follows each control's own shape (it used to force a 10px radius, which squared off the round play button) */
+button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.line:focus-visible { border-radius: 10px; }
 .wrap { max-width: 680px; margin: 0 auto; padding-left: max(var(--edge), env(safe-area-inset-left, 0px)); padding-right: max(var(--edge), env(safe-area-inset-right, 0px)); }
 .sheet .wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 
@@ -163,6 +165,7 @@ body { margin-top: 0; }
   .ib:hover, .chip:hover, .qx:hover, .recent button:hover { transform: scale(1.07); }
   #nextep:hover, #again:hover, .speed:hover, .lvpick select:hover, .ov .h button:hover { transform: scale(1.04); }
   .play:hover { transform: scale(1.06); }
+  .rng:hover .thumb { transform: scale(1.15); }
 }
 .ep:active { transform: scale(.975); transition: transform .1s ease-out; }
 .ib:active, .chip:active, .play:active, .speed:active, .qx:active, .recent button:active { transform: scale(.9); transition: transform .08s ease-out, background-color .1s ease; }
@@ -532,6 +535,17 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .sheet.swap.closing::before { opacity: 0; transition: opacity .22s ease; }
 .sheet.swap.closing .panel { transform: translate3d(calc(var(--dx, 28px) * -1), 0, 0); opacity: 0; transition: transform .26s ease, opacity .18s ease; }
 @media (prefers-reduced-motion: reduce) { .sheet, .sheet::before, .sheet .panel { transition: none !important; } }
+/* desktop: moving between the grammar list and a card keeps the panel fixed and slides only its content, page to page
+   (the incoming sheet sits on top with a see-through frame while the outgoing one, still drawn underneath, slides its content out) */
+.sheet .panel { overflow-x: hidden; }
+.sheet .panel > .wrap { transition: transform .36s cubic-bezier(.32,.72,0,1); }
+.sheet.slide-in { z-index: 8; }
+.sheet.slide-in::before { opacity: 0 !important; transition: none !important; }
+.sheet.slide-out::before { opacity: 1 !important; transition: none !important; }
+.sheet.slide-in .panel, .sheet.slide-out .panel { transform: none !important; opacity: 1 !important; transition: none !important; }
+.sheet.slide-in .panel { background: transparent; border-color: transparent; box-shadow: none; }
+.sheet.slide-in:not(.open) .panel > .wrap { transform: translate3d(calc(var(--dir, 1) * 100%), 0, 0); transition: none; }
+.sheet.slide-out .panel > .wrap { transform: translate3d(calc(var(--dir, 1) * -100%), 0, 0); }
 
 .sheet .panel { background: var(--surface); width: 100%; max-height: 78%; overflow: auto; overscroll-behavior: contain; border-radius: 20px 20px 0 0;
   padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)); }
@@ -658,10 +672,16 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 @media (min-width: 1024px) {
   :root { --side: 340px; }
   #list, #list[hidden] { display: block !important; position: fixed; top: 0; bottom: 0; left: 0; width: var(--side); max-width: none; margin: 0;
-    overflow-y: auto; overscroll-behavior: contain; padding: 28px 14px 32px; border-right: 1px solid var(--rule); background: var(--bg); z-index: 4;
+    overflow-y: auto; overscroll-behavior: contain; padding: 0 14px 32px; border-right: 1px solid var(--rule); background: var(--bg); z-index: 4;
     box-sizing: border-box; }
   body.searching #list { padding-top: 0; }
-  #list .search.pinned, #list .search { position: sticky; left: auto; right: auto; padding-inline: 0; }
+  /* the list's top space sits on its header, so the sticky search bar meets the very top edge (cards no longer show above it);
+     the bar spans the sidebar's full width so its divider runs edge to edge */
+  #list > .hdr { padding-top: 28px; }
+  #list .logo { width: 52px; height: 52px; margin-left: -2px; }
+  #list .mast { gap: 10px; }
+  #list .mast h1 { font-size: 26px; }
+  #list .search.pinned, #list .search { position: sticky; left: auto; right: auto; margin-inline: -14px; padding-inline: 14px; }
   /* (episode cards keep the phone layout: summary shown, same padding) */
   /* current episode: a soft accent tint and a hairline accent stroke (same 1px weight as the other cards), EP number in accent */
   #list .ep.cur, #list .ep.cur:hover { background: color-mix(in srgb, var(--accent) 9%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 45%, var(--rule)); }
@@ -721,6 +741,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
    word's card opens there in place of the list (back returns to the list). No scrim and audio keeps playing. */
 @media (min-width: 1600px) {
   :root { --rail: 420px; }
+  html { zoom: .94; }   /* text and controls read a little large at this size; breakpoints still follow the real window width */
   #player { margin-right: var(--rail); }
   .transport { right: calc(var(--rail) + 64px); }
   .sidefoot { right: calc(var(--rail) + 16px); }
@@ -733,7 +754,13 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     transform: translate3d(24px, 0, 0); opacity: 0; transition: transform .36s var(--sheet-ease), opacity .2s ease, height .34s var(--spring-sheet); }
   .sheet.open .panel, .sheet.swap.open .panel { transform: translate3d(0, 0, 0); opacity: 1; }
   .sheet .panel [data-close] { display: none; }
+  /* the panel's own collapse button (top right); collapsed, the script and player take the room and the book icon brings it back */
+  .sheet .panel .railx { display: grid; margin-right: -8px; color: var(--muted); }
+  body.railoff { --rail: 0px; }
+  body.railoff .sheet { display: none !important; }
+  body.railoff #xpbtn { display: grid; }
 }
+.railx { display: none; }
 </style>
 </head>
 <body>
@@ -803,7 +830,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 <div class="speedmenu langmenu" id="langmenu" role="menu" aria-label="Translation and text size" hidden></div>
 <div class="sheet" id="dsheet" hidden><div class="panel"><div class="wrap dt" id="detail"></div></div></div>
 <div class="sheet" id="sheet" hidden><div class="panel"><div class="wrap">
-  <div class="sh-top"><h2>이번 회 문법 · 표현 · 어휘</h2><button class="ib" data-close="1" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="sh-top"><h2>이번 회 문법 · 표현 · 어휘</h2><button class="ib" data-close="1" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><button class="ib railx" data-railx="1" aria-label="Hide panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M15 4v16"/><path d="M8 10l2 2-2 2"/></svg></button></div>
   <p class="h" id="sheeth">Tap to see its meaning and how it’s used.</p><div id="xpf" class="xpf"></div><div id="xplist"></div>
 </div></div></div>
 
@@ -1656,10 +1683,13 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   // ---------- sheet motion: slide up to open, down to close; sideways between the list and a card ----------
   var xpFlow = false;                                       // the card sheet was reached from the grammar & vocab list
   function shown(el) { return !el.hidden && !el.classList.contains("closing"); }
-  function syncXpOn() { $("xpbtn").classList.toggle("on", shown($("sheet")) || (xpFlow && shown($("dsheet")))); }
+  function syncXpOn() { $("xpbtn").classList.toggle("on", !document.body.classList.contains("railoff") && (shown($("sheet")) || (xpFlow && shown($("dsheet"))))); }
+  function slides(dx) { return dx != null && DESK.matches && !matchMedia("(prefers-reduced-motion: reduce)").matches; }
   function sheetShow(el, dx, fromH) {
-    clearTimeout(el._t); el.hidden = false; el.classList.remove("closing", "open"); setTimeout(syncXpOn, 0);
+    clearTimeout(el._t); el.hidden = false; el.classList.remove("closing", "open", "slide-out"); setTimeout(syncXpOn, 0);
     el.classList.toggle("swap", dx != null); el.style.setProperty("--dx", (dx || 0) + "px");
+    el.classList.toggle("slide-in", slides(dx)); el.style.setProperty("--dir", dx < 0 ? -1 : 1);
+    if (slides(dx)) fromH = null;                              // same frame, so no height easing
     var p = el.querySelector(".panel");
     if (fromH) {                                            // ease the height from the sheet it replaces
       p.style.height = ""; var to = p.getBoundingClientRect().height;
@@ -1671,9 +1701,14 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   function sheetHide(el, dx, after) {
     if (el.hidden) { if (after) after(); return; }
-    clearTimeout(el._t); el.classList.remove("open"); el.classList.add("closing"); setTimeout(syncXpOn, 0);
+    clearTimeout(el._t); el.classList.remove("open", "slide-in"); el.classList.add("closing"); setTimeout(syncXpOn, 0);
     el.classList.toggle("swap", dx != null); el.style.setProperty("--dx", (dx || 0) + "px");
-    el._t = setTimeout(function () { el.hidden = true; el.classList.remove("closing", "swap"); if (after) after(); }, dx != null ? 270 : 280);
+    var sl = slides(dx); el.classList.toggle("slide-out", sl); el.style.setProperty("--dir", dx < 0 ? -1 : 1);
+    el._t = setTimeout(function () {
+      el.hidden = true; el.classList.remove("closing", "swap", "slide-out");
+      if (sl) document.querySelectorAll(".sheet.slide-in").forEach(function (o) { o.classList.remove("slide-in"); });   // the new page takes over its frame
+      if (after) after();
+    }, sl ? 380 : dx != null ? 270 : 280);
   }
   function panelH(el) { return el.hidden ? 0 : el.querySelector(".panel").getBoundingClientRect().height; }
   var xpScroll = 0;
@@ -1688,7 +1723,15 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     if (resumeAfter) audio.play().catch(function () {});
     resumeAfter = false;
   }
-  $("xpbtn").addEventListener("click", function () { openXp(false); });
+  function setRail(off) { document.body.classList.toggle("railoff", off); store.set("railoff", off); syncXpOn(); }
+  if (store.get("railoff", false)) document.body.classList.add("railoff");
+  document.addEventListener("click", function (ev) { if (ev.target.closest && ev.target.closest("[data-railx]")) setRail(true); });
+  $("xpbtn").addEventListener("click", function () {
+    if (document.body.classList.contains("railoff")) {        // wide screen, panel collapsed: bring it back on the list
+      setRail(false); var d = $("dsheet"); d.hidden = true; d.classList.remove("open", "closing", "swap", "slide-in", "slide-out");
+    }
+    openXp(false);
+  });
   // while a sheet is open the page behind it stays put: only the sheet's own content scrolls, and only if it is long enough to.
   // iOS ignores overflow:hidden on the page and hands a sheet's overscroll to the page, so stop those moves by hand.
   (function () {
@@ -1750,7 +1793,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     $("detail").className = "wrap dt" + (it.kind === "vocab" ? " v" : "");
     $("detail").innerHTML =
       '<div class="dt-top"><button class="dt-back" data-all="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>' + T("seeAll") + ' · ' + ep.items.length + '</button>' +
-      '<button class="ib" data-close="1" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
+      '<button class="ib" data-close="1" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><button class="ib railx" data-railx="1" aria-label="Hide panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M15 4v16"/><path d="M8 10l2 2-2 2"/></svg></button></div>' +
       '<span class="dt-kind">' + esc(it.tag || kinds[it.kind] || "Expression") + '</span><h2>' + esc(it.item) + '</h2>' +
       '<p class="mean"' + tl() + '>' + esc(cz(it, "meaning") || cz(it, "gloss")) + '</p>' +
       (it.example ? '<h3>' + T("example") + '</h3><div class="ex"><div class="k">' + esc(it.example) + '</div>' + (TR === "off" ? "" : '<div class="e"' + tl() + '>' + esc(cz(it, "translation")) + '</div>') + '</div>' : "") +
@@ -2147,6 +2190,12 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   $("q").addEventListener("blur", function () { setTimeout(function () {       // tapping away with nothing typed leaves search mode
     if (document.activeElement !== $("q") && !$("q").value.trim() && !$("list").hidden) { document.body.classList.remove("searching"); runSearch(); }
   }, 120); });
+  // desktop: the sidebar scrolls on its own, so its search bar gets the same hairline as the phone once cards pass under it
+  $("list").addEventListener("scroll", function () {
+    if (!DESK.matches) return;
+    var L = $("list"), sb = $("searchbar");
+    sb.classList.toggle("stuck", L.scrollTop > 2 && sb.getBoundingClientRect().top <= L.getBoundingClientRect().top + 0.5);
+  }, { passive: true });
   $("q").addEventListener("keydown", function (ev) { if (ev.key === "Enter") { remember(this.value); this.blur(); } });
   $("qcancel").addEventListener("click", exitSearch);
   $("qx").addEventListener("mousedown", function (ev) { ev.preventDefault(); });          // keep the keyboard up
@@ -2161,7 +2210,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   // a hairline under each top bar once content has scrolled beneath it
   function markStuck() {
     var y = window.scrollY;
-    if (!$("list").hidden) { var sb = $("searchbar"); sb.classList.toggle("stuck", sb.getBoundingClientRect().top <= 0.5 && y > 2); }
+    if (!$("list").hidden) { var sb = $("searchbar"); if (!DESK.matches) sb.classList.toggle("stuck", sb.getBoundingClientRect().top <= 0.5 && y > 2); }
     else topEl.classList.toggle("stuck", y > 2);
   }
   window.addEventListener("scroll", markStuck, { passive: true });
