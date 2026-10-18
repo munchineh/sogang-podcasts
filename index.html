@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="ae5b3d40844c">
+<html lang="ko" data-build="17f1f6ef6e04">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -388,9 +388,13 @@ body.findtype .transport { transform: translateY(110%); }
 .transport .wrap { padding-block: 18px 14px; padding-inline: max(14px, env(safe-area-inset-left, 0px)); display: grid; gap: 17px; }
 .seek { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; font: 500 11.5px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
 .nowpl { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; font: 600 13.5px var(--f-body); color: var(--ink); margin-bottom: -6px; }
-.nowpl b { flex: 0 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; }
+.nowpl { min-width: 0; }
+.transport .wrap > * { min-width: 0; }   /* a long title must never widen the bar (it pushed the controls off a phone screen) */
+/* titles: Korean on top, the chosen translation under it (phones); side by side on desktop */
+.nowpl .nowt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; line-height: 1.3; margin-left: 4px; }   /* a little more room after the EP tag */
+.nowpl b { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; }
 /* the title in the chosen translation language follows the Korean one (none when no translation is picked); it gives way first */
-.nowpl .nowsub { flex: 1 1 0; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: 500 13px var(--f-latin); color: var(--muted); }
+.nowpl .nowsub { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: 500 13px var(--f-latin); color: var(--muted); }
 .nowpl .nowsub:empty { display: none; }
 .nowpl .nowtag { flex: none; font: 600 11px/1 var(--f-mono); letter-spacing: .02em; color: var(--accent); background: var(--accent-soft); padding: 6px 7px 4px; border-radius: 6px; }   /* the mono caps ride high: 1px more on top centres them */
 .nowpl svg { width: 16px; height: 16px; color: var(--muted); flex: none; }
@@ -398,6 +402,10 @@ body.findtype .transport { transform: translateY(110%); }
 .nowpl .eq i { width: 3px; border-radius: 2px; background: var(--accent); height: 40%; animation: eq 1s ease-in-out infinite alternate; }
 .nowpl .eq i:nth-child(2) { animation-delay: -.35s; } .nowpl .eq i:nth-child(3) { animation-delay: -.7s; }
 .paused .nowpl .eq i { animation-play-state: paused; }
+/* the bar always says what's playing, inside the episode too; the chevron (back to the episode) only on the mini player */
+.transport .nowpl[hidden] { display: flex !important; }
+.transport .nowpl > svg { display: none; }
+body.mini .transport .nowpl > svg { display: block; }
 @keyframes eq { from { height: 30%; } to { height: 100%; } }
 body.mini #list { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 200px); }
 /* seek bar drawn by hand: a soft track instead of the browser's dark outline in dark mode */
@@ -737,8 +745,9 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   /* inside the bar: use its full width (the phone .wrap caps at 680px and centred the controls with wide empty sides) */
   .transport .wrap { max-width: none; padding-inline: 22px; }
   /* desktop: the bar always says what's playing, like the phone's mini player (a click scrolls back to the current line) */
-  .transport .nowpl[hidden] { display: flex !important; }
-  .transport .nowpl > svg { display: none; }
+  .nowpl .nowt { flex-direction: row; align-items: baseline; gap: 10px; }
+  .nowpl .nowt b { flex: 0 1 auto; }
+  .nowpl .nowsub { flex: 1 1 0; }
   /* room to spare on desktop: the side buttons get text labels */
   .ctrls .tx { display: inline; font: 600 13px var(--f-latin); white-space: nowrap; }
   .speed { display: inline-flex; align-items: center; gap: 7px; padding-inline: 12px; }
@@ -833,7 +842,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 </section>
   <div class="speedmenu" id="speedmenu" role="menu" aria-label="Playback speed" hidden></div>
   <footer class="transport" id="transport" hidden><div class="wrap">
-    <button class="nowpl" id="nowpl" hidden><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="nowtag" id="nowtag"></span><b id="nowtxt"></b><span class="nowsub" id="nowsub"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+    <button class="nowpl" id="nowpl" hidden><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="nowtag" id="nowtag"></span><span class="nowt"><b id="nowtxt"></b><span class="nowsub" id="nowsub"></span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
     <div class="seek"><span id="cur">0:00</span><span class="rng" id="rng"><input type="range" id="pos" min="0" max="1000" value="0" aria-label="Position"><i class="thumb" aria-hidden="true"></i></span><span id="tot">0:00</span></div>
     <div class="ctrls">
       <div class="side"><button class="speed" id="speed" aria-label="Playback speed"><span class="lb">1×</span><span class="tx" data-t="speedLbl"></span></button>
