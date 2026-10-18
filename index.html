@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="a043c39000cd">
+<html lang="ko" data-build="e809b1d4f0cf">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1437,7 +1437,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   var kbd = $("kbdlg");
   function openKb() {
     $("kbt").textContent = T("kbTitle"); $("kbok").textContent = T("close");
-    $("kbkeys").innerHTML = [["<kbd>Space</kbd>", T("tipPlay")], ["<kbd>Shift</kbd><kbd>←</kbd><kbd>→</kbd>", T("kbLines")], ["<kbd>←</kbd><kbd>→</kbd>", T("kbSeek")], ["<kbd>R</kbd>", T("tipAgain")], ["<kbd>C</kbd>", T("backNow")], ["<kbd>N</kbd>", T("nextEp")],
+    $("kbkeys").innerHTML = [["<kbd>Space</kbd>", T("tipPlay")], ["<kbd>Shift</kbd><kbd>←</kbd><kbd>→</kbd>", T("kbLines")], ["<kbd>←</kbd><kbd>→</kbd>", T("kbSeek")], ["<kbd>R</kbd>", T("tipAgain")], ["<kbd>C</kbd>", T("backNow")], ["<kbd>N</kbd>", T("nextEp")], ["<kbd>" + MOD + "</kbd><kbd>K</kbd> · <kbd>/</kbd>", T("search")], ["<kbd>" + MOD + "</kbd><kbd>F</kbd>", T("tipFind")],
       ["<kbd>Esc</kbd>", T("kbClose")], ["<kbd>?</kbd>", T("kbHelp")]].map(function (r) { return "<dt>" + r[0] + "</dt><dd>" + esc(r[1]) + "</dd>"; }).join("");
     kbd.hidden = false; void kbd.offsetWidth; kbd.classList.add("open"); $("kbok").focus({ preventScroll: true });
   }
@@ -1467,12 +1467,15 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   });
   // when an episode finishes, a bubble over the next-episode button suggests moving on; any other action dismisses it
   function placeCoach() {
-    var r = $("nextep").getBoundingClientRect(), c = $("coach");
-    c.style.left = (r.left + r.width / 2) + "px"; c.style.bottom = (window.innerHeight - r.top + 10) + "px";
-    var w = c.offsetWidth, x = r.left + r.width / 2;                     // keep the bubble on screen; the tail stays over the button
-    var shift = Math.min(0, window.innerWidth - 12 - (x + w / 2)); c.style.marginLeft = shift + "px";
-    c.style.setProperty("--tail", -shift + "px");
+    var r = $("nextep").getBoundingClientRect(), c = $("coach"), z = zf();
+    c.style.left = (r.left + r.width / 2) / z + "px"; c.style.bottom = (window.innerHeight - r.top + 10) / z + "px";
+    var w = c.offsetWidth * z, x = r.left + r.width / 2;                 // keep the bubble on screen; the tail stays over the button
+    var shift = Math.min(0, window.innerWidth - 12 - (x + w / 2)); c.style.marginLeft = shift / z + "px";
+    c.style.setProperty("--tail", -shift / z + "px");
   }
+  // wide screens draw the page at 94% (zoom on <html>): measured rects are on-screen pixels, but fixed positions are set in page
+  // pixels, so on-screen values are divided by this factor before use (1 everywhere else)
+  function zf() { var b = document.body, w = b.offsetWidth; return w ? (b.getBoundingClientRect().width / w) || 1 : 1; }
   function showCoach() {
     var n = nextReady(); if (!n || $("transport").hidden) return;
     var ct = T("coach", { e: "\u0001" }).split("\u0001");
@@ -1570,20 +1573,20 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     var m = $("langmenu"); if (menuOpen(m)) { closeLangMenu(); return; }
     renderLangMenu();
     if (below) {
-      var r = btn.getBoundingClientRect();
-      m.style.top = (r.bottom + 8) + "px"; m.style.bottom = "auto"; m.style.left = "auto"; m.style.maxHeight = (innerHeight - r.bottom - 24) + "px";
-      m.style.right = Math.max(8, innerWidth - r.right) + "px";
+      var r = btn.getBoundingClientRect(), z = zf();
+      m.style.top = (r.bottom + 8) / z + "px"; m.style.bottom = "auto"; m.style.left = "auto"; m.style.maxHeight = (innerHeight - r.bottom - 24) / z + "px";
+      m.style.right = Math.max(8, innerWidth - r.right) / z + "px";
     } else anchorAbove(m, btn);
     m.scrollTop = 0;
     popMenu(m, true, btn); btn.setAttribute("aria-expanded", "true");
   }
   // player bar menus open right above their own button (not above the whole bar), left-aligned with it, kept on screen
   function anchorAbove(m, btn) {
-    var r = btn.getBoundingClientRect();
+    var r = btn.getBoundingClientRect(), z = zf();
     m.removeAttribute("style");
-    m.style.bottom = (innerHeight - r.top + 8) + "px";
-    m.style.left = Math.max(8, Math.min(r.left, innerWidth - m.offsetWidth - 8)) + "px"; m.style.right = "auto";
-    m.style.maxHeight = Math.max(160, r.top - 24 - (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--sat")) || 0)) + "px";
+    m.style.bottom = (innerHeight - r.top + 8) / z + "px";
+    m.style.left = Math.max(8, Math.min(r.left, innerWidth - m.offsetWidth * z - 8)) / z + "px"; m.style.right = "auto";
+    m.style.maxHeight = Math.max(160, r.top / z - 24 - (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--sat")) || 0)) + "px";
   }
   function closeLangMenu() { popMenu($("langmenu"), false); $("langbtn").setAttribute("aria-expanded", "false"); }
   $("enbtn").addEventListener("click", function (ev) { ev.stopPropagation(); openLangMenu(this, false); });
@@ -1617,7 +1620,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   applyPrefs();
   // the pill and the speed menu sit just above the player bar, whatever its height (mini player, safe area)
   if (window.ResizeObserver) new ResizeObserver(function () { fitLabels(); }).observe($("transport"));
-  if (window.ResizeObserver) new ResizeObserver(function (en) { document.documentElement.style.setProperty("--tp", Math.round(en[0].target.getBoundingClientRect().height) + "px"); }).observe($("transport"));
+  if (window.ResizeObserver) new ResizeObserver(function (en) { document.documentElement.style.setProperty("--tp", Math.round(en[0].target.offsetHeight) + "px"); }).observe($("transport"));
   ["wheel", "touchmove"].forEach(function (evn) { window.addEventListener(evn, function () { if (!autoScrolling && !swiping) userScrolledAt = Date.now(); }, { passive: true }); });
   $("backnow").addEventListener("click", function () { userScrolledAt = 0; setCurrent(cur, true); });
   // the pill shows whenever the current line has left the middle of the screen, pointing the way back to it
@@ -1864,6 +1867,25 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   document.addEventListener("pointerup", function (ev) {
     if (ev.pointerType !== "mouse") return;
     setTimeout(function () { var a = document.activeElement; if (a && a.matches && a.matches(".line, #transport button")) a.blur(); }, 0);
+  });
+  // ⌘K / Ctrl+K or "/": search all episodes; ⌘F / Ctrl+F: find in this episode (18 Oct, Mancini)
+  var MAC = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent), MOD = MAC ? "⌘" : "Ctrl";
+  function goSearch() {
+    if (finding) exitFind();
+    var q = $("q");
+    if (!q.offsetParent) showList();                       // phone layout: back to the list first
+    setTimeout(function () { q.focus(); q.select(); }, q.offsetParent ? 0 : 320);
+  }
+  document.addEventListener("keydown", function (ev) {
+    var k = (ev.key || "").toLowerCase(), mod = MAC ? ev.metaKey : ev.ctrlKey;
+    var typing = ev.target.closest && ev.target.closest("input, textarea, select, [contenteditable]");
+    if (mod && !ev.altKey && !ev.shiftKey && k === "k") { ev.preventDefault(); goSearch(); return; }
+    if (mod && !ev.altKey && !ev.shiftKey && k === "f") {
+      ev.preventDefault();
+      if (!$("player").hidden && ep) { if (!finding) enterFind(); else { $("fq").focus(); $("fq").select(); } } else goSearch();
+      return;
+    }
+    if (ev.key === "/" && !typing && !ev.metaKey && !ev.ctrlKey && !ev.altKey && kbd.hidden) { ev.preventDefault(); goSearch(); }
   });
   // Space play/pause, Shift+←/→ previous/next line, ←/→ back/forward 1 s, R replay line, C back to the current line, N next episode, ? shortcuts (not while typing, or with a card or dialog open)
   document.addEventListener("keydown", function (ev) {
