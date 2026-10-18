@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="e809b1d4f0cf">
+<html lang="ko" data-build="119d75d85eb8">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -2052,6 +2052,11 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     fi = (k + n) % n; var h = fhits[fi];
     if (HL) CSS.highlights.set("find-cur", new Highlight(h.range));
     drawHits();
+    // the shapes are measured once; the text can still move after that (smooth scroll changes the current line, fonts and
+    // translations settle), which left the yellow box off its word. Measure again once things have settled.
+    clearTimeout(goFind._t1); clearTimeout(goFind._t2);
+    goFind._t1 = setTimeout(function () { if (finding) drawHits(); }, 450);
+    goFind._t2 = setTimeout(function () { if (finding) drawHits(); }, 1100);
     if (scroll !== false) { userScrolledAt = Date.now(); lineEls[h.line].scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }
   }
   // a real spring as a CSS linear() curve (damping ratio z, natural frequency w, length T seconds)
@@ -2228,6 +2233,11 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   $("fq").addEventListener("focus", function () { document.body.classList.add("findtype"); });
   $("fq").addEventListener("blur", function () { document.body.classList.remove("findtype"); setTimeout(pinTop, 300); });
   window.addEventListener("resize", function () { if (finding && fhits.length) drawHits(); });
+  if (window.ResizeObserver) {                 // any reflow of the script (text size, translation, a line growing) moves the matches
+    var fro = null;
+    new ResizeObserver(function () { if (finding && fhits.length) { cancelAnimationFrame(fro); fro = requestAnimationFrame(drawHits); } }).observe($("script"));
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (finding && fhits.length) drawHits(); });
   $("findbtn").addEventListener("click", enterFind);
   $("fdone").addEventListener("click", exitFind);
   $("fq").addEventListener("input", function () { clearTimeout(fTimer); fTimer = setTimeout(runFind, 140); });
