@@ -388,7 +388,7 @@ body.findtype .transport { transform: translateY(110%); }
 .transport { position: fixed; left: 0; right: 0; bottom: 0; z-index: 4; background: var(--surface); border: 1px solid var(--rule); border-bottom: 0;
   border-radius: 22px 22px 0 0; box-shadow: 0 -8px 28px rgba(10,10,20,.07); padding-bottom: env(safe-area-inset-bottom, 0px); }
 .transport .wrap { padding-block: 18px 14px; padding-inline: max(14px, env(safe-area-inset-left, 0px)); display: grid; gap: 17px; }
-.seek { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; font: 500 11.5px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.seek { display: grid; grid-template-columns: auto 1fr auto auto; gap: 10px; align-items: center; font: 500 11.5px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
 .nowpl { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; font: 600 13.5px var(--f-body); color: var(--ink); margin-bottom: -6px; }
 .nowpl { min-width: 0; }
 .transport .wrap > * { min-width: 0; }   /* a long title must never widen the bar (it pushed the controls off a phone screen) */
@@ -447,6 +447,26 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .coach::after { content: ""; position: absolute; left: calc(50% + var(--tail, 0px)); bottom: -7px; width: 12px; height: 12px; margin-left: -6px; background: inherit;
   border: solid var(--bubble-line); border-width: 0 1px 1px 0; border-radius: 0 0 3px 0; transform: rotate(45deg); }
 .coach b { color: var(--accent); font-weight: 700; }
+.coach { display: flex; align-items: center; gap: 10px; }
+.coach .cgo { all: unset; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.coach .cx { all: unset; cursor: pointer; font: 600 13px/1 var(--f-latin); color: var(--muted); padding: 6px 2px 6px 10px; border-left: 1px solid var(--bubble-line); }
+.coach .ring { position: relative; width: 20px; height: 20px; flex: none; }
+.coach .ring svg { position: absolute; inset: 0; transform: rotate(-90deg); fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round;
+  stroke-dasharray: 53.41; stroke-dashoffset: 0; }
+.coach .ring.run svg { stroke-dashoffset: 53.41; transition: stroke-dashoffset linear var(--cd, 5s); }
+.coach .ring i { position: absolute; inset: 0; display: grid; place-items: center; font: 700 11px/1 var(--f-mono); font-style: normal; color: var(--accent); }
+.coach.counting { animation: none !important; }
+/* "at episode end" choice in the speed menu; a dot on the speed button while it isn't Stop */
+.speedmenu { max-height: calc(100dvh - var(--tp, 140px) - env(safe-area-inset-top, 0px) - 28px); overflow-y: auto; overscroll-behavior: contain; }
+/* end-of-episode button at the end of the progress row: dim when Stop, accent when Play next / Repeat episode */
+.endm { width: 32px; height: 28px; margin: -4px -6px -4px -4px; border-radius: 8px; display: grid; place-items: center; color: var(--faint); transition: color .2s ease, background-color .2s ease; }
+.endm svg { width: 17px; height: 17px; }
+.endm[data-m="next"], .endm[data-m="loop"] { color: var(--accent); background: var(--accent-soft); }
+.endm:active { transform: scale(.92); }
+.etoast { position: fixed; z-index: 5; padding: 7px 12px; border-radius: 10px; background: var(--bubble); color: var(--ink); border: 1px solid var(--bubble-line);
+  font: 600 13px/1.2 var(--f-latin); box-shadow: 0 2px 4px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.14); white-space: nowrap; pointer-events: none;
+  opacity: 0; translate: 0 4px; transition: opacity .18s ease, translate .25s var(--spring); }
+.etoast.on { opacity: 1; translate: 0 0; }
 /* the bubble: a neutral card one step up from the player bar (white in light mode, a lighter grey in dark) */
 :root { --bubble: #ffffff; --bubble-line: #e3e4ec; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bubble: #2b2c37; --bubble-line: #393b48; } }
@@ -845,7 +865,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   <div class="speedmenu" id="speedmenu" role="menu" aria-label="Playback speed" hidden></div>
   <footer class="transport" id="transport" hidden><div class="wrap">
     <button class="nowpl" id="nowpl" hidden><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="nowtag" id="nowtag"></span><span class="nowt"><b id="nowtxt"></b><span class="nowsub" id="nowsub"></span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
-    <div class="seek"><span id="cur">0:00</span><span class="rng" id="rng"><input type="range" id="pos" min="0" max="1000" value="0" aria-label="Position"><i class="thumb" aria-hidden="true"></i></span><span id="tot">0:00</span></div>
+    <div class="seek"><span id="cur">0:00</span><span class="rng" id="rng"><input type="range" id="pos" min="0" max="1000" value="0" aria-label="Position"><i class="thumb" aria-hidden="true"></i></span><span id="tot">0:00</span><button class="endm" id="endm" data-m="stop"><svg id="endicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"></svg></button></div>
     <div class="ctrls">
       <div class="side"><button class="speed" id="speed" aria-label="Playback speed"><span class="lb">1×</span><span class="tx" data-t="speedLbl"></span></button>
         <button class="chip en" id="enbtn" aria-haspopup="menu" aria-label="Translation and text size"><span class="lb">EN</span></button></div>
@@ -861,7 +881,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     <h2 id="kbt"></h2><dl class="keys" id="kbkeys"></dl>
     <div class="abtns one"><button id="kbok"></button></div>
   </div></div>
-  <button class="coach" id="coach" hidden><span id="coacht"></span></button>
+  <div class="etoast" id="endtoast" hidden role="status"></div>
+  <div class="coach" id="coach" hidden><button class="cgo" id="coachgo"><span id="coacht"></span><span class="ring" id="coachring" hidden aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.5"/></svg><i id="coachn"></i></span></button><button class="cx" id="coachx" hidden></button></div>
   <div class="alert" id="skipdlg" hidden role="alertdialog" aria-modal="true" aria-labelledby="skipt" aria-describedby="skipb"><div class="abox">
     <h2 id="skipt"></h2><p id="skipb"></p>
     <label class="nask"><input type="checkbox" id="skipnask"><span id="skipnaskt"></span></label>
@@ -909,7 +930,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   // UI text in the chosen translation language (None → English)
   var I18N = {
     cs: { tipFind: "Hledat v této epizodě", tipXp: "Gramatika a slovíčka", tipPrev: "Předchozí řádek", tipNext: "Další řádek", tipPlay: "Přehrát / Pozastavit", tipAgain: "Přehrát řádek znovu", tipSpeed: "Rychlost přehrávání", speedLbl: "Rychlost", tipTr: "Překlad a velikost textu", tipLang: "Jazyk", tipRefresh: "Obnovit", kbTitle: "Klávesové zkratky", kbClose: "Zavřít kartu nebo nabídku", kbHelp: "Zobrazit tento seznam", kbLines: "Předchozí / další řádek", kbSeek: "Zpět / vpřed o 1 s", hanja: "Hanča",
-      coach: "Další: {e}", nextEp: "Další epizoda", skipT: "Přeskočit na další epizodu?", skipB: "Další: {t}. Váš postup v této epizodě je uložený.", skipNoAsk: "Už se neptat", cancel: "Zrušit", skip: "Přeskočit",
+      coach: "Další: {e}", nextEp: "Další epizoda", skipT: "Přeskočit na další epizodu?", skipB: "Další: {t}. Váš postup v této epizodě je uložený.", skipNoAsk: "Už se neptat", cancel: "Zrušit", skip: "Přeskočit", endLbl: "Na konci epizody", endStop: "Zastavit", endNext: "Přehrát další", endLoop: "Opakovat epizodu",
       lede: "Každodenní korejské rozhovory podle osnov Sogang. Vyberte si epizodu, nebo něco vyhledejte.", search: "Hledat v podcastech", level: "Úroveň {n}", ready: "Hotovo {a} z {b}",
       scriptOnly: "Jen text", audioBy: "Zvuk do {d}", done: "Dokončeno", left: "zbývá {t}", "new": "Nové", preview: "Ukázka",
       about: "O této epizodě", more: "Zobrazit víc", less: "Zobrazit méně", setting: "Prostředí", formality: "Míra zdvořilosti", topics: "Témata", xpTitle: "Gramatika a slovíčka", fType: "Typ", fBook: "Učebnice", fUnit: "Lekce", fAll: "Vše", tyG: "Gramatika", tyV: "Slovíčka", tyE: "Výrazy", tyX: "Navíc", unitN: "Lekce {n}", fClear: "Zrušit", fNone: "Těmto filtrům nic neodpovídá.", secG: "Gramatika a výrazy", secV: "Slovíčka", inComm: "Výklad", bookFirst: "Nejdřív vyberte učebnici", items: "Gramatika a slovíčka", seeAll: "Zobrazit vše",
@@ -921,7 +942,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       lines: "{n} řádků", noMatch: "Žádný řádek neobsahuje „{q}“.", loadFail: "Seznam epizod se nepodařilo načíst. Stáhněte dolů pro obnovení.",
       cancel: "Zrušit", clear: "Vymazat", recent: "Nedávná hledání", findPh: "Hledat v této epizodě", close: "Hotovo" },
     en: { tipFind: "Find in this episode", tipXp: "Grammar & Vocab", tipPrev: "Previous line", tipNext: "Next line", tipPlay: "Play / Pause", tipAgain: "Replay line", tipSpeed: "Playback speed", speedLbl: "Speed", tipTr: "Translation & Text size", tipLang: "Language", tipRefresh: "Refresh", kbTitle: "Keyboard shortcuts", kbClose: "Close a card or menu", kbHelp: "Show this list", kbLines: "Previous / Next line", kbSeek: "Back / Forward 1 s", hanja: "Hanja",
-      coach: "Up next: {e}", nextEp: "Next episode", skipT: "Skip to the next episode?", skipB: "Up next: {t}. Your progress on this episode is saved.", skipNoAsk: "Don’t ask again", cancel: "Cancel", skip: "Skip",
+      coach: "Up next: {e}", nextEp: "Next episode", skipT: "Skip to the next episode?", skipB: "Up next: {t}. Your progress on this episode is saved.", skipNoAsk: "Don’t ask again", cancel: "Cancel", skip: "Skip", endLbl: "At episode end", endStop: "Stop", endNext: "Play next", endLoop: "Repeat episode",
       lede: "Everyday Korean conversations based on the Sogang syllabus. Pick an episode or search for something.", search: "Search podcasts", level: "Level {n}", ready: "{a} / {b} ready",
       scriptOnly: "Script only", audioBy: "Audio by {d}", done: "Done", left: "{t} left", "new": "New", preview: "Preview",
       about: "About this episode", more: "Show more", less: "Show less", setting: "Setting", formality: "Formality", topics: "Topics", xpTitle: "Grammar & Vocab", fType: "Type", fBook: "Book", fUnit: "Unit", fAll: "All", tyG: "Grammar", tyV: "Vocab", tyE: "Expressions", tyX: "Extra", unitN: "Unit {n}", fClear: "Clear", fNone: "Nothing matches these filters.", secG: "Grammar & Expressions", secV: "Vocab", inComm: "Commentary", bookFirst: "Pick a book first", items: "Grammar & Vocab", seeAll: "See all",
@@ -933,7 +954,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       lines: "{n} lines", noMatch: "No lines match “{q}”.", loadFail: "Couldn’t load the episode list. Pull to refresh.",
       cancel: "Cancel", clear: "Clear", recent: "Recent searches", findPh: "Find in this episode", close: "Done" },
     ko: { tipFind: "이번 회에서 찾기", tipXp: "문법·어휘", tipPrev: "이전 줄", tipNext: "다음 줄", tipPlay: "재생/일시정지", tipAgain: "이 줄 다시 듣기", tipSpeed: "재생 속도", speedLbl: "속도", tipTr: "번역·글자 크기", tipLang: "언어", tipRefresh: "새로고침", kbTitle: "키보드 단축키", kbClose: "카드·메뉴 닫기", kbHelp: "이 목록 보기", kbLines: "이전/다음 줄", kbSeek: "1초 뒤로/앞으로", hanja: "한자",
-      coach: "다음 회: {e}", nextEp: "다음 회", skipT: "다음 회로 넘어갈까요?", skipB: "다음 회: {t}. 이번 회 진도는 저장돼요.", skipNoAsk: "다시 묻지 않기", cancel: "취소", skip: "넘어가기",
+      coach: "다음 회: {e}", nextEp: "다음 회", skipT: "다음 회로 넘어갈까요?", skipB: "다음 회: {t}. 이번 회 진도는 저장돼요.", skipNoAsk: "다시 묻지 않기", cancel: "취소", skip: "넘어가기", endLbl: "회가 끝나면", endStop: "멈추기", endNext: "다음 회 재생", endLoop: "이번 회 반복",
       lede: "서강 커리큘럼을 바탕으로 한 일상 한국어 대화예요. 에피소드를 고르거나 검색해 보세요.", search: "팟캐스트 검색", level: "{n}급", ready: "오디오 {a} / {b}",
       scriptOnly: "대본만", audioBy: "오디오 {d} 예정", done: "다 들음", left: "{t} 남음", "new": "새 에피소드", preview: "미리 듣기",
       about: "이번 회 소개", more: "더 보기", less: "접기", setting: "배경", formality: "말투", topics: "주제", xpTitle: "문법 · 표현 · 어휘", fType: "종류", fBook: "교재", fUnit: "단원", fAll: "전체", tyG: "문법", tyV: "어휘", tyE: "표현", tyX: "추가", unitN: "{n}과", fClear: "초기화", fNone: "조건에 맞는 항목이 없어요.", secG: "문법 · 표현", secV: "어휘", inComm: "해설", bookFirst: "교재를 먼저 고르세요", items: "문법 · 어휘", seeAll: "전체 보기",
@@ -945,7 +966,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       lines: "{n}줄", noMatch: "“{q}” 검색 결과가 없어요.", loadFail: "에피소드 목록을 불러오지 못했어요. 당겨서 새로고침해 주세요.",
       cancel: "취소", clear: "지우기", recent: "최근 검색", findPh: "이번 회에서 찾기", close: "완료" },
     ja: { tipFind: "このエピソード内を検索", tipXp: "文法・語彙", tipPrev: "前の行", tipNext: "次の行", tipPlay: "再生/一時停止", tipAgain: "この行をもう一度", tipSpeed: "再生速度", speedLbl: "速度", tipTr: "翻訳・文字サイズ", tipLang: "言語", tipRefresh: "更新", kbTitle: "キーボードショートカット", kbClose: "カード・メニューを閉じる", kbHelp: "この一覧を表示", kbLines: "前/次の行", kbSeek: "1秒戻る/進む", hanja: "漢字",
-      coach: "次は {e}", nextEp: "次のエピソード", skipT: "次のエピソードに進みますか？", skipB: "次は「{t}」。このエピソードの進捗は保存されます。", skipNoAsk: "今後は確認しない", cancel: "キャンセル", skip: "進む",
+      coach: "次は {e}", nextEp: "次のエピソード", skipT: "次のエピソードに進みますか？", skipB: "次は「{t}」。このエピソードの進捗は保存されます。", skipNoAsk: "今後は確認しない", cancel: "キャンセル", skip: "進む", endLbl: "エピソードの終了時", endStop: "停止", endNext: "次を再生", endLoop: "このエピソードをリピート",
       lede: "西江大学のカリキュラムに基づいた日常の韓国語会話。エピソードを選ぶか、検索してください。", search: "ポッドキャストを検索", level: "レベル{n}", ready: "{a} / {b} 配信中",
       scriptOnly: "台本のみ", audioBy: "音声は{d}頃", done: "聴き終わり", left: "残り{t}", "new": "新着", preview: "プレビュー",
       about: "このエピソードについて", more: "もっと見る", less: "閉じる", setting: "場面", formality: "話し方", topics: "テーマ", xpTitle: "文法・表現・語彙", fType: "種類", fBook: "教科書", fUnit: "課", fAll: "すべて", tyG: "文法", tyV: "語彙", tyE: "表現", tyX: "追加", unitN: "第{n}課", fClear: "クリア", fNone: "条件に合う項目がありません。", secG: "文法・表現", secV: "語彙", inComm: "解説", bookFirst: "先に教科書を選んでください", items: "文法・語彙", seeAll: "すべて見る",
@@ -956,7 +977,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       playFrom: "ここから再生", goLine: "この行へ", commentaryOnly: "場面の会話ではなく、解説の中で紹介しています。",
       lines: "{n}行", noMatch: "「{q}」を含む行はありません。", loadFail: "エピソード一覧を読み込めませんでした。下に引いて更新してください。", cancel: "キャンセル", clear: "消去", recent: "最近の検索", findPh: "このエピソード内を検索", close: "完了" },
     zh: { tipFind: "在本集中查找", tipXp: "语法与词汇", tipPrev: "上一句", tipNext: "下一句", tipPlay: "播放/暂停", tipAgain: "重听这句", tipSpeed: "播放速度", speedLbl: "速度", tipTr: "翻译与字号", tipLang: "语言", tipRefresh: "刷新", kbTitle: "键盘快捷键", kbClose: "关闭卡片或菜单", kbHelp: "显示此列表", kbLines: "上一句/下一句", kbSeek: "后退/前进 1 秒", hanja: "汉字",
-      coach: "下一集：{e}", nextEp: "下一集", skipT: "跳到下一集吗？", skipB: "下一集：{t}。本集的进度会保存。", skipNoAsk: "不再提示", cancel: "取消", skip: "跳过",
+      coach: "下一集：{e}", nextEp: "下一集", skipT: "跳到下一集吗？", skipB: "下一集：{t}。本集的进度会保存。", skipNoAsk: "不再提示", cancel: "取消", skip: "跳过", endLbl: "本集结束后", endStop: "停止", endNext: "播放下一集", endLoop: "单集循环",
       lede: "基于西江课程的日常韩语对话。挑一集来听，或搜索内容。", search: "搜索播客", level: "{n} 级", ready: "{a} / {b} 集可听",
       scriptOnly: "仅文本", audioBy: "音频预计{d}", done: "已听完", left: "剩余 {t}", "new": "新", preview: "预览",
       about: "本集简介", more: "展开", less: "收起", setting: "场景", formality: "语体", topics: "主题", xpTitle: "语法 · 表达 · 词汇", fType: "类型", fBook: "教材", fUnit: "单元", fAll: "全部", tyG: "语法", tyV: "词汇", tyE: "表达", tyX: "补充", unitN: "第{n}课", fClear: "清除", fNone: "没有符合条件的项目。", secG: "语法 · 表达", secV: "词汇", inComm: "讲解", bookFirst: "请先选择教材", items: "语法词汇", seeAll: "查看全部",
@@ -967,7 +988,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       playFrom: "从这里播放", goLine: "跳到该句", commentaryOnly: "只在讲解中出现，场景对话里没有用到。",
       lines: "{n} 句", noMatch: "没有找到包含“{q}”的句子。", loadFail: "无法加载节目列表，请下拉刷新。", cancel: "取消", clear: "清除", recent: "最近搜索", findPh: "在本集中查找", close: "完成" },
     zt: { tipFind: "在本集中搜尋", tipXp: "文法與詞彙", tipPrev: "上一句", tipNext: "下一句", tipPlay: "播放/暫停", tipAgain: "重聽這句", tipSpeed: "播放速度", speedLbl: "速度", tipTr: "翻譯與字級", tipLang: "語言", tipRefresh: "重新整理", kbTitle: "鍵盤快捷鍵", kbClose: "關閉卡片或選單", kbHelp: "顯示此列表", kbLines: "上一句/下一句", kbSeek: "後退/前進 1 秒", hanja: "漢字",
-      coach: "下一集：{e}", nextEp: "下一集", skipT: "跳到下一集嗎？", skipB: "下一集：{t}。本集的進度會保存。", skipNoAsk: "不再提示", cancel: "取消", skip: "跳過",
+      coach: "下一集：{e}", nextEp: "下一集", skipT: "跳到下一集嗎？", skipB: "下一集：{t}。本集的進度會保存。", skipNoAsk: "不再提示", cancel: "取消", skip: "跳過", endLbl: "本集結束後", endStop: "停止", endNext: "播放下一集", endLoop: "單集循環",
       lede: "以西江課程為基礎的日常韓語對話。挑一集來聽，或搜尋內容。", search: "搜尋播客", level: "{n} 級", ready: "{a} / {b} 集可聽",
       scriptOnly: "僅文字", audioBy: "音訊預計{d}", done: "已聽完", left: "剩餘 {t}", "new": "新", preview: "預覽",
       about: "本集簡介", more: "展開", less: "收合", setting: "場景", formality: "語體", topics: "主題", xpTitle: "語法 · 表達 · 詞彙", fType: "類型", fBook: "教材", fUnit: "單元", fAll: "全部", tyG: "語法", tyV: "詞彙", tyE: "表達", tyX: "補充", unitN: "第{n}課", fClear: "清除", fNone: "沒有符合條件的項目。", secG: "語法 · 表達", secV: "詞彙", inComm: "講解", bookFirst: "請先選擇教材", items: "語法詞彙", seeAll: "查看全部",
@@ -978,7 +999,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       playFrom: "從這裡播放", goLine: "跳到這句", commentaryOnly: "只在講解中出現，情境對話裡沒有用到。",
       lines: "{n} 句", noMatch: "找不到包含「{q}」的句子。", loadFail: "無法載入節目列表，請下拉重新整理。", cancel: "取消", clear: "清除", recent: "最近搜尋", findPh: "在本集中尋找", close: "完成" },
     de: { tipFind: "In dieser Folge suchen", tipXp: "Grammatik & Wortschatz", tipPrev: "Vorherige Zeile", tipNext: "Nächste Zeile", tipPlay: "Wiedergabe / Pause", tipAgain: "Zeile wiederholen", tipSpeed: "Wiedergabetempo", speedLbl: "Tempo", tipTr: "Übersetzung & Textgröße", tipLang: "Sprache", tipRefresh: "Aktualisieren", kbTitle: "Tastenkürzel", kbClose: "Karte oder Menü schließen", kbHelp: "Diese Liste anzeigen", kbLines: "Vorherige / nächste Zeile", kbSeek: "1 s zurück / vor", hanja: "Hanja",
-      coach: "Als Nächstes: {e}", nextEp: "Nächste Folge", skipT: "Zur nächsten Folge springen?", skipB: "Als Nächstes: {t}. Dein Fortschritt in dieser Folge wird gespeichert.", skipNoAsk: "Nicht mehr fragen", cancel: "Abbrechen", skip: "Springen",
+      coach: "Als Nächstes: {e}", nextEp: "Nächste Folge", skipT: "Zur nächsten Folge springen?", skipB: "Als Nächstes: {t}. Dein Fortschritt in dieser Folge wird gespeichert.", skipNoAsk: "Nicht mehr fragen", cancel: "Abbrechen", skip: "Springen", endLbl: "Am Ende der Folge", endStop: "Stoppen", endNext: "Nächste abspielen", endLoop: "Folge wiederholen",
       lede: "Koreanische Alltagsgespräche nach dem Sogang-Lehrplan. Wähle eine Folge oder suche etwas.", search: "Podcasts durchsuchen", level: "Stufe {n}", ready: "{a} / {b} bereit",
       scriptOnly: "Nur Skript", audioBy: "Audio ab {d}", done: "Gehört", left: "noch {t}", "new": "Neu", preview: "Vorschau",
       about: "Über diese Folge", more: "Mehr", less: "Weniger", setting: "Schauplatz", formality: "Sprachebene", topics: "Themen", xpTitle: "Grammatik & Wortschatz", fType: "Art", fBook: "Buch", fUnit: "Lektion", fAll: "Alle", tyG: "Grammatik", tyV: "Wortschatz", tyE: "Ausdrücke", tyX: "Extra", unitN: "Lektion {n}", fClear: "Zurücksetzen", fNone: "Keine Treffer für diese Filter.", secG: "Grammatik & Ausdrücke", secV: "Wortschatz", inComm: "Kommentar", bookFirst: "Erst ein Buch wählen", items: "Lernpunkte", seeAll: "Alle ansehen",
@@ -989,7 +1010,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       playFrom: "Ab hier abspielen", goLine: "Zur Zeile", commentaryOnly: "Wird im Kommentar erklärt, kommt in der Szene aber nicht vor.",
       lines: "{n} Zeilen", noMatch: "Keine Zeile enthält „{q}“.", loadFail: "Die Folgenliste konnte nicht geladen werden. Zum Aktualisieren nach unten ziehen.", cancel: "Abbrechen", clear: "Löschen", recent: "Letzte Suchen", findPh: "In dieser Folge suchen", close: "Fertig" },
     fr: { tipFind: "Rechercher dans l’épisode", tipXp: "Grammaire et vocabulaire", tipPrev: "Ligne précédente", tipNext: "Ligne suivante", tipPlay: "Lecture / pause", tipAgain: "Réécouter la ligne", tipSpeed: "Vitesse de lecture", speedLbl: "Vitesse", tipTr: "Traduction et taille du texte", tipLang: "Langue", tipRefresh: "Actualiser", kbTitle: "Raccourcis clavier", kbClose: "Fermer une carte ou un menu", kbHelp: "Afficher cette liste", kbLines: "Ligne précédente / suivante", kbSeek: "Reculer / avancer de 1 s", hanja: "Hanja",
-      coach: "À suivre : {e}", nextEp: "Épisode suivant", skipT: "Passer à l’épisode suivant ?", skipB: "À suivre : {t}. Votre progression dans cet épisode est enregistrée.", skipNoAsk: "Ne plus demander", cancel: "Annuler", skip: "Passer",
+      coach: "À suivre : {e}", nextEp: "Épisode suivant", skipT: "Passer à l’épisode suivant ?", skipB: "À suivre : {t}. Votre progression dans cet épisode est enregistrée.", skipNoAsk: "Ne plus demander", cancel: "Annuler", skip: "Passer", endLbl: "À la fin de l’épisode", endStop: "Arrêter", endNext: "Lire le suivant", endLoop: "Répéter l’épisode",
       lede: "Des conversations coréennes du quotidien basées sur le programme de Sogang. Choisissez un épisode ou lancez une recherche.", search: "Rechercher des podcasts", level: "Niveau {n}", ready: "{a} / {b} disponibles",
       scriptOnly: "Texte seul", audioBy: "Audio vers le {d}", done: "Écouté", left: "encore {t}", "new": "Nouveau", preview: "Aperçu",
       about: "À propos de cet épisode", more: "Plus", less: "Moins", setting: "Cadre", formality: "Registre", topics: "Thèmes", xpTitle: "Grammaire et vocabulaire", fType: "Type", fBook: "Manuel", fUnit: "Leçon", fAll: "Tout", tyG: "Grammaire", tyV: "Vocabulaire", tyE: "Expressions", tyX: "Extra", unitN: "Leçon {n}", fClear: "Effacer", fNone: "Aucun élément ne correspond à ces filtres.", secG: "Grammaire et expressions", secV: "Vocabulaire", inComm: "Commentaire", bookFirst: "Choisissez d’abord un manuel", items: "À apprendre", seeAll: "Tout voir",
@@ -1000,7 +1021,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       playFrom: "Lire à partir d’ici", goLine: "Aller à la ligne", commentaryOnly: "Expliqué dans le commentaire, mais pas utilisé dans la scène.",
       lines: "{n} lignes", noMatch: "Aucune ligne ne contient « {q} ».", loadFail: "Impossible de charger la liste des épisodes. Tirez pour actualiser.", cancel: "Annuler", clear: "Effacer", recent: "Recherches récentes", findPh: "Chercher dans l’épisode", close: "OK" },
     ru: { tipFind: "Найти в выпуске", tipXp: "Грамматика и лексика", tipPrev: "Предыдущая строка", tipNext: "Следующая строка", tipPlay: "Воспроизведение / пауза", tipAgain: "Повторить строку", tipSpeed: "Скорость", speedLbl: "Скорость", tipTr: "Перевод и размер текста", tipLang: "Язык", tipRefresh: "Обновить", kbTitle: "Сочетания клавиш", kbClose: "Закрыть карточку или меню", kbHelp: "Показать этот список", kbLines: "Предыдущая / следующая строка", kbSeek: "Назад / вперёд на 1 с", hanja: "Ханча",
-      coach: "Далее: {e}", nextEp: "Следующий выпуск", skipT: "Перейти к следующему выпуску?", skipB: "Далее: {t}. Прогресс в этом выпуске сохранится.", skipNoAsk: "Больше не спрашивать", cancel: "Отмена", skip: "Перейти",
+      coach: "Далее: {e}", nextEp: "Следующий выпуск", skipT: "Перейти к следующему выпуску?", skipB: "Далее: {t}. Прогресс в этом выпуске сохранится.", skipNoAsk: "Больше не спрашивать", cancel: "Отмена", skip: "Перейти", endLbl: "В конце выпуска", endStop: "Остановить", endNext: "Следующий выпуск", endLoop: "Повторять выпуск",
       lede: "Повседневные диалоги на корейском по программе Sogang. Выберите выпуск или воспользуйтесь поиском.", search: "Поиск по подкастам", level: "Уровень {n}", ready: "готово {a} / {b}",
       scriptOnly: "Только текст", audioBy: "Аудио к {d}", done: "Прослушано", left: "осталось {t}", "new": "Новое", preview: "Превью",
       about: "Об этом выпуске", more: "Ещё", less: "Свернуть", setting: "Место действия", formality: "Стиль речи", topics: "Темы", xpTitle: "Грамматика и лексика", fType: "Тип", fBook: "Учебник", fUnit: "Урок", fAll: "Все", tyG: "Грамматика", tyV: "Лексика", tyE: "Выражения", tyX: "Дополнительно", unitN: "Урок {n}", fClear: "Сбросить", fNone: "Ничего не найдено по этим фильтрам.", secG: "Грамматика и выражения", secV: "Лексика", inComm: "Разбор", bookFirst: "Сначала выберите учебник", items: "Изучаем", seeAll: "Показать все",
@@ -1011,7 +1032,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       playFrom: "Слушать отсюда", goLine: "К строке", commentaryOnly: "Объясняется в комментарии, но в сцене не встречается.",
       lines: "Строк: {n}", noMatch: "Нет строк с «{q}».", loadFail: "Не удалось загрузить список выпусков. Потяните вниз, чтобы обновить.", cancel: "Отмена", clear: "Очистить", recent: "Недавние запросы", findPh: "Поиск в выпуске", close: "Готово" },
     tr: { tipFind: "Bu bölümde ara", tipXp: "Dil bilgisi ve kelimeler", tipPrev: "Önceki satır", tipNext: "Sonraki satır", tipPlay: "Oynat / duraklat", tipAgain: "Satırı tekrar dinle", tipSpeed: "Oynatma hızı", speedLbl: "Hız", tipTr: "Çeviri ve yazı boyutu", tipLang: "Dil", tipRefresh: "Yenile", kbTitle: "Klavye kısayolları", kbClose: "Kartı veya menüyü kapat", kbHelp: "Bu listeyi göster", kbLines: "Önceki / sonraki satır", kbSeek: "1 sn geri / ileri", hanja: "Hanja",
-      coach: "Sıradaki: {e}", nextEp: "Sonraki bölüm", skipT: "Sonraki bölüme geçilsin mi?", skipB: "Sıradaki: {t}. Bu bölümdeki ilerlemen kaydedilir.", skipNoAsk: "Bir daha sorma", cancel: "Vazgeç", skip: "Geç",
+      coach: "Sıradaki: {e}", nextEp: "Sonraki bölüm", skipT: "Sonraki bölüme geçilsin mi?", skipB: "Sıradaki: {t}. Bu bölümdeki ilerlemen kaydedilir.", skipNoAsk: "Bir daha sorma", cancel: "Vazgeç", skip: "Geç", endLbl: "Bölüm bitince", endStop: "Durdur", endNext: "Sonrakini oynat", endLoop: "Bölümü tekrarla",
       lede: "Sogang müfredatına dayalı günlük Korece konuşmalar. Bir bölüm seçin ya da arama yapın.", search: "Podcast ara", level: "Seviye {n}", ready: "{a} / {b} hazır",
       scriptOnly: "Yalnızca metin", audioBy: "Ses {d} civarı", done: "Bitti", left: "{t} kaldı", "new": "Yeni", preview: "Önizleme",
       about: "Bu bölüm hakkında", more: "Devamını göster", less: "Daha az göster", setting: "Ortam", formality: "Hitap düzeyi", topics: "Konular", xpTitle: "Dilbilgisi ve kelimeler", fType: "Tür", fBook: "Kitap", fUnit: "Ünite", fAll: "Tümü", tyG: "Dilbilgisi", tyV: "Kelimeler", tyE: "İfadeler", tyX: "Ek", unitN: "Ünite {n}", fClear: "Temizle", fNone: "Bu filtrelere uyan öğe yok.", secG: "Dilbilgisi ve ifadeler", secV: "Kelimeler", inComm: "Yorum", bookFirst: "Önce bir kitap seçin", items: "Dilbilgisi ve kelimeler", seeAll: "Tümünü gör",
@@ -1022,7 +1043,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       playFrom: "Buradan oynat", goLine: "Satıra git", commentaryOnly: "Sahnede geçmiyor, yorum kısmında açıklanıyor.",
       lines: "{n} satır", noMatch: "“{q}” ile eşleşen satır yok.", loadFail: "Bölüm listesi yüklenemedi. Yenilemek için aşağı çekin.", cancel: "Vazgeç", clear: "Temizle", recent: "Son aramalar", findPh: "Bu bölümde ara", close: "Bitti" },
     vi: { tipFind: "Tìm trong tập này", tipXp: "Ngữ pháp & từ vựng", tipPrev: "Dòng trước", tipNext: "Dòng sau", tipPlay: "Phát / tạm dừng", tipAgain: "Nghe lại dòng này", tipSpeed: "Tốc độ phát", speedLbl: "Tốc độ", tipTr: "Bản dịch & cỡ chữ", tipLang: "Ngôn ngữ", tipRefresh: "Làm mới", kbTitle: "Phím tắt", kbClose: "Đóng thẻ hoặc menu", kbHelp: "Hiện danh sách này", kbLines: "Dòng trước / sau", kbSeek: "Lùi / tiến 1 giây", hanja: "Hán tự",
-      coach: "Tiếp theo: {e}", nextEp: "Tập tiếp theo", skipT: "Chuyển sang tập tiếp theo?", skipB: "Tiếp theo: {t}. Tiến độ của bạn ở tập này sẽ được lưu.", skipNoAsk: "Không hỏi lại", cancel: "Hủy", skip: "Chuyển",
+      coach: "Tiếp theo: {e}", nextEp: "Tập tiếp theo", skipT: "Chuyển sang tập tiếp theo?", skipB: "Tiếp theo: {t}. Tiến độ của bạn ở tập này sẽ được lưu.", skipNoAsk: "Không hỏi lại", cancel: "Hủy", skip: "Chuyển", endLbl: "Khi hết tập", endStop: "Dừng", endNext: "Phát tập tiếp", endLoop: "Lặp lại tập",
       lede: "Hội thoại tiếng Hàn đời thường theo giáo trình Sogang. Chọn một tập hoặc tìm kiếm.", search: "Tìm podcast", level: "Cấp {n}", ready: "{a} / {b} tập sẵn sàng",
       scriptOnly: "Chỉ có lời thoại", audioBy: "Âm thanh khoảng {d}", done: "Đã nghe", left: "còn {t}", "new": "Mới", preview: "Nghe thử",
       about: "Về tập này", more: "Xem thêm", less: "Thu gọn", setting: "Bối cảnh", formality: "Mức độ trang trọng", topics: "Chủ đề", xpTitle: "Ngữ pháp & từ vựng", fType: "Loại", fBook: "Giáo trình", fUnit: "Bài", fAll: "Tất cả", tyG: "Ngữ pháp", tyV: "Từ vựng", tyE: "Cách nói", tyX: "Bổ sung", unitN: "Bài {n}", fClear: "Xóa lọc", fNone: "Không có mục nào khớp bộ lọc.", secG: "Ngữ pháp & cách nói", secV: "Từ vựng", inComm: "Giải thích", bookFirst: "Hãy chọn giáo trình trước", items: "Ngữ pháp & từ vựng", seeAll: "Xem tất cả",
@@ -1033,7 +1054,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       playFrom: "Phát từ đây", goLine: "Đến dòng này", commentaryOnly: "Được giải thích trong phần bình luận, không xuất hiện trong cảnh.",
       lines: "{n} dòng", noMatch: "Không có dòng nào khớp với “{q}”.", loadFail: "Không tải được danh sách tập. Kéo xuống để làm mới.", cancel: "Hủy", clear: "Xóa", recent: "Tìm kiếm gần đây", findPh: "Tìm trong tập này", close: "Xong" },
     th: { tipFind: "ค้นหาในตอนนี้", tipXp: "ไวยากรณ์และคำศัพท์", tipPrev: "บรรทัดก่อนหน้า", tipNext: "บรรทัดถัดไป", tipPlay: "เล่น / หยุดชั่วคราว", tipAgain: "ฟังบรรทัดนี้อีกครั้ง", tipSpeed: "ความเร็วในการเล่น", speedLbl: "ความเร็ว", tipTr: "คำแปลและขนาดตัวอักษร", tipLang: "ภาษา", tipRefresh: "รีเฟรช", kbTitle: "แป้นพิมพ์ลัด", kbClose: "ปิดการ์ดหรือเมนู", kbHelp: "แสดงรายการนี้", kbLines: "บรรทัดก่อน / ถัดไป", kbSeek: "ย้อน / ข้าม 1 วินาที", hanja: "ฮันจา",
-      coach: "ตอนถัดไป: {e}", nextEp: "ตอนถัดไป", skipT: "ข้ามไปตอนถัดไปไหม", skipB: "ตอนถัดไป: {t} ความคืบหน้าในตอนนี้จะถูกบันทึกไว้", skipNoAsk: "ไม่ต้องถามอีก", cancel: "ยกเลิก", skip: "ข้าม",
+      coach: "ตอนถัดไป: {e}", nextEp: "ตอนถัดไป", skipT: "ข้ามไปตอนถัดไปไหม", skipB: "ตอนถัดไป: {t} ความคืบหน้าในตอนนี้จะถูกบันทึกไว้", skipNoAsk: "ไม่ต้องถามอีก", cancel: "ยกเลิก", skip: "ข้าม", endLbl: "เมื่อจบตอน", endStop: "หยุด", endNext: "เล่นตอนถัดไป", endLoop: "เล่นตอนนี้ซ้ำ",
       lede: "บทสนทนาภาษาเกาหลีในชีวิตประจำวันตามหลักสูตรซอกัง เลือกตอนที่อยากฟัง หรือค้นหาได้เลย", search: "ค้นหาพอดแคสต์", level: "ระดับ {n}", ready: "พร้อมฟัง {a} / {b}",
       scriptOnly: "มีแค่บท", audioBy: "เสียงราว {d}", done: "ฟังจบแล้ว", left: "เหลือ {t}", "new": "ใหม่", preview: "ตัวอย่าง",
       about: "เกี่ยวกับตอนนี้", more: "ดูเพิ่มเติม", less: "ย่อ", setting: "ฉาก", formality: "ระดับภาษา", topics: "หัวข้อ", xpTitle: "ไวยากรณ์และคำศัพท์", fType: "ประเภท", fBook: "หนังสือ", fUnit: "บท", fAll: "ทั้งหมด", tyG: "ไวยากรณ์", tyV: "คำศัพท์", tyE: "สำนวน", tyX: "เพิ่มเติม", unitN: "บทที่ {n}", fClear: "ล้าง", fNone: "ไม่มีรายการที่ตรงกับตัวกรองนี้", secG: "ไวยากรณ์และสำนวน", secV: "คำศัพท์", inComm: "อธิบาย", bookFirst: "เลือกหนังสือก่อน", items: "ไวยากรณ์และคำศัพท์", seeAll: "ดูทั้งหมด",
@@ -1420,7 +1441,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   audio.addEventListener("play", function () { setPlayIcon(true); $("transport").classList.remove("paused"); });
   audio.addEventListener("pause", function () { setPlayIcon(false); $("transport").classList.add("paused"); });
   audio.addEventListener("ended", function () { if (!ep.partial) store.set("done_" + ep.ep, true); store.set("pos_" + ep.ep, 0);
-    if (document.body.classList.contains("mini")) { document.body.classList.remove("mini"); $("transport").hidden = true; } });
+    if (document.body.classList.contains("mini") && endMode() === "stop") { document.body.classList.remove("mini"); $("transport").hidden = true; } });
   var rafOn = false;
   function raf() { if (!audio.paused) { tick(false); requestAnimationFrame(raf); } else rafOn = false; }
   audio.addEventListener("playing", function () { if (!rafOn) { rafOn = true; requestAnimationFrame(raf); } });
@@ -1497,7 +1518,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   // when an episode finishes, a bubble over the next-episode button suggests moving on; any other action dismisses it
   function placeCoach() {
     var r = $("nextep").getBoundingClientRect(), c = $("coach"), z = zf();
-    c.style.left = (r.left + r.width / 2) / z + "px"; c.style.bottom = (window.innerHeight - r.top + 10) / z + "px";
+    c.style.left = (r.left + r.width / 2) / z + "px"; c.style.bottom = (window.innerHeight - $("transport").getBoundingClientRect().top + 10) / z + "px";   // above the whole bar, clear of the end-of-episode button
     var w = c.offsetWidth * z, x = r.left + r.width / 2;                 // keep the bubble on screen; the tail stays over the button
     var shift = Math.min(0, window.innerWidth - 12 - (x + w / 2)); c.style.marginLeft = shift / z + "px";
     c.style.setProperty("--tail", -shift / z + "px");
@@ -1505,21 +1526,67 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   // wide screens draw the page at 94% (zoom on <html>): measured rects are on-screen pixels, but fixed positions are set in page
   // pixels, so on-screen values are divided by this factor before use (1 everywhere else)
   function zf() { var b = document.body, w = b.offsetWidth; return w ? (b.getBoundingClientRect().width / w) || 1 : 1; }
-  function showCoach() {
-    var n = nextReady(); if (!n || $("transport").hidden) return;
+  var cdTimer = null, cdTick = null, cdNext = null;
+  function stopCountdown() {
+    clearTimeout(cdTimer); clearInterval(cdTick); cdTimer = cdTick = null; cdNext = null;
+    var c = $("coach"); c.classList.remove("counting"); $("coachring").hidden = true; $("coachring").classList.remove("run"); $("coachx").hidden = true;
+  }
+  function showCoach(auto) {
+    stopCountdown();
+    var n = auto ? nextFull() : nextReady(); if (!n || $("transport").hidden) return;
     var ct = T("coach", { e: "\u0001" }).split("\u0001");
     $("coacht").innerHTML = esc(ct[0]) + "<b>" + esc(epLabel(n)) + "</b>" + esc(ct[1] || "");
-    var c = $("coach"); c.hidden = false; placeCoach(); void c.offsetWidth; c.classList.add("on");
+    var c = $("coach");
+    if (auto) {                                              // play next: a 5 s ring counts down, then the next episode starts
+      var left = 5; cdNext = n; $("coachn").textContent = left; $("coachring").hidden = false; $("coachx").hidden = false;
+      $("coachx").textContent = T("cancel"); c.classList.add("counting");
+    }
+    c.hidden = false; placeCoach(); void c.offsetWidth; c.classList.add("on");
+    if (auto) {
+      void $("coachring").offsetWidth; $("coachring").classList.add("run");
+      cdTick = setInterval(function () { left--; if (left > 0) $("coachn").textContent = left; }, 1000);
+      cdTimer = setTimeout(function () { var m = cdNext; hideCoach(); if (m) openEp(m.ep, null, true); }, 5000);
+    }
   }
-  function hideCoach() { var c = $("coach"); if (c.hidden) return; c.classList.remove("on"); setTimeout(function () { if (!c.classList.contains("on")) c.hidden = true; }, 220); }
-  $("coach").addEventListener("click", function () { hideCoach(); var n = nextReady(); if (n) goNext(n); });
-  audio.addEventListener("ended", function () { setTimeout(showCoach, 400); });
+  function hideCoach() { var c = $("coach"); stopCountdown(); if (c.hidden) return; c.classList.remove("on"); setTimeout(function () { if (!c.classList.contains("on")) c.hidden = true; }, 220); }
+  // the next episode whose audio is complete (previews are skipped when playing on by itself)
+  function nextFull() {
+    if (!ep || !index) return null;
+    var k = index.findIndex(function (x) { return x.ep === ep.ep; });
+    for (var j = k + 1; k >= 0 && j < index.length; j++) if (index[j].ready && !index[j].partial) return index[j];
+    return null;
+  }
+  $("coachgo").addEventListener("click", function () { var a = cdNext, n = a || nextReady(); hideCoach(); if (!n) return; if (a) openEp(n.ep, null, true); else goNext(n); });
+  $("coachx").addEventListener("click", function (ev) { ev.stopPropagation(); hideCoach(); });
+  audio.addEventListener("ended", function () {
+    var m = endMode();
+    if (m === "loop") { audio.currentTime = 0; var pr = audio.play(); if (pr && pr.catch) pr.catch(function () {}); return; }
+    if (m === "next") {
+      var n = nextFull(); if (!n) return;
+      if (document.hidden || document.body.classList.contains("mini")) { openEp(n.ep, null, true); return; }   // locked screen / mini player: no countdown to watch
+      setTimeout(function () { showCoach(true); }, 400); return;
+    }
+    setTimeout(function () { showCoach(false); }, 400);
+  });
   ["play", "seeking"].forEach(function (k) { audio.addEventListener(k, hideCoach); });
   window.addEventListener("resize", function () { if (!$("coach").hidden) placeCoach(); });
-  $("skipno").addEventListener("click", closeDlg);
-  $("skipyes").addEventListener("click", function () {
+  // iOS Safari could drop the tap on these buttons (the dialog blocks touch moves so the page behind stays put), so a finger
+  // lifting on the button counts too; the click that may follow is ignored
+  function dlgTap(el, fn) {
+    var last = 0;
+    function run(ev) { dlog(el.id + " " + ev.type + (ev.pointerType ? "/" + ev.pointerType : "")); if (Date.now() - last < 700 || dlg.hidden) return; last = Date.now(); fn(); }
+    el.addEventListener("click", run);
+    el.addEventListener("pointerup", function (ev) {
+      if (ev.pointerType === "mouse") return;
+      var r = el.getBoundingClientRect();
+      if (ev.clientX >= r.left && ev.clientX <= r.right && ev.clientY >= r.top && ev.clientY <= r.bottom) run(ev);
+    });
+    ["pointerdown", "pointercancel", "touchstart", "touchend", "touchcancel"].forEach(function (n) { el.addEventListener(n, function (ev) { dlog(el.id + " " + ev.type); }, { passive: true }); });
+  }
+  dlgTap($("skipno"), closeDlg);
+  dlgTap($("skipyes"), function () {
     if ($("skipnask").checked) store.set("skipNoAsk", true);
-    closeDlg(); if (dlgNext) goNext(dlgNext);
+    var n = dlgNext; closeDlg(); if (n) goNext(n);
   });
   dlg.addEventListener("click", function (ev) { if (ev.target === dlg) closeDlg(); });
   dlg.addEventListener("touchmove", function (ev) { ev.preventDefault(); }, { passive: false });
@@ -1553,7 +1620,30 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
         (r === 1 ? "<small>" + T("default") + "</small>" : "") + '</button>';
     }).join("");
   }
-  $("speed").setAttribute("aria-haspopup", "menu");
+  // what happens when an episode finishes: stop (the "up next" bubble), play the next fully voiced episode after 5 s, or repeat
+  function endMode() { var m = store.get("endMode", "stop"); return m === "next" || m === "loop" ? m : "stop"; }
+  // the button at the end of the progress row (above next episode) cycles Stop → Play next → Repeat episode
+  var END_ICON = {
+    stop: '<path d="M17 2l4 4-4 4"/><path d="M3 11V10a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',
+    loop: '<path d="M17 2l4 4-4 4"/><path d="M3 11V10a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/><path d="M11 10.5l1.5-1v5.5" stroke-width="1.8"/>',
+    next: '<path d="M3 12h13"/><path d="M12 7l5 5-5 5"/><path d="M21 5v14"/>' };
+  function endName(m) { return T(m === "next" ? "endNext" : m === "loop" ? "endLoop" : "endStop"); }
+  function syncEnd() {
+    var m = endMode(), b = $("endm"); b.dataset.m = m;
+    $("endicon").innerHTML = END_ICON[m];
+    b.setAttribute("aria-label", T("endLbl") + ": " + endName(m)); b.dataset.tip = T("endLbl") + ": " + endName(m);
+  }
+  var endToastT = null;
+  $("endm").addEventListener("click", function () {
+    var m = endMode(), nx = m === "stop" ? "next" : m === "next" ? "loop" : "stop";
+    store.set("endMode", nx); syncEnd();
+    var t = $("endtoast"), r = this.getBoundingClientRect(), z = zf();
+    t.textContent = endName(nx); t.hidden = false;
+    t.style.right = Math.max(8, window.innerWidth - r.right - 4) / z + "px"; t.style.bottom = (window.innerHeight - r.top + 8) / z + "px";
+    void t.offsetWidth; t.classList.add("on"); clearTimeout(endToastT);
+    endToastT = setTimeout(function () { t.classList.remove("on"); setTimeout(function () { if (!t.classList.contains("on")) t.hidden = true; }, 200); }, 1400);
+  });
+  $("speed").setAttribute("aria-haspopup", "menu"); syncEnd();
   $("speed").addEventListener("click", function (ev) {
     ev.stopPropagation(); closeLangMenu();
     var m = $("speedmenu"); if (menuOpen(m)) { popMenu(m, false); return; }
@@ -2259,7 +2349,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   if (window.visualViewport) visualViewport.addEventListener("resize", kbdCheck);
   // diagnostics for the iOS top-edge blur: open the site with #dbg to show live viewport numbers
-  var dbg = null;
+  var dbg = null, dlogs = [];
+  function dlog(t) { if (!dbg) return; dlogs.push(new Date().toISOString().slice(17, 23) + " " + t); if (dlogs.length > 8) dlogs.shift(); }
   function startDbg() {
     if (dbg) return;
     dbg = document.createElement("pre");
@@ -2275,7 +2366,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
         "\nscrollY " + Math.round(scrollY) + "  kbd " + document.body.classList.contains("kbd") + "  focus " + (document.activeElement && document.activeElement.id) +
         "\n" + box(".sbar") + "\n" + box(".search") + "\n" + box("#player .top") +
         "\nsafe-top " + getComputedStyle(document.querySelector(".sbar")).height + "  body mt " + getComputedStyle(document.body).marginTop +
-        "  standalone " + (navigator.standalone || matchMedia("(display-mode: standalone)").matches);
+        "  standalone " + (navigator.standalone || matchMedia("(display-mode: standalone)").matches) + (dlogs.length ? "\n" + dlogs.join("\n") : "");
       requestAnimationFrame(dbgTick);
     };
     dbgTick();
