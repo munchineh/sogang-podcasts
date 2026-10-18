@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="b4b4e77a4da7">
+<html lang="ko" data-build="a043c39000cd">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1426,7 +1426,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     document.querySelectorAll(".tx[data-t]").forEach(function (el) { el.textContent = T(el.dataset.t); });
     fitLabels();
     [["findbtn", "tipFind"], ["xpbtn", "tipXp"], ["prev", "tipPrev", "Shift+←", 1], ["next", "tipNext", "Shift+→", 1], ["play", "tipPlay", "Space", 1],
-     ["again", "tipAgain", "R", 1, 1], ["nextep", "nextEp", "", 1], ["speed", "tipSpeed", "", 1], ["enbtn", "tipTr", "", 1], ["langbtn", "tipLang"],
+     ["again", "tipAgain", "R", 1, 1], ["nextep", "nextEp", "N", 1], ["speed", "tipSpeed", "", 1], ["enbtn", "tipTr", "", 1], ["langbtn", "tipLang"],
      ["refresh", "tipRefresh", "", 0, 1], ["kbbtn", "kbTitle", "?", 1, 1]].forEach(function (t) {
       var el = $(t[0]); if (!el) return;
       el.dataset.tip = T(t[1]) + (t[2] ? " (" + t[2] + ")" : "");
@@ -1437,7 +1437,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   var kbd = $("kbdlg");
   function openKb() {
     $("kbt").textContent = T("kbTitle"); $("kbok").textContent = T("close");
-    $("kbkeys").innerHTML = [["<kbd>Space</kbd>", T("tipPlay")], ["<kbd>Shift</kbd><kbd>←</kbd><kbd>→</kbd>", T("kbLines")], ["<kbd>←</kbd><kbd>→</kbd>", T("kbSeek")], ["<kbd>R</kbd>", T("tipAgain")], ["<kbd>C</kbd>", T("backNow")],
+    $("kbkeys").innerHTML = [["<kbd>Space</kbd>", T("tipPlay")], ["<kbd>Shift</kbd><kbd>←</kbd><kbd>→</kbd>", T("kbLines")], ["<kbd>←</kbd><kbd>→</kbd>", T("kbSeek")], ["<kbd>R</kbd>", T("tipAgain")], ["<kbd>C</kbd>", T("backNow")], ["<kbd>N</kbd>", T("nextEp")],
       ["<kbd>Esc</kbd>", T("kbClose")], ["<kbd>?</kbd>", T("kbHelp")]].map(function (r) { return "<dt>" + r[0] + "</dt><dd>" + esc(r[1]) + "</dd>"; }).join("");
     kbd.hidden = false; void kbd.offsetWidth; kbd.classList.add("open"); $("kbok").focus({ preventScroll: true });
   }
@@ -1865,7 +1865,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     if (ev.pointerType !== "mouse") return;
     setTimeout(function () { var a = document.activeElement; if (a && a.matches && a.matches(".line, #transport button")) a.blur(); }, 0);
   });
-  // Space play/pause, Shift+←/→ previous/next line, ←/→ back/forward 1 s, R replay line, C back to the current line, ? shortcuts (not while typing, or with a card or dialog open)
+  // Space play/pause, Shift+←/→ previous/next line, ←/→ back/forward 1 s, R replay line, C back to the current line, N next episode, ? shortcuts (not while typing, or with a card or dialog open)
   document.addEventListener("keydown", function (ev) {
     if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
     var t = ev.target, typing = t.closest && t.closest("input, textarea, select, [contenteditable]");
@@ -1887,6 +1887,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       userScrolledAt = 0;
     } else if (ev.key === "r" || ev.key === "R") {
       ev.preventDefault(); $("again").click();
+    } else if (ev.key === "n" || ev.key === "N") {          // next episode (same as the button, including its "skip?" check)
+      ev.preventDefault(); if (!$("nextep").disabled) $("nextep").click();
     } else if (ev.key === "c" || ev.key === "C") {           // back to the current line (same as the pill), and follow the audio again
       ev.preventDefault(); userScrolledAt = 0; setCurrent(cur, true);
     }
