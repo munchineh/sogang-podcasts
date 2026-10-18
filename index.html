@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="0b622bbfadf4">
+<html lang="ko" data-build="e80cb3788a23">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -156,6 +156,17 @@ body { margin-top: 0; }
 .ib, .chip, .play, .speed, .qx, .recent button { transition: transform .45s var(--spring), background-color .2s ease; }
 .ib:active, .chip:active, .play:active, .speed:active, .qx:active, .recent button:active { transform: scale(.9); transition: transform .08s ease-out, background-color .1s ease; }
 @media (prefers-reduced-motion: reduce) { .ep, .ib, .chip, .play, .speed, .qx, .recent button { transition: none !important; } }
+/* hover (mouse only): things you can click grow a touch on a spring; pressing still dips them (rules below win over hover) */
+.ov .h button, .lvpick select { transition: transform .45s var(--spring), background-color .15s ease, border-color .15s ease, box-shadow .15s ease; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .ep:hover { transform: scale(1.012); }
+  .ib:hover, .chip:hover, .qx:hover, .recent button:hover { transform: scale(1.07); }
+  #nextep:hover, #again:hover, .speed:hover, .lvpick select:hover, .ov .h button:hover { transform: scale(1.04); }
+  .play:hover { transform: scale(1.06); }
+}
+.ep:active { transform: scale(.975); transition: transform .1s ease-out; }
+.ib:active, .chip:active, .play:active, .speed:active, .qx:active, .recent button:active { transform: scale(.9); transition: transform .08s ease-out, background-color .1s ease; }
+#nextep:active, #again:active, .speed:active, .lvpick select:active, .ov .h button:active { transform: scale(.95); transition: transform .08s ease-out, background-color .1s ease; }
 .ep .no { font: 500 11.5px/1.6 var(--f-mono); color: var(--faint); letter-spacing: .04em; font-variant-numeric: tabular-nums; }
 .ep .st { font: 500 11.5px/1.6 var(--f-mono); letter-spacing: .02em; color: var(--muted); white-space: nowrap; justify-self: end; }
 /* card status: new = green ▶ + length, part-listened = purple "time left", finished = grey ↻ + length */
@@ -483,7 +494,10 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 /* each language name in its own script's system font. In the Japanese UI the body font is Hiragino, whose Cyrillic is
    full-width (Р у с с к и й came out spaced); the lang attribute also gets 日本語 Japanese and 简体/繁體 Chinese glyph forms */
 .langmenu button[data-tr]:not([data-tr="off"]) { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Noto Sans", sans-serif; }
-.langmenu .sizes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 2px 4px 4px; }
+.langmenu .szrow { position: sticky; top: -6px; z-index: 1; margin: -6px -6px 4px; padding: 6px 6px 8px; background: var(--surface); border-bottom: 1px solid var(--rule); }
+.langmenu .szrow .lbl { display: block; }
+.langmenu .sizes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 0 4px; }
+.langmenu .sizes button { height: 40px; }
 .langmenu .sizes button { justify-content: center; padding: 0; font-weight: 700; }
 .back-now { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--tp, 140px) + 24px); z-index: 4;
   display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 16px 0 12px; border-radius: 999px; white-space: nowrap;
@@ -526,6 +540,24 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .sh-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .sh-top .ib { margin-right: -8px; }
 .sheet p.h { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+/* filters over the list: one row of dropdowns (type, book, unit) and a clear on the right */
+.xpf { position: relative; display: flex; align-items: center; gap: 6px; margin: 12px 0 4px; }
+.xpf .dd { flex: none; height: 32px; padding: 0 9px 0 12px; border-radius: 999px; border: 1px solid var(--rule); font: 600 13px var(--f-body); color: var(--ink);
+  display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.xpf .dd svg { width: 14px; height: 14px; color: var(--muted); transition: transform .2s ease; }
+.xpf .dd[aria-expanded="true"] svg { transform: rotate(180deg); }
+.xpf .dd.on { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+.xpf .dd.on svg { color: var(--accent); }
+.xpf .clr { margin-left: auto; height: 32px; padding: 0 4px; font: 600 13px var(--f-body); color: var(--accent); }
+.xpf .clr[hidden] { display: none; }
+.xpf .pop { position: absolute; top: 38px; z-index: 4; min-width: 150px; max-height: 280px; overflow-y: auto; padding: 6px; display: grid; gap: 2px;
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; box-shadow: 0 10px 30px rgba(10,10,20,.18); }
+.xpf .pop button { height: 40px; border-radius: 8px; padding: 0 12px; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  font: 600 14.5px var(--f-body); text-align: left; }
+.xpf .pop button small { font: 500 11.5px var(--f-mono); color: var(--muted); }
+.xpf .pop button[aria-checked="true"] { background: var(--accent-soft); color: var(--accent); }
+.xpf .pop button[disabled] { opacity: .35; }
+.xpnone { padding: 28px 4px; text-align: center; color: var(--muted); font-size: 14px; }
 .xpsec { display: flex; justify-content: space-between; align-items: baseline; margin: 18px 2px 6px; }
 .xpsec h3 { font: 700 15px var(--f-display); margin: 0; letter-spacing: -.01em; color: var(--muted); }   /* section label, quieter than the items */
 .xpsec span { font: 500 11.5px var(--f-mono); color: var(--muted); }
@@ -772,7 +804,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 <div class="sheet" id="dsheet" hidden><div class="panel"><div class="wrap dt" id="detail"></div></div></div>
 <div class="sheet" id="sheet" hidden><div class="panel"><div class="wrap">
   <div class="sh-top"><h2>이번 회 문법 · 표현 · 어휘</h2><button class="ib" data-close="1" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-  <p class="h" id="sheeth">Tap to see its meaning and how it’s used.</p><div id="xplist"></div>
+  <p class="h" id="sheeth">Tap to see its meaning and how it’s used.</p><div id="xpf" class="xpf"></div><div id="xplist"></div>
 </div></div></div>
 
 <script>
@@ -1029,7 +1061,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   function openEp(id, atLine, autoplay) {
     audio.pause(); if (finding) exitFind(); if ($("coach")) hideCoach();
     fetch("data/" + id + ".json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (d) {
-      ep = d; cur = -1;
+      ep = d; cur = -1; XF = { ty: "", bk: "", un: "" }; XOPEN = "";
       timed = d.lines.map(function (l, k) { return l.t == null ? -1 : k; }).filter(function (k) { return k >= 0; });
       if (!$("list").hidden) listY = window.scrollY;
       $("list").hidden = true; $("player").hidden = false; window.scrollTo(0, 0); userScrolledAt = 0;
@@ -1485,12 +1517,13 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     });
   }
   function renderLangMenu() {
-    $("langmenu").innerHTML = '<div class="lbl">' + T("translation") + '</div>' + LANGS.map(function (x) {
+    // text size first, as a compact row that is always in view; the translation list scrolls under it
+    $("langmenu").innerHTML = '<div class="szrow"><span class="lbl">' + T("textSize") + '</span><div class="sizes">' + SIZES.map(function (v, i) {
+      return '<button role="menuitemradio" aria-checked="' + (i === SZ) + '" data-sz="' + i + '" style="font-size:' + (11 + i * 3) + 'px">가</button>';
+    }).join("") + '</div></div><div class="lbl">' + T("translation") + '</div>' + LANGS.map(function (x) {
       var lang = x[0] === "off" ? UL() : x[0] === "zt" ? "zh-TW" : x[0] === "zh" ? "zh-CN" : x[0];
       return '<button role="menuitemradio" lang="' + lang + '" aria-checked="' + (x[0] === TR) + '" data-tr="' + x[0] + '">' + (x[0] === "off" ? T("none") : x[1]) + '</button>';
-    }).join("") + '<div class="lbl">' + T("textSize") + '</div><div class="sizes">' + SIZES.map(function (v, i) {
-      return '<button role="menuitemradio" aria-checked="' + (i === SZ) + '" data-sz="' + i + '" style="font-size:' + (11 + i * 3) + 'px">가</button>';
-    }).join("") + '</div>';
+    }).join("");
   }
   // the same menu opens from the player bar (above it) and from the home page (below the language chip)
   function openLangMenu(btn, below) {
@@ -1502,6 +1535,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       m.style.top = (r.bottom + 8) + "px"; m.style.bottom = "auto"; m.style.left = "auto"; m.style.maxHeight = (innerHeight - r.bottom - 24) + "px";
       m.style.right = Math.max(8, innerWidth - r.right) + "px";
     } else m.removeAttribute("style");
+    m.scrollTop = 0;
     popMenu(m, true, btn); btn.setAttribute("aria-expanded", "true");
   }
   function closeLangMenu() { popMenu($("langmenu"), false); $("langbtn").setAttribute("aria-expanded", "false"); }
@@ -1564,18 +1598,57 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }, { passive: true });
 
   // expressions sheet
+  // filters: type (grammar / vocab / expressions / extra), book (4A / 4B …) and unit, from the card's tag ("4A.3 Extra Grammar")
+  var XF = { ty: "", bk: "", un: "" }, XOPEN = "";
+  var XLBL = { ty: "종류", bk: "교재", un: "단원" }, TYN = { g: "문법", v: "어휘", e: "표현", x: "추가" };
+  function xpMeta(it) {
+    var t = it.tag || "", m = t.match(/^(\d[AB])(?:\.(\d+))?/);
+    var ty = /Extra/.test(t) ? "x" : (/Expressions/.test(t) || it.kind === "speaking") ? "e" : it.kind === "vocab" ? "v" : "g";
+    return { ty: ty, bk: m ? m[1] : "", un: m && m[2] ? m[2] : "" };
+  }
   function renderXp() {
     function row(it, k) {
       var n = 0, v = it.kind === "vocab"; ep.lines.forEach(function (l) { (l.hl || []).forEach(function (h) { if (h[2] === k) n++; }); });
       return '<button class="xp ' + (v ? "v" : "g") + '" data-k="' + k + '">' + (it.tag ? '<span class="tag' + (v ? " v" : "") + '">' + esc(it.tag) + '</span>' : "") +
         '<b>' + esc(it.item) + '</b><span>' + esc(cz(it, "gloss")) + '</span><em' + (n ? "" : ' class="none"') + '>' + (n ? n + "×" : "해설") + '</em></button>';
     }
+    var M = ep.items.map(xpMeta);
+    function pass(m, skip) { return (skip === "ty" || !XF.ty || m.ty === XF.ty) && (skip === "bk" || !XF.bk || m.bk === XF.bk) && (skip === "un" || !XF.un || m.un === XF.un); }
+    function count(dim, val) { var c = 0; M.forEach(function (m) { if (pass(m, dim) && (!val || m[dim] === val)) c++; }); return c; }
+    var OPT = { ty: [], bk: [], un: [] };
+    ["g", "v", "e", "x"].forEach(function (t) { if (M.some(function (m) { return m.ty === t; })) OPT.ty.push([t, TYN[t]]); });
+    M.forEach(function (m) { if (m.bk && !OPT.bk.some(function (o) { return o[0] === m.bk; })) OPT.bk.push([m.bk, m.bk]); }); OPT.bk.sort();
+    M.forEach(function (m) { if (m.un && (!XF.bk || m.bk === XF.bk) && !OPT.un.some(function (o) { return o[0] === m.un; })) OPT.un.push([m.un, m.un + "과"]); });
+    OPT.un.sort(function (a, b) { return a[0] - b[0]; });
+    var CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+    var h = "";
+    ["ty", "bk", "un"].forEach(function (d) {
+      if (OPT[d].length < 2 && !XF[d]) return;
+      var cur = OPT[d].filter(function (o) { return o[0] === XF[d]; })[0];
+      h += '<button class="dd' + (XF[d] ? " on" : "") + '" data-dd="' + d + '" aria-haspopup="menu" aria-expanded="' + (XOPEN === d) + '">' + (cur ? cur[1] : XLBL[d]) + CHEV + '</button>';
+    });
+    h += '<button class="clr" data-clr="1"' + (XF.ty || XF.bk || XF.un ? "" : " hidden") + '>초기화</button>';
+    if (XOPEN) h += '<div class="pop" role="menu" data-for="' + XOPEN + '">' + [["", "전체"]].concat(OPT[XOPEN]).map(function (o) {
+      var c = count(XOPEN, o[0]);
+      return '<button role="menuitemradio" data-f="' + XOPEN + '" data-v="' + o[0] + '" aria-checked="' + (XF[XOPEN] === o[0]) + '"' + (c || XF[XOPEN] === o[0] ? "" : " disabled") + '>' + o[1] + '<small>' + c + '</small></button>';
+    }).join("") + '</div>';
+    $("xpf").innerHTML = h;
+    if (XOPEN) { var bt = $("xpf").querySelector('[data-dd="' + XOPEN + '"]'), pp = $("xpf").querySelector(".pop"); if (bt && pp) pp.style.left = bt.offsetLeft + "px"; }
     var g = [], v = [];
-    ep.items.forEach(function (it, k) { (it.kind === "vocab" ? v : g).push(row(it, k)); });
+    ep.items.forEach(function (it, k) { if (pass(M[k])) (it.kind === "vocab" ? v : g).push(row(it, k)); });
     $("xplist").innerHTML =
       (g.length ? '<div class="xpsec"><h3>문법 · 표현</h3><span>' + g.length + '</span></div>' + g.join("") : "") +
-      (v.length ? '<div class="xpsec"><h3>어휘</h3><span>' + v.length + '</span></div>' + v.join("") : "");
+      (v.length ? '<div class="xpsec"><h3>어휘</h3><span>' + v.length + '</span></div>' + v.join("") : "") +
+      (g.length || v.length ? "" : '<div class="xpnone">조건에 맞는 항목이 없어요.</div>');
   }
+  $("xpf").addEventListener("click", function (ev) {
+    ev.stopPropagation();
+    var b = ev.target.closest("button"); if (!b || b.disabled) return;
+    if (b.dataset.dd) { XOPEN = XOPEN === b.dataset.dd ? "" : b.dataset.dd; renderXp(); return; }
+    if (b.dataset.clr) { XF = { ty: "", bk: "", un: "" }; XOPEN = ""; renderXp(); return; }
+    if (b.dataset.f) { XF[b.dataset.f] = b.dataset.v; if (b.dataset.f === "bk") XF.un = ""; XOPEN = ""; renderXp(); }
+  });
+  document.addEventListener("click", function (ev) { if (XOPEN && !ev.target.closest("#xpf")) { XOPEN = ""; renderXp(); } });
   // ---------- sheet motion: slide up to open, down to close; sideways between the list and a card ----------
   var xpFlow = false;                                       // the card sheet was reached from the grammar & vocab list
   function shown(el) { return !el.hidden && !el.classList.contains("closing"); }
