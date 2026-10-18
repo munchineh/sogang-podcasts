@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="99cdb55e3d33">
+<html lang="ko" data-build="6edcc27abfd3">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1567,6 +1567,10 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     document.documentElement.style.setProperty("--ks", SIZES[SZ] || 1);
     if (typeof finding !== "undefined" && finding) setTimeout(function () { runFind(true); }, 60);   // text size or language changed: redraw the matches
     document.documentElement.dataset.tr = TR;              // lets Japanese pick Japanese kanji forms
+    if (ep && !$("dsheet").hidden && openDetail._k != null) {  // an open word card follows the language too
+      var dp = $("dsheet").querySelector(".panel"), y = dp.scrollTop;
+      openDetail._quiet = true; try { openDetail(openDetail._k); } finally { openDetail._quiet = false; } dp.scrollTop = y;
+    }
     if (!ep) return;
     document.querySelectorAll(".line").forEach(function (el) {
       var l = ep.lines[+el.dataset.i], e = el.querySelector(".en"); if (!e || !l) return;
@@ -1816,11 +1820,12 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     return out + esc(l.ko.slice(p));
   }
   function openDetail(k, dx, fromH) {
-    if (WIDE.matches && document.body.classList.contains("railoff")) setRail(false);   // a word tapped while the side panel is collapsed brings the panel back
-    if (WIDE.matches && dx == null && !$("sheet").hidden) {  // docked list showing: slide the card in over it
+    var quiet = openDetail._quiet; openDetail._k = k;      // quiet: redraw the open card in place (language changed)
+    if (!quiet && WIDE.matches && document.body.classList.contains("railoff")) setRail(false);   // a word tapped while the side panel is collapsed brings the panel back
+    if (!quiet && WIDE.matches && dx == null && !$("sheet").hidden) {  // docked list showing: slide the card in over it
       xpScroll = $("sheet").querySelector(".panel").scrollTop; fromH = panelH($("sheet")); sheetHide($("sheet"), 28); dx = 28;
     }
-    xpFlow = dx != null;                                    // dx is only passed when coming from the list
+    if (!quiet) xpFlow = dx != null;                        // dx is only passed when coming from the list
     var it = ep.items[k]; if (!it) return;
     var kinds = { grammar: "Grammar", speaking: "Expression", vocab: "Vocab" };
     // one bullet per line of the note; a "·" list becomes separate bullets only when every piece is an "X = Y" pair
@@ -1850,7 +1855,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
           '<span class="go">' + (ep.ready && l.t != null ? "▶ " + T("playFrom") + " · " + fmt(l.t) : T("goLine")) + '</span></button>';
       }).join("") + '</div>' : '<p class="mean" style="color:var(--muted);font-size:14px">' + T("commentaryOnly") + '</p>');
     if (!WIDE.matches) { resumeAfter = resumeAfter || !audio.paused; audio.pause(); }     // wide screens keep playing
-    sheetShow($("dsheet"), dx, fromH); $("dsheet").querySelector(".panel").scrollTop = 0;
+    if (!quiet) { sheetShow($("dsheet"), dx, fromH); $("dsheet").querySelector(".panel").scrollTop = 0; }
   }
   function closeDetail(resume) {
     if (WIDE.matches && !$("player").hidden) {               // docked: back to the list
