@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="b7eb6cb538c9">
+<html lang="ko" data-build="b4b4e77a4da7">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -579,10 +579,10 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .xpf .pop button[aria-checked="true"] { background: var(--accent-soft); color: var(--accent); }
 .xpf .pop button[disabled] { opacity: .35; }
 .xpnone { padding: 28px 4px; text-align: center; color: var(--muted); font-size: 14px; }
-.xpsec { display: flex; justify-content: space-between; align-items: baseline; margin: 18px 2px 6px; }
+.xpsec { display: flex; justify-content: space-between; align-items: baseline; margin: 26px 2px 8px; }
 .xpsec h3 { font: 700 15px var(--f-display); margin: 0; letter-spacing: -.01em; color: var(--muted); }   /* section label, quieter than the items */
 .xpsec span { font: 500 11.5px var(--f-mono); color: var(--muted); }
-.xp { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 12px 2px; border-top: 1px solid var(--rule); text-align: left; width: 100%; }
+.xp { display: grid; grid-template-columns: 1fr auto; gap: 5px 12px; padding: 14px 2px; border-top: 1px solid var(--rule); text-align: left; width: 100%; }
 .xp .tag { justify-self: start; font: 600 10.5px/1 var(--f-mono); letter-spacing: .02em; color: var(--muted); background: color-mix(in srgb, var(--ink) 7%, transparent);
   padding: 4px 7px; border-radius: 6px; }
 .xp .tag.v { background: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent); }
@@ -632,19 +632,22 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .dt-back { display: inline-flex; align-items: center; gap: 2px; height: 40px; padding: 0 8px 0 0; margin-left: -6px; font: 600 14.5px var(--f-latin); color: var(--accent); }
 .dt-back svg { width: 22px; height: 22px; }
 .dt-kind { display: inline-block; margin-top: 4px; font: 600 11px/1 var(--f-mono); letter-spacing: .02em; color: var(--muted); background: color-mix(in srgb, var(--ink) 7%, transparent); padding: 5px 8px; border-radius: 6px; }
-.dt h2 { font: 900 26px/1.3 var(--f-display); letter-spacing: -.02em; margin: 4px 0 2px; }
-.dt .mean { font-family: var(--f-latin); font-size: 16px; margin: 0 0 14px; }
-.dt h3 { font: 600 11px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin: 18px 0 8px; }
+.dt h2 { font: 900 26px/1.3 var(--f-display); letter-spacing: -.02em; margin: 8px 0 4px; }
+.dt .mean { font-family: var(--f-latin); font-size: 16px; margin: 0 0 6px; }
+/* sections (Example, Notes, In this episode) sit apart: more air above each, with a hairline between them */
+.dt h3 { font: 600 11px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin: 22px 0 12px; padding-top: 20px; border-top: 1px solid var(--rule); }
 .dt .ex { padding: 12px 14px; border-radius: 12px; background: var(--accent-soft); }
 .dt .ex .k { font-size: 17px; font-weight: 500; line-height: 1.6; }
 .dt .ex .e { font-size: 14px; color: var(--muted); margin-top: 2px; }
-.dt ul { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 8px; font-size: 14.5px; line-height: 1.55; }
+.dt ul { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 10px; font-size: 14.5px; line-height: 1.55; }
 .dt ul li { position: relative; padding-left: 15px; }
 .dt ul li::before { content: ""; position: absolute; left: 2px; top: calc(.775em - 2px); width: 4px; height: 4px; border-radius: 50%; background: var(--muted); }
-.dt .uses { display: grid; gap: 8px; }
+.dt .uses { display: grid; gap: 10px; padding-bottom: 8px; }
 .dt .use { display: grid; gap: 3px; text-align: left; width: 100%; padding: 12px 14px; border-radius: 12px;
-  background: color-mix(in srgb, var(--ink) 4.5%, var(--surface)); }
-.dt .use:active { background: color-mix(in srgb, var(--ink) 9%, var(--surface)); }
+  background: color-mix(in srgb, var(--ink) 4.5%, var(--surface)); transition: transform .45s var(--spring), background-color .15s ease; }
+@media (hover: hover) and (pointer: fine) { .dt .use:hover { background: color-mix(in srgb, var(--ink) 7.5%, var(--surface)); } }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) { .dt .use:hover { transform: scale(1.012); } }
+.dt .use:active { background: color-mix(in srgb, var(--ink) 9%, var(--surface)); transform: scale(.98); transition: transform .08s ease-out, background-color .08s ease; }
 .dt .use .k { font-size: 16px; font-weight: 500; line-height: 1.6; }
 .dt .use .e { font-family: var(--f-latin); font-size: 13.5px; color: var(--muted); }
 .dt .use mark { background: var(--hl); color: inherit; border-radius: 4px; padding: 0 2px; font-weight: 700; }
@@ -1434,7 +1437,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   var kbd = $("kbdlg");
   function openKb() {
     $("kbt").textContent = T("kbTitle"); $("kbok").textContent = T("close");
-    $("kbkeys").innerHTML = [["<kbd>Space</kbd>", T("tipPlay")], ["<kbd>Shift</kbd><kbd>←</kbd><kbd>→</kbd>", T("kbLines")], ["<kbd>←</kbd><kbd>→</kbd>", T("kbSeek")], ["<kbd>R</kbd>", T("tipAgain")],
+    $("kbkeys").innerHTML = [["<kbd>Space</kbd>", T("tipPlay")], ["<kbd>Shift</kbd><kbd>←</kbd><kbd>→</kbd>", T("kbLines")], ["<kbd>←</kbd><kbd>→</kbd>", T("kbSeek")], ["<kbd>R</kbd>", T("tipAgain")], ["<kbd>C</kbd>", T("backNow")],
       ["<kbd>Esc</kbd>", T("kbClose")], ["<kbd>?</kbd>", T("kbHelp")]].map(function (r) { return "<dt>" + r[0] + "</dt><dd>" + esc(r[1]) + "</dd>"; }).join("");
     kbd.hidden = false; void kbd.offsetWidth; kbd.classList.add("open"); $("kbok").focus({ preventScroll: true });
   }
@@ -1862,7 +1865,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     if (ev.pointerType !== "mouse") return;
     setTimeout(function () { var a = document.activeElement; if (a && a.matches && a.matches(".line, #transport button")) a.blur(); }, 0);
   });
-  // Space play/pause, Shift+←/→ previous/next line, ←/→ back/forward 1 s, R replay line, ? shortcuts (not while typing, or with a card or dialog open)
+  // Space play/pause, Shift+←/→ previous/next line, ←/→ back/forward 1 s, R replay line, C back to the current line, ? shortcuts (not while typing, or with a card or dialog open)
   document.addEventListener("keydown", function (ev) {
     if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
     var t = ev.target, typing = t.closest && t.closest("input, textarea, select, [contenteditable]");
@@ -1884,6 +1887,8 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       userScrolledAt = 0;
     } else if (ev.key === "r" || ev.key === "R") {
       ev.preventDefault(); $("again").click();
+    } else if (ev.key === "c" || ev.key === "C") {           // back to the current line (same as the pill), and follow the audio again
+      ev.preventDefault(); userScrolledAt = 0; setCurrent(cur, true);
     }
   });
 
