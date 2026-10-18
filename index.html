@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="cee70de43268">
+<html lang="ko" data-build="137ca723196a">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -589,6 +589,10 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 /* grammar tags outlined, vocab tags filled (18 Oct: the filled grey balanced the plain vocab words; the highlighted grammar
    items read better with a light outline) */
 .xp .tag:not(.v) { background: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent); }
+/* Extra Grammar / Extra Vocab (beyond the unit's core list): same shape, in the accent colour */
+.xp .tag.x { color: var(--accent); }
+.xp .tag.x:not(.v) { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent); }
+.xp .tag.x.v { background: var(--accent-soft); }
 .xp b { font-weight: 700; font-size: 16.5px; line-height: 1.45; justify-self: start; }
 .xp.g b { background: var(--hl); border-radius: 5px; padding: 0 5px; }
 
@@ -1670,7 +1674,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   function renderXp(onlyF) {          // onlyF: just the filter row (opening/closing a dropdown leaves the list alone)
     function row(it, k) {
       var n = 0, v = it.kind === "vocab"; ep.lines.forEach(function (l) { (l.hl || []).forEach(function (h) { if (h[2] === k) n++; }); });
-      return '<button class="xp ' + (v ? "v" : "g") + '" data-k="' + k + '">' + (it.tag ? '<span class="tag' + (v ? " v" : "") + '">' + esc(it.tag) + '</span>' : "") +
+      return '<button class="xp ' + (v ? "v" : "g") + '" data-k="' + k + '">' + (it.tag ? '<span class="tag' + (v ? " v" : "") + (/Extra/.test(it.tag) ? " x" : "") + '">' + esc(it.tag) + '</span>' : "") +
         '<b>' + esc(it.item) + '</b><span>' + esc(cz(it, "gloss")) + '</span><em' + (n ? "" : ' class="none"') + '>' + (n ? n + "×" : T("inComm")) + '</em></button>';
     }
     var M = ep.items.map(xpMeta);
