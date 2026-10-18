@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="e80cb3788a23">
+<html lang="ko" data-build="88d50395e12c">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -83,7 +83,7 @@ html, body { height: 100%; }
 html[data-tr="ja"] { --f-latin: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Noto Sans KR", sans-serif;
   --f-body: "Dots", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Noto Sans KR", -apple-system, sans-serif; }
 body { background: var(--bg); color: var(--ink); font: 16px/1.6 var(--f-body); -webkit-text-size-adjust: 100%;
-  word-break: keep-all; overflow-wrap: anywhere; }
+  word-break: keep-all; overflow-wrap: anywhere;  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; /* Mac browsers drew text heavier than iPhone */ }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 button:focus-visible, .line:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 10px; }
 .wrap { max-width: 680px; margin: 0 auto; padding-left: max(var(--edge), env(safe-area-inset-left, 0px)); padding-right: max(var(--edge), env(safe-area-inset-right, 0px)); }
@@ -661,8 +661,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     box-sizing: border-box; }
   body.searching #list { padding-top: 0; }
   #list .search.pinned, #list .search { position: sticky; left: auto; right: auto; padding-inline: 0; }
-  #list .ep .b { display: none; }
-  #list .ep { padding-block: 14px; }
+  /* (episode cards keep the phone layout: summary shown, same padding) */
   /* current episode: a soft accent tint and a hairline accent stroke (same 1px weight as the other cards), EP number in accent */
   #list .ep.cur, #list .ep.cur:hover { background: color-mix(in srgb, var(--accent) 9%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 45%, var(--rule)); }
   #list .ep.cur .no { color: var(--accent); }
@@ -1494,15 +1493,14 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   document.addEventListener("click", function (ev) { if (!ev.target.closest("#speedmenu")) popMenu($("speedmenu"), false); });
   document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") popMenu($("speedmenu"), false); });
   // translation (none / English / 简体 / 繁體) and text size, remembered on this device
-  var LANGS = [["off", "None", "KO"], ["en", "English", "EN"], ["zh", "简体中文", "简"], ["zt", "繁體中文", "繁"],
-               ["de", "Deutsch", "DE"], ["fr", "Français", "FR"], ["ru", "Русский", "RU"],
-               ["tr", "Türkçe", "TR"],
-               ["vi", "Tiếng Việt", "VI"],
-               ["th", "ไทย", "TH"], ["ja", "日本語", "JA"], ["cs", "Čeština", "CS"]];
+  // alphabetical by the name as shown: Latin script A–Z, then Cyrillic, Thai, Japanese, Chinese (18 Oct, Mancini)
+  var LANGS = [["off", "None", "KO"], ["cs", "Čeština", "CS"], ["de", "Deutsch", "DE"], ["en", "English", "EN"], ["fr", "Français", "FR"],
+               ["vi", "Tiếng Việt", "VI"], ["tr", "Türkçe", "TR"], ["ru", "Русский", "RU"], ["th", "ไทย", "TH"], ["ja", "日本語", "JA"],
+               ["zh", "简体中文", "简"], ["zt", "繁體中文", "繁"]];
   var SIZES = [0.88, 1, 1.13, 1.27];
   var GLOBE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.8 5.7 3.8 9s-1.2 6.3-3.8 9c-2.6-2.7-3.8-5.7-3.8-9S9.4 5.7 12 3z"/></svg>';
   function applyPrefs() {
-    var lab = LANGS.filter(function (x) { return x[0] === TR; })[0] || LANGS[1];
+    var lab = LANGS.filter(function (x) { return x[0] === TR; })[0] || LANGS.filter(function (x) { return x[0] === "en"; })[0];
     // no translation: just the globe; otherwise the language's short code
     $("enbtn").innerHTML = TR === "off" ? GLOBE : '<span class="lb' + (/[\u3400-\u9fff]/.test(lab[2]) ? " cjk" : "") + '">' + lab[2] + "</span>"; $("enbtn").setAttribute("aria-pressed", TR !== "off");
     $("langcode").textContent = lab[2]; $("langcode").hidden = TR === "off";
