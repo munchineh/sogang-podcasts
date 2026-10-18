@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="1d8e425c5a99">
+<html lang="ko" data-build="6562d15791a0">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -658,6 +658,14 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 /* hover tooltips (mouse only; phones never see them): the button's label, plus its key, after a short pause */
 @media (hover: hover) and (pointer: fine) {
   [data-tip] { position: relative; }
+  #tip { position: fixed; z-index: 40; pointer-events: none; display: flex; align-items: center; gap: 8px; white-space: nowrap;
+    padding: 6px 8px 6px 10px; border-radius: 8px; background: var(--ink); color: var(--bg); font: 500 12px/1.2 var(--f-latin);
+    opacity: 0; transition: opacity .12s ease; }
+  #tip.on { opacity: 1; }
+  #tip .k { display: inline-flex; gap: 3px; }
+  #tip kbd { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 4px; display: inline-grid; place-items: center;
+    font: 600 11px/1 var(--f-latin); color: var(--bg); background: color-mix(in srgb, var(--bg) 16%, transparent); }
+  [data-tip]:hover::after { display: none !important; }
   [data-tip]:hover::after { content: attr(data-tip); position: absolute; z-index: 30; left: 50%; top: calc(100% + 8px); translate: -50% 0;
     white-space: nowrap; pointer-events: none; padding: 6px 9px; border-radius: 8px; background: var(--ink); color: var(--bg);
     font: 500 12px/1.2 var(--f-latin); letter-spacing: 0; opacity: 0; animation: tipin .14s ease .5s forwards; }
@@ -1426,11 +1434,11 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   function setTips() {
     document.querySelectorAll(".tx[data-t]").forEach(function (el) { el.textContent = T(el.dataset.t); });
     fitLabels();
-    [["findbtn", "tipFind"], ["xpbtn", "tipXp"], ["prev", "tipPrev", "Shift+←", 1], ["next", "tipNext", "Shift+→", 1], ["play", "tipPlay", "Space", 1],
+    [["findbtn", "tipFind"], ["xpbtn", "tipXp"], ["prev", "tipPrev", "⇧ ←", 1], ["next", "tipNext", "⇧ →", 1], ["play", "tipPlay", "Space", 1],
      ["again", "tipAgain", "R", 1, 1], ["nextep", "nextEp", "N", 1], ["speed", "tipSpeed", "", 1], ["enbtn", "tipTr", "", 1], ["langbtn", "tipLang"],
      ["refresh", "tipRefresh", "", 0, 1], ["kbbtn", "kbTitle", "?", 1, 1]].forEach(function (t) {
       var el = $(t[0]); if (!el) return;
-      el.dataset.tip = T(t[1]) + (t[2] ? " (" + t[2] + ")" : "");
+      el.dataset.tip = T(t[1]); if (t[2]) el.dataset.keys = t[2]; else delete el.dataset.keys;
       if (t[3]) el.setAttribute("data-tip-up", ""); if (t[4] === 1) el.setAttribute("data-tip-end", ""); if (t[4] === -1) el.setAttribute("data-tip-start", "");
     });
   }
@@ -1869,6 +1877,31 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     if (ev.pointerType !== "mouse") return;
     setTimeout(function () { var a = document.activeElement; if (a && a.matches && a.matches(".line, #transport button")) a.blur(); }, 0);
   });
+  // hover tooltips (mouse only): label + key caps, above or below the control, kept on screen
+  (function () {
+    var tip = document.createElement("div"); tip.id = "tip"; tip.setAttribute("aria-hidden", "true"); document.body.appendChild(tip);
+    var timer = null, cur = null;
+    function hide() { clearTimeout(timer); tip.classList.remove("on"); cur = null; }
+    document.addEventListener("pointerover", function (ev) {
+      if (ev.pointerType !== "mouse") return;
+      var el = ev.target.closest && ev.target.closest("[data-tip]");
+      if (el === cur) return; hide(); if (!el) return; cur = el;
+      timer = setTimeout(function () {
+        if (cur !== el || !document.contains(el)) return;
+        var keys = (el.dataset.keys || "").split(" ").filter(Boolean);
+        tip.innerHTML = '<span>' + esc(el.dataset.tip) + '</span>' + (keys.length ? '<span class="k">' + keys.map(function (k) { return "<kbd>" + esc(k) + "</kbd>"; }).join("") + '</span>' : "");
+        var r = el.getBoundingClientRect(), Z = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
+        tip.style.left = "0px"; tip.style.top = "0px";
+        var w = tip.getBoundingClientRect().width, h = tip.getBoundingClientRect().height;
+        var x = el.hasAttribute("data-tip-end") ? r.right - w : el.hasAttribute("data-tip-start") ? r.left : r.left + r.width / 2 - w / 2;
+        x = Math.max(8, Math.min(x, innerWidth - w - 8));
+        var y = el.hasAttribute("data-tip-up") ? r.top - h - 8 : r.bottom + 8;
+        tip.style.left = (x / Z) + "px"; tip.style.top = (y / Z) + "px"; tip.classList.add("on");
+      }, 500);
+    });
+    ["pointerdown", "scroll", "keydown"].forEach(function (n) { window.addEventListener(n, hide, true); });
+    document.addEventListener("pointerout", function (ev) { if (cur && !cur.contains(ev.relatedTarget)) hide(); });
+  })();
   // ⌘K / Ctrl+K or "/": search all episodes; ⌘F / Ctrl+F: find in this episode (18 Oct, Mancini)
   var MAC = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent), MOD = MAC ? "⌘" : "Ctrl";
   function goSearch() {
@@ -2013,14 +2046,14 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   function drawHits() {
     document.querySelectorAll(".fh").forEach(function (x) { x.remove(); });
     fhits.forEach(function (h, k) {
-      var line = lineEls[h.line], lr = line.getBoundingClientRect();
+      var line = lineEls[h.line], lr = line.getBoundingClientRect(), Z = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
       h.els = Array.prototype.map.call(h.range.getClientRects(), function (r) {
         var d = document.createElement("i"); d.className = "fh" + (k === fi ? " cur" : "");
-        d.style.cssText = "left:" + (r.left - lr.left - 1.5) + "px;top:" + (r.top - lr.top) + "px;width:" + (r.width + 3) + "px;height:" + r.height + "px";
+        d.style.cssText = "left:" + ((r.left - lr.left) / Z - 1.5) + "px;top:" + ((r.top - lr.top) / Z) + "px;width:" + (r.width / Z + 3) + "px;height:" + (r.height / Z) + "px";
         line.appendChild(d);
         // engines differ on what an absolutely placed child of a grid line is measured from (Safari: off by the line's
         // padding), so check where it landed and correct by the difference
-        var g = d.getBoundingClientRect(), dx = r.left - 1.5 - g.left, dy = r.top - g.top;
+        var g = d.getBoundingClientRect(), dx = (r.left - g.left) / Z - 1.5, dy = (r.top - g.top) / Z;
         if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5) { d.style.left = (parseFloat(d.style.left) + dx) + "px"; d.style.top = (parseFloat(d.style.top) + dy) + "px"; }
         return d;
       });
