@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="12b9208789b2">
+<html lang="ko" data-build="46163ba5d7bd">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1091,7 +1091,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
       for (var k = i; k < j; k++) if (QUOTES.indexOf(t[k]) >= 0) { gs[i] = 1; ge[j] = 1; break; }
     }
     var bound = []; for (i = 0; i <= n; i++) bound.push(i === 0 || i === n || M[i] !== M[i - 1] || !!gs[i] || !!ge[i]);
-    var hasW = !!((l.w && l.w.length) || l.cs), open = null, markOpen = false, grp = false;
+    var hasW = !!((l.w && l.w.length) || l.sy), open = null, markOpen = false, grp = false;
     function close() { if (open !== null) { out += "</span>"; open = null; } }
     for (i = 0; i < n; i++) {
       if (bound[i]) {
@@ -1118,12 +1118,12 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   // per word: [start, end] for every character, from the syllable timings (punctuation borrows its neighbour's time)
   function prepChars(l) {
     wordChars = []; wordFill = [];
-    if (!l.cs) return;
+    if (!l.sy) return;
     var n = 0, words = l.ko.split(" ");
     words.forEach(function (w, q) {
       var arr = [];
       for (var i = 0; i < w.length; i++) {
-        if (/[가-힣0-9A-Za-z]/.test(w[i]) && n * 2 + 1 < l.cs.length) { arr.push([l.cs[n * 2], l.cs[n * 2 + 1]]); n++; }
+        if (/[가-힣0-9A-Za-z]/.test(w[i]) && n * 2 + 1 < l.sy.length) { arr.push([l.sy[n * 2], l.sy[n * 2 + 1]]); n++; }
         else arr.push(null);
       }
       for (i = 0; i < arr.length; i++) if (!arr[i]) { var pv = i > 0 ? arr[i - 1] : null; arr[i] = pv ? [pv[1], pv[1]] : null; }
@@ -1154,7 +1154,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   }
   function setWord(k, t) {
     var l = ep.lines[k], el = lineEls[k];
-    if (l && l.cs && el) { setWordCs(t); return; }
+    if (l && l.sy && el) { setWordCs(t); return; }
     if (!l || !l.w || !el) return;
     var W = l.w, n = W.length, j = -1;
     while (j + 1 < n && W[j + 1] <= t) j++;
@@ -1274,7 +1274,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     // a line that opens with a laugh, sigh or yawn (or follows a long pause): its words start late, so move on to it
     // 0.35 s after the previous line's last word instead of leaving the finished line lit through the gap
     var p = L[timed[a]], nx = a + 1 < timed.length ? L[timed[a + 1]] : null;
-    var pe = p.cs && p.cs.length ? p.cs[p.cs.length - 1] : null;      // last syllable's end (forced alignment)
+    var pe = p.sy && p.sy.length ? p.sy[p.sy.length - 1] : null;      // last syllable's end (forced alignment)
     if (nx && pe != null && t > pe + 0.35 && nx.t - pe > 1.0) return timed[a + 1];
     // two voices overlapping a little (a quick reply, a goodbye): stay on the earlier line until its words are done,
     // so its highlight finishes instead of jumping to the next speaker mid-sentence
@@ -1296,7 +1296,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     lineEls.forEach(function (el, k) { el.classList.toggle("now", k === i); el.classList.toggle("past", k < i); el.classList.remove("kara"); });
     cur = i; curWord = -2; wordEls = [];
     if (lineEls[i] && ep.lines[i]) prepChars(ep.lines[i]);
-    if (lineEls[i] && (ep.lines[i].w || ep.lines[i].cs)) {
+    if (lineEls[i] && (ep.lines[i].w || ep.lines[i].sy)) {
       lineEls[i].classList.add("kara");
       lineEls[i].querySelectorAll(".w").forEach(function (s) { var q = +s.dataset.w; (wordEls[q] = wordEls[q] || []).push(s); });
     }
