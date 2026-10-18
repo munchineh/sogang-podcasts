@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="494ec6fd6d37">
+<html lang="ko" data-build="8bcc8a9ba45a">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -747,7 +747,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   /* inside the bar: use its full width (the phone .wrap caps at 680px and centred the controls with wide empty sides) */
   .transport .wrap { max-width: none; padding-inline: 22px; }
   /* desktop: the bar always says what's playing, like the phone's mini player (a click scrolls back to the current line) */
-  .nowpl .nowt { flex-direction: row; align-items: baseline; gap: 10px; }
+  .nowpl .nowt { flex-direction: row; align-items: center; gap: 10px; }   /* centred, not baseline: the two scripts sit at different heights */
   .nowpl .nowt b { flex: 0 1 auto; }
   .nowpl .nowsub { flex: 1 1 0; }
   /* room to spare on desktop: the side buttons get text labels */
