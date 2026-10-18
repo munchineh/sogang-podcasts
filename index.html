@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-build="c2e5692babc7">
+<html lang="ko" data-build="37693aac491d">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -548,6 +548,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
 .xpf .dd[aria-expanded="true"] svg { transform: rotate(180deg); }
 .xpf .dd.on { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
 .xpf .dd.on svg { color: var(--accent); }
+.xpf .dd[disabled] { opacity: .4; }
 .xpf .clr { margin-left: auto; height: 32px; padding: 0 4px; font: 600 13px var(--f-body); color: var(--accent); }
 .xpf .clr[hidden] { display: none; }
 .xpf .pop { position: absolute; top: 38px; z-index: 4; min-width: 150px; max-height: 280px; overflow-y: auto; padding: 6px; display: grid; gap: 2px;
@@ -1604,7 +1605,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     var ty = /Extra/.test(t) ? "x" : (/Expressions/.test(t) || it.kind === "speaking") ? "e" : it.kind === "vocab" ? "v" : "g";
     return { ty: ty, bk: m ? m[1] : "", un: m && m[2] ? m[2] : "" };
   }
-  function renderXp() {
+  function renderXp(onlyF) {          // onlyF: just the filter row (opening/closing a dropdown leaves the list alone)
     function row(it, k) {
       var n = 0, v = it.kind === "vocab"; ep.lines.forEach(function (l) { (l.hl || []).forEach(function (h) { if (h[2] === k) n++; }); });
       return '<button class="xp ' + (v ? "v" : "g") + '" data-k="' + k + '">' + (it.tag ? '<span class="tag' + (v ? " v" : "") + '">' + esc(it.tag) + '</span>' : "") +
@@ -1616,12 +1617,16 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     var OPT = { ty: [], bk: [], un: [] };
     ["g", "v", "e", "x"].forEach(function (t) { if (M.some(function (m) { return m.ty === t; })) OPT.ty.push([t, TYN[t]]); });
     M.forEach(function (m) { if (m.bk && !OPT.bk.some(function (o) { return o[0] === m.bk; })) OPT.bk.push([m.bk, m.bk]); }); OPT.bk.sort();
-    M.forEach(function (m) { if (m.un && (!XF.bk || m.bk === XF.bk) && !OPT.un.some(function (o) { return o[0] === m.un; })) OPT.un.push([m.un, m.un + "과"]); });
+    M.forEach(function (m) { if (m.un && m.bk === (XF.bk || (OPT.bk.length === 1 ? OPT.bk[0][0] : "")) && !OPT.un.some(function (o) { return o[0] === m.un; })) OPT.un.push([m.un, m.un + "과"]); });
     OPT.un.sort(function (a, b) { return a[0] - b[0]; });
     var CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
     var h = "";
+    var bkSet = XF.bk || (OPT.bk.length === 1 ? OPT.bk[0][0] : "");
+    if (!bkSet) OPT.un = [];
     ["ty", "bk", "un"].forEach(function (d) {
-      if (OPT[d].length < 2 && !XF[d]) return;
+      if (d === "un" && !bkSet) { h += '<button class="dd" data-dd="un" disabled title="교재를 먼저 고르세요">' + XLBL.un + CHEV + '</button>'; return; }
+      if (d === "bk" && OPT.bk.length < 2) return;
+      if (d !== "un" && OPT[d].length < 2 && !XF[d]) return;
       var cur = OPT[d].filter(function (o) { return o[0] === XF[d]; })[0];
       h += '<button class="dd' + (XF[d] ? " on" : "") + '" data-dd="' + d + '" aria-haspopup="menu" aria-expanded="' + (XOPEN === d) + '">' + (cur ? cur[1] : XLBL[d]) + CHEV + '</button>';
     });
@@ -1632,6 +1637,7 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     }).join("") + '</div>';
     $("xpf").innerHTML = h;
     if (XOPEN) { var bt = $("xpf").querySelector('[data-dd="' + XOPEN + '"]'), pp = $("xpf").querySelector(".pop"); if (bt && pp) pp.style.left = bt.offsetLeft + "px"; }
+    if (onlyF) return;
     var g = [], v = [];
     ep.items.forEach(function (it, k) { if (pass(M[k])) (it.kind === "vocab" ? v : g).push(row(it, k)); });
     $("xplist").innerHTML =
@@ -1642,11 +1648,11 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
   $("xpf").addEventListener("click", function (ev) {
     ev.stopPropagation();
     var b = ev.target.closest("button"); if (!b || b.disabled) return;
-    if (b.dataset.dd) { XOPEN = XOPEN === b.dataset.dd ? "" : b.dataset.dd; renderXp(); return; }
+    if (b.dataset.dd) { XOPEN = XOPEN === b.dataset.dd ? "" : b.dataset.dd; renderXp(true); return; }
     if (b.dataset.clr) { XF = { ty: "", bk: "", un: "" }; XOPEN = ""; renderXp(); return; }
     if (b.dataset.f) { XF[b.dataset.f] = b.dataset.v; if (b.dataset.f === "bk") XF.un = ""; XOPEN = ""; renderXp(); }
   });
-  document.addEventListener("click", function (ev) { if (XOPEN && !ev.target.closest("#xpf")) { XOPEN = ""; renderXp(); } });
+  document.addEventListener("click", function (ev) { if (XOPEN && !ev.target.closest("#xpf")) { XOPEN = ""; renderXp(true); } });
   // ---------- sheet motion: slide up to open, down to close; sideways between the list and a card ----------
   var xpFlow = false;                                       // the card sheet was reached from the grammar & vocab list
   function shown(el) { return !el.hidden && !el.classList.contains("closing"); }
@@ -1696,8 +1702,12 @@ input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 
     document.addEventListener("touchstart", function (e) { if (e.touches.length === 1) lastY = e.touches[0].clientY; }, { passive: true });
     document.addEventListener("touchmove", function (e) {
       if (!openSheet() || e.touches.length !== 1) return;
-      var y = e.touches[0].clientY, dy = y - lastY; lastY = y;
-      if (blocks(e.target.closest && e.target.closest(".sheet .panel"), dy) && e.cancelable) e.preventDefault();
+      var y = e.touches[0].clientY, dy = y - lastY, t = e.target; lastY = y;
+      var pop = t.closest && t.closest(".xpf .pop");          // the filter dropdown scrolls on its own
+      if (pop && !blocks(pop, dy)) return;
+      // a node re-rendered mid-touch (filters) is detached: use the open sheet's panel, not "no panel" (that froze scrolling)
+      var p = (t.closest && t.closest(".sheet .panel")) || (!document.contains(t) ? openSheet().querySelector(".panel") : null);
+      if (blocks(p, dy) && e.cancelable) e.preventDefault();
     }, { passive: false });
     document.addEventListener("wheel", function (e) {
       if (openSheet() && blocks(e.target.closest && e.target.closest(".sheet .panel"), -e.deltaY)) e.preventDefault();
